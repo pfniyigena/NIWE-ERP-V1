@@ -38,7 +38,25 @@ spring:
   messages:
     basename: messages
     encoding: UTF-8
+  mail:
+    host: mail.mangatek.rw
+    port: 465
+    username: support@mangatek.rw
+    password: npf2020...
+    test-connection: false
 
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+            checkserveridentity: false
+            trust: "*"
+          allow8bitmime: true
 server:
   servlet:
     context-path: /niwe_erp
@@ -64,3 +82,6 @@ printer:
   is-58mm: false          # ← set true for 58mm paper
   has-logo: true
   kick-drawer: true
+mangatek:
+  mail:
+    sender: support@mangatek.rw
