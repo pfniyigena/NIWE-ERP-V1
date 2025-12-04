@@ -1,0 +1,109 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<!-- ============================================================== -->
+<div th:fragment="header" class="dashboard-header">
+	<nav class="navbar navbar-expand-lg bg-white fixed-top">
+		<a class="navbar-brand" href="#" th:href="@{/}">NIWE ERP</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse " id="navbarSupportedContent">
+			<ul class="navbar-nav ml-auto navbar-right-top">
+				<li class="nav-item">
+					<div id="custom-search" class="top-search-bar">
+						<input class="form-control" type="text" placeholder="Search..">
+					</div>
+				</li>
+				<li class="nav-item dropdown connection"><a class="nav-link"
+					href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false"> <i
+						class="fas fa-fw fa-th"></i>
+				</a>
+					<ul class="dropdown-menu dropdown-menu-right connection-dropdown">
+						<li class="connection-list">
+							<div class="row">
+								<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+									<a href="#" th:href="@{/inflows/add/inflow/table}"
+										class="connection-item"><img
+										th:src="@{/assets/images/niwe-inflow.png}"
+										th:alt="#{menu.inflows}"> <span
+										th:text="#{menu.inflows}"></span></a>
+								</div>
+								<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+									<a href="#" th:href="@{/inflows/add/outflow/table}"
+										class="connection-item"><img
+										th:src="@{/assets/images/niwe-outflow.png}"
+										th:alt="#{menu.outflows}"> <span
+										th:text="#{menu.outflows}"></span></a>
+								</div>
+								<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+									<a href="#" th:href="@{/items/list}" class="connection-item"><img
+										th:src="@{/assets/images/niwe-products.png}"
+										th:alt="#{menu.items}"> <span th:text="#{menu.items}"></span></a>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+									<a href="#" th:href="@{/categories/list}"
+										class="connection-item"><img
+										th:src="@{/assets/images/niwe-categories.png}"
+										th:alt="#{menu.item.categories}"> <span
+										th:text="#{menu.item.categories}"></span></a>
+								</div>
+								<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+									<a href="#" th:href="@{/brands/list}" class="connection-item"><img
+										th:src="@{/assets/images/niwe-brands.png}"
+										th:alt="#{menu.item.brands}"> <span
+										th:text="#{menu.item.brands}"></span></a>
+								</div>
+								<div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
+									<a href="#" th:href="@{/suppliers/list}" class="connection-item"><img
+										th:src="@{/assets/images/niwe-suppliers.png}"
+										th:alt="#{menu.suppliers}"> <span
+										th:text="#{menu.suppliers}"></span></a>
+								</div>
+							</div>
+						</li>
+					</ul></li>
+				<li class="nav-item dropdown nav-user"><a
+					class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2"
+					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span
+						sec:authentication="name" class="user-avatar-md rounded-circle"></span></a>
+					<div class="dropdown-menu dropdown-menu-right nav-user-dropdown"
+						aria-labelledby="navbarDropdownMenuLink2">
+						<div class="nav-user-info">
+							<h5 class="mb-0 text-white nav-user-name"
+								sec:authentication="name"></h5>
+
+						</div>
+						<a class="dropdown-item" href="#"><i class="fas fa-user mr-2"></i>Account</a>
+						<a class="dropdown-item" href="#"><i class="fas fa-cog mr-2"></i>Setting</a>
+						<a class="dropdown-item" href="#" th:href="@{/logout}"><i
+							class="fas fa-power-off mr-2"></i>Logout</a>
+					</div></li>
+				<li class="nav-item dropdown nav-user"><a
+					class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink3"
+					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span
+						class="flag-icon"
+						th:classappend="'flag-icon-' + ${ {'en':'us','fr':'fr','rw':'rw'}[#locale.language] }"></span></a>
+					<div class="dropdown-menu dropdown-menu-right nav-user-dropdown"
+						aria-labelledby="navbarDropdownMenuLink3">
+						<a class="dropdown-item" href="#" th:href="@{/(lang='en')}"><em
+							class="flag-icon flag-icon-us"></em> <span
+							th:text="#{language.english}"></span> </a> <a class="dropdown-item"
+							href="#" th:href="@{/(lang='fr')}"><em
+							class="flag-icon flag-icon-fr"></em> <span
+							th:text="#{language.french}"></span></a> <a class="dropdown-item"
+							href="#" th:href="@{/(lang='rw')}"><em
+							class="flag-icon flag-icon-rw"></em> <span
+							th:text="#{language.rwandaise}"></span></a>
+					</div></li>
+			</ul>
+		</div>
+	</nav>
+</div>
+<!-- ============================================================== -->

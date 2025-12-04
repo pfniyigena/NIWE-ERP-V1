@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.item.details}"></title>
+<!-- Inline Card Component -->
+<style>
+.info-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: .25rem 0;
+	border-bottom: 1px solid #f1f1f1;
+}
+
+.info-label {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	color: #6c757d;
+	font-weight: 600;
+	margin-right: 1rem;
+	white-space: nowrap;
+}
+
+.info-value {
+	font-size: 1rem;
+	font-weight: 500;
+	text-align: right;
+	flex-grow: 1;
+}
+</style>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<h6 class="pageheader-title"
+					th:text="#{label.item.details}+ ' - ' + ${item.itemName}+ ' - ' + ${item.internalCode}"></h6>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-body">
+					<!-- ============================================================== -->
+					<!-- basic pills  -->
+					<!-- ============================================================== -->
+					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5">
+						<div class="pills-regular">
+							<ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
+								<li class="nav-item"><a class="nav-link active"
+									id="pills-home-tab" data-toggle="pill" href="#pills-home"
+									role="tab" aria-controls="home" aria-selected="true">Information</a>
+								</li>
+								<li class="nav-item"><a class="nav-link"
+									id="pills-profile-tab" data-toggle="pill" href="#pills-profile"
+									role="tab" aria-controls="profile" aria-selected="false">Inflow
+										Summary</a></li>
+								<li class="nav-item"><a class="nav-link"
+									id="pills-contact-tab" data-toggle="pill" href="#pills-contact"
+									role="tab" aria-controls="contact" aria-selected="false">Outflow
+										Summary</a></li>
+							</ul>
+							<div class="tab-content" id="pills-tabContent">
+								<div class="tab-pane fade show active" id="pills-home"
+									role="tabpanel" aria-labelledby="pills-home-tab">
+									<div class="row">
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.name}"></span>
+												<span class="info-value" th:text="${item.itemName}"></span>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.barcode}"></span>
+												<span class="info-value" th:text="${item.barcode}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label"
+													th:text="#{label.general.unitPrice}"></span> <span
+													class="info-value" th:text="${item.unitPrice}"></span>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.unitCost}"></span>
+												<span class="info-value" th:text="${item.unitCost}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.tax}"></span>
+												<span class="info-value"
+													th:text="${item.tax.displayName}+'('+${item.tax.taxValue}+'%)'"></span>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.brand}"></span>
+												<span class="info-value" th:text="${item.brand.brandName}"
+													th:if="${item.brand !=null}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label"
+													th:text="#{label.general.external.code}"></span> <span
+													class="info-value" th:text="${item.externalItemCode}"></span>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.category}"></span>
+												<span class="info-value"
+													th:text="${item.category.categoryName}"
+													th:if="${item.category !=null}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.nature}"></span>
+												<span class="info-value" th:text="${item.nature.name}"
+													th:if="${item.nature != null}"></span>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.country}"></span>
+												<span class="info-value"
+													th:text="${item.country.displayName}"
+													th:if="${item.country !=null}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label"
+													th:text="#{label.general.classification}"></span> <span
+													class="info-value"
+													th:text="${item.classification.displayName}"
+													th:if="${item.classification != null}"></span>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.general.unit}"></span>
+												<span class="info-value" th:text="${item.unit.name}"
+													th:if="${item.unit !=null}"></span>
+											</div>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="info-item">
+												<span class="info-label" th:text="#{label.stock.level}"></span>
+												<span class="info-value" th:text="${item.stockLevel}"></span>
+											</div>
+										</div>
+
+									</div>
+								</div>
+								<div class="tab-pane fade" id="pills-profile" role="tabpanel"
+									aria-labelledby="pills-profile-tab">
+									<p>Inflow</p>
+								</div>
+								<div class="tab-pane fade" id="pills-contact" role="tabpanel"
+									aria-labelledby="pills-contact-tab">
+									<p>Outflow</p>
+								</div>
+							</div>
+						</div>
+						<a th:href="@{/items/list}" class="btn btn-secondary btn-sm"
+							th:title="#{label.button.back}"> <span class="fa fa-times"></span>
+						</a>
+					</div>
+					<!-- ============================================================== -->
+					<!-- end basic pills  -->
+					<!-- ============================================================== -->
+				</div>
+			</div>
+		</div>
+		<!-- ============================================================== -->
+		<!-- end users table  -->
+		<!-- ============================================================== -->
+	</div>
+</div>
+</html>

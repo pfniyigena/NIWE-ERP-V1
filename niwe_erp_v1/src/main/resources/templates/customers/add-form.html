@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.customer.details}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<h2 class="pageheader-title" th:text="#{label.customer.details}"></h2>
+				<div class="page-breadcrumb">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#"
+								th:href="@{/sales/list}" class="breadcrumb-link"><span
+									th:text="#{menu.sales}"></span></a></li>
+							<li class="breadcrumb-item"><a href="#"
+								th:href="@{/customers/list}"> <span
+									th:text="#{label.permission.list}"></span></a></li>
+							<li class="breadcrumb-item active" aria-current="page"><span
+								th:text="#{label.customer.details}"></span></li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<h5 class="card-header" th:text="#{label.customer.details}"></h5>
+				<div class="card-body">
+					<form style="border-radius: 0px;" th:object="${customer}"
+						th:action="@{/customers/new}" method="post">
+						<input type="hidden" th:field="*{id}" /> <input type="hidden"
+							th:field="*{internalCode}" />
+						<div class="form-group row">
+							<label class="col-2 col-sm-2 col-form-label text-sm-left"
+								th:text="#{label.general.name}" for="customerName"></label>
+							<div class="col-6 col-sm-6">
+								<input type="text" class="form-control"
+									th:classappend="${#fields.hasErrors('customerName')} ? 'is-invalid'"
+									th:field="*{customerName}"
+									th:placeholder="#{label.general.name}" required>
+								<div class="invalid-feedback"
+									th:if="${#fields.hasErrors('customerName')}">
+									<span th:errors="*{customerName}"></span>
+
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-2 col-sm-2 col-form-label text-sm-left"
+								th:text="#{label.general.tin}" for="customerTin"></label>
+							<div class="col-6 col-sm-6">
+								<input type="text" class="form-control"
+									th:classappend="${#fields.hasErrors('customerTin')} ? 'is-invalid'"
+									th:field="*{customerTin}" th:placeholder="#{label.general.tin}"
+									required>
+								<div class="invalid-feedback"
+									th:if="${#fields.hasErrors('customerTin')}">
+									<span th:errors="*{customerTin}"></span>
+
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-2 col-sm-2 col-form-label text-sm-left"
+								th:text="#{label.general.phone}" for="customerPhone"></label>
+							<div class="col-6 col-sm-6">
+								<input type="text" class="form-control"
+									th:classappend="${#fields.hasErrors('customerPhone')} ? 'is-invalid'"
+									th:field="*{customerPhone}" th:placeholder="#{label.general.phone}"
+									required>
+								<div class="invalid-feedback"
+									th:if="${#fields.hasErrors('customerPhone')}">
+									<span th:errors="*{customerPhone}"></span>
+
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-6 col-sm-3 col-form-label text-sm-right"></div>
+							<div class="col-12 col-sm-6 col-lg-4 pt-1">
+								<button type="submit" class="btn btn-rounded btn-success"
+									th:text="#{label.button.save}"></button>
+
+								<a href="#" th:href="@{/customers/list}"
+									class="btn btn-rounded btn-danger"
+									th:text="#{label.button.back}"></a>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

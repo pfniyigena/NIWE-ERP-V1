@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.permission.details}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<h2 class="pageheader-title" th:text="#{label.permission.details}"></h2>
+				<div class="page-breadcrumb">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#"
+								class="breadcrumb-link"><span
+									th:text="#{menu.administration}"></span></a></li>
+							<li class="breadcrumb-item"><a href="#"
+								th:href="@{/permissions/list}"> <span
+									th:text="#{label.permission.list}"></span></a></li>
+							<li class="breadcrumb-item active" aria-current="page"><span
+								th:text="#{label.permission.details}"></span></li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<h5 class="card-header" th:text="#{label.permission.details}"></h5>
+				<div class="card-body">
+					<form style="border-radius: 0px;" th:object="${corePermission}"
+						th:action="@{/permissions/new}" method="post">
+						<input type="hidden" th:field="*{id}" />
+						<div class="form-group row">
+							<label class="col-2 col-sm-2 col-form-label text-sm-left"
+								th:text="#{label.general.name}" for="name"></label>
+							<div class="col-6 col-sm-6">
+								<input type="text" class="form-control"
+									th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'"
+									th:field="*{name}" th:placeholder="#{label.general.name}"
+									required>
+								<div class="invalid-feedback"
+									th:if="${#fields.hasErrors('name')}">
+									<span th:errors="*{name}"></span>
+									 
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-2 col-sm-2 col-form-label text-sm-left"
+								th:text="#{label.general.description}" for="description"></label>
+							<div class="col-6 col-sm-6">
+								<input type="text" class="form-control is-valid"
+									th:field="*{description}"
+									th:placeholder="#{label.general.description}" required>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-6 col-sm-3 col-form-label text-sm-right"></div>
+							<div class="col-12 col-sm-6 col-lg-4 pt-1">
+								<button type="submit" class="btn btn-rounded btn-success"
+									th:text="#{label.button.save}"></button>
+
+								<a href="#" th:href="@{/permissions/list}"
+									class="btn btn-rounded btn-danger"
+									th:text="#{label.button.back}"></a>
+							</div>
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

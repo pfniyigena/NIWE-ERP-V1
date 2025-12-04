@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.item.details}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<h6 class="pageheader-title" th:text="#{label.item.details}"></h6>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-body">
+					<form style="border-radius: 0px;" th:object="${item}"
+						th:action="@{/items/new}" method="post">
+						<input type="hidden" th:field="*{id}" /> <input type="hidden"
+							th:field="*{internalCode}" /> <input type="hidden"
+							th:field="*{itemCode}" /> <input type="hidden"
+							th:field="*{taxpayer}" />
+						<div class="row">
+							<!-- Column 1 -->
+							<div class="col-md-6">
+								<div class="form-group row">
+									<label class="col-2 col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.name}" for="itemName"></label>
+									<div class="col-6 col-sm-6">
+										<input type="text" class="form-control is-valid"
+											th:field="*{itemName}" th:placeholder="#{label.general.name}"
+											required>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-2 col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.barcode}" for="barcode"></label>
+									<div class="col-6 col-sm-6">
+										<input type="text" class="form-control is-valid"
+											th:field="*{barcode}"
+											th:placeholder="#{label.general.barcode}" required>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-2 col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.unitPrice}" for="unitPrice"></label>
+									<div class="col-6 col-sm-6">
+										<input type="number" step="0.01" min="0.01"
+											class="form-control is-valid" th:field="*{unitPrice}"
+											th:placeholder="#{label.general.unitPrice}" required>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-2 col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.unitCost}" for="unitCost"></label>
+									<div class="col-6 col-sm-6">
+										<input type="number" step="0.01" min="0.01"
+											class="form-control is-valid" th:field="*{unitCost}"
+											th:placeholder="#{unitCost}">
+									</div>
+								</div>
+
+								<div class="form-group row">
+									<label class="col-2 col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.tax}" for="tax"></label>
+									<div class="col-6 col-sm-6">
+										<select th:field="*{tax}" class="form-control selectpicker"
+											required>
+											<option value="">-- Select --</option>
+											<option th:each="it : ${taxes}" th:value="${it.id}"
+												th:text="${it.displayName}+'('+${it.taxValue}+'%)'"></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-2 col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.brand}" for="brand"></label>
+									<div class="col-6 col-sm-6">
+										<select th:field="*{brand}" class="form-control selectpicker">
+											<option value="">-- Select --</option>
+											<option th:each="it : ${brands}" th:value="${it.id}"
+												th:text="${it.brandName}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-2 col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.stock.level}" for="stockLevel"></label>
+									<div class="col-6 col-sm-6">
+										<input type="number" min="0"
+											class="form-control is-valid" th:field="*{stockLevel}"
+											th:placeholder="#{label.stock.level}">
+									</div>
+								</div>
+
+							</div>
+							<!-- Column 2 -->
+							<div class="col-md-6">
+								<div class="form-group row">
+									<label class="col-4 col-sm-4 col-form-label text-sm-left"
+										th:text="#{label.general.external.code}"
+										for="externalItemCode"></label>
+									<div class="col-6 col-sm-6">
+										<input type="text" class="form-control is-valid"
+											th:field="*{externalItemCode}"
+											th:placeholder="#{label.general.external.code}">
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-4 col-sm-4 col-form-label text-sm-left"
+										th:text="#{label.general.category}" for="category"></label>
+									<div class="col-6 col-sm-6">
+										<select th:field="*{category}"
+											class="form-control selectpicker">
+											<option value="">-- Select --</option>
+											<option th:each="it : ${categories}" th:value="${it.id}"
+												th:text="${it.categoryName}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-4 col-sm-4 col-form-label text-sm-left"
+										th:text="#{label.general.nature}" for="nature"></label>
+									<div class="col-6 col-sm-6">
+										<select th:field="*{nature}" class="form-control selectpicker"
+											required>
+											<option value="">-- Select --</option>
+											<option th:each="it : ${natures}" th:value="${it.id}"
+												th:text="${it.name}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-4 col-sm-4 col-form-label text-sm-left"
+										th:text="#{label.general.country}" for="country"></label>
+									<div class="col-6 col-sm-6">
+										<select th:field="*{country}"
+											class="form-control selectpicker" required>
+											<option value="">-- Select --</option>
+											<option th:each="it : ${countries}" th:value="${it.id}"
+												th:text="${it.displayName}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-4 col-sm-4 col-form-label text-sm-left"
+										th:text="#{label.general.classification}" for="classification"></label>
+									<div class="col-6 col-sm-6">
+										<select th:field="*{classification}"
+											class="form-control selectpicker" required>
+											<option value="">-- Select --</option>
+											<option th:each="it : ${classifications}" th:value="${it.id}"
+												th:text="${it.displayName}"></option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-4 col-sm-4 col-form-label text-sm-left"
+										th:text="#{label.general.unit}" for="unit"></label>
+									<div class="col-6 col-sm-6">
+										<select th:field="*{unit}" class="form-control selectpicker"
+											required>
+											<option value="">-- Select --</option>
+											<option th:each="it : ${units}" th:value="${it.id}"
+												th:text="${it.name}"></option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="form-group row">
+							<div class="col-6 col-sm-3 col-form-label text-sm-right"></div>
+							<div class="col-6 col-sm-6">
+								<button type="submit" class="btn btn-rounded btn-success"
+									th:text="#{label.button.save}"></button>
+								<a href="#" th:href="@{/items/list}"
+									class="btn btn-rounded btn-danger"
+									th:text="#{label.button.back}"></a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- ============================================================== -->
+		<!-- end users table  -->
+		<!-- ============================================================== -->
+	</div>
+</div>
+</html>

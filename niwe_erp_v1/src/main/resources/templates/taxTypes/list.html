@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.tax.list}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<h2 class="pageheader-title" th:text="#{label.tax.list}"></h2>
+				<div class="page-breadcrumb">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#"
+								class="breadcrumb-link"><span th:text="#{menu.settings}"></span></a></li>
+							<li class="breadcrumb-item"><a href="#"
+								th:href="@{/taxTypes/list}"> <span
+									th:text="#{label.tax.list}"></span></a></li>
+							<li class="breadcrumb-item active" aria-current="page"><span
+								th:text="#{label.tax.list}"></span></li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-header d-flex">
+					<h5 th:text="#{label.tax.list}"></h5>
+					<div class="toolbar ml-auto">
+						<a href="#" th:href="@{/taxTypes/new}"
+							class="btn btn-primary btn-sm "><span
+							th:text="#{label.button.add}"></span></a>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered first">
+							<thead>
+								<tr>
+									<th th:text="#{label.general.name}"></th>
+									<th th:text="#{label.general.code}"></th>
+									<th th:text="#{label.general.displayName}"></th>
+									<th th:text="#{label.tax.rate}"></th>
+									<th th:text="#{label.general.displayLevel}"></th>
+									<th th:text="#{label.general.description}"></th>
+									<th th:text="#{label.button.actions}"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="list : ${lists}">
+									<td th:text="${list.taxName}"></td>
+									<td th:text="${list.taxCode}"></td>
+									<td th:text="${list.displayName}"></td>
+									<td th:text="${list.taxValue}"></td>
+									<td th:text="${list.displayLevel}"></td>
+									<td th:text="${list.description}"></td>
+									<td><a href="#"
+										th:href="@{'/taxTypes/update/' + ${list.id}}"
+										class="text-primary" th:title="#{label.button.edit}"><em
+											class="fas fa-pencil-alt"></em></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- ============================================================== -->
+		<!-- end users table  -->
+		<!-- ============================================================== -->
+	</div>
+</div>
+
+</html>

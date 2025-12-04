@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.outflow.list}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-header d-flex">
+					<h5
+						th:text="#{label.outflow.list}+ ' - ' + ${warehouse.warehouseName}+ ' - ' + ${locationName}"></h5>
+				</div>
+				<div class="card-body">
+					<input type="hidden" id="itemId" th:value="${itemId}" /> <input
+						type="hidden" id="warehouseId" th:value="${warehouseId}" /> <input
+						type="hidden" id="locationId" th:value="${locationId}" />
+					<div class="table-responsive">
+						<table id="locationMovementTable"
+							class="table table-striped table-bordered first">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th th:text="#{label.general.name}"></th>
+									<th th:text="#{label.general.code}"></th>
+									<th th:text="#{label.general.date}"></th>
+									<th th:text="#{label.general.previous}"></th>
+									<th th:text="#{label.general.affected}"></th>
+									<th th:text="#{label.general.current}"></th>
+									<th th:text="#{label.general.mouvement}"></th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- ============================================================== -->
+		<!-- end users table  -->
+		<!-- ============================================================== -->
+	</div>
+</div>
+<div layout:fragment="page-scripts">
+	<script th:src="@{/assets/niwe/js/location-movement-table.js}"></script>
+</div>
+</html>

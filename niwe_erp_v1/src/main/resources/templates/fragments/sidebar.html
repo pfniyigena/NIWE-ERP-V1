@@ -1,0 +1,208 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<div th:fragment="sidebar" class="nav-left-sidebar sidebar-dark">
+	<div class="menu-list">
+		<nav class="navbar navbar-expand-lg navbar-light">
+			<a class="d-xl-none d-lg-none" href="#" th:href="@{/}" >Dashboard</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse"
+				data-target="#navbarNav" aria-controls="navbarNav"
+				aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNav">
+				<ul class="navbar-nav flex-column">
+					<li class="nav-divider">Menu</li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-0" aria-controls="submenu-0"><i
+							class="fas fa-fw fa-chart-pie"></i><span
+							th:text="#{menu.dashboard}"></span> <span
+							class="badge badge-success">6</span></a>
+						<div id="submenu-0" class="collapse submenu">
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"><span
+										th:text="#{menu.inventory}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"><span
+										th:text="#{menu.sales}"></span></a></li>
+							</ul>
+						</div></li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-1" aria-controls="submenu-1"><i
+							class="fa fa-fw fa-user-circle"></i><span
+							th:text="#{menu.administration}"></span> <span
+							class="badge badge-success">6</span></a>
+						<div id="submenu-1" class="collapse submenu">
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/users/list}"><span th:text="#{menu.users}"></span>
+								</a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/roles/list}"><span th:text="#{menu.roles}"></span></a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/permissions/list}"><span
+										th:text="#{menu.permissions}"></span> </a></li>
+							</ul>
+						</div></li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-2" aria-controls="submenu-2"><i
+							class="fa fa-fw fas fa-cog"></i><span th:text="#{menu.settings}"></span>
+							<span class="badge badge-success">6</span></a>
+						<div id="submenu-2" class="collapse submenu">
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/taxpayers/list}"><span
+										th:text="#{menu.taxpayers}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/branches/list}"><span
+										th:text="#{menu.branches}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/warehouses/list}"><span
+										th:text="#{menu.warehouses}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/countries/list}"><span
+										th:text="#{menu.countries}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/taxTypes/list}"><span th:text="#{menu.taxes}"></span>
+								</a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/chargeTypes/list}"><span
+										th:text="#{menu.charges}"></span> </a></li>
+							</ul>
+						</div></li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-3" aria-controls="submenu-3"><i
+							class="fab fa-product-hunt"></i><span th:text="#{menu.items}"></span>
+							<span class="badge badge-success">6</span></a>
+						<div id="submenu-3" class="collapse submenu">
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/items/list}"><span th:text="#{menu.items}"></span>
+								</a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/categories/list}"><span
+										th:text="#{menu.item.categories}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/brands/list}"><span
+										th:text="#{menu.item.brands}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/itemClassifications/list}"><span
+										th:text="#{menu.item.classifications}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/quantityUnits/list}"><span
+										th:text="#{menu.quantity.units}"></span> </a></li>
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/itemNatures/list}"><span
+										th:text="#{menu.item.natures}"></span> </a></li>
+
+							</ul>
+						</div></li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-4" aria-controls="submenu-4"><i
+							class="fas fa-balance-scale"></i><span
+							th:text="#{menu.reconciliations}"></span> <span
+							class="badge badge-success">6</span></a>
+						<div id="submenu-4" class="collapse submenu">
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/reconciliations/list}"><span
+										th:text="#{menu.reconciliations}"></span> </a></li>
+							</ul>
+						</div></li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-5" aria-controls="submenu-5"><i
+							class="fa fa-university"></i><span th:text="#{menu.inventory}"></span>
+							<span class="badge badge-success">6</span></a>
+						<div id="submenu-5" class="collapse submenu">
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/stands/list}"><span th:text="#{menu.stands}"></span>
+								</a></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/inflows/list}"><span th:text="#{menu.inflows}"></span>
+								</a></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/outflows/list}"><span
+										th:text="#{menu.outflows}"></span> </a></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/suppliers/list}"><span
+										th:text="#{menu.suppliers}"></span> </a></li>
+							</ul>
+						</div></li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-6" aria-controls="submenu-6"><i
+							class="fas fa-tasks"></i><span th:text="#{menu.operations}"></span>
+							<span class="badge badge-success">6</span></a>
+						<div id="submenu-6" class="collapse submenu"></div></li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-7" aria-controls="submenu-7"><i
+							class="fas fa-shopping-cart"></i><span th:text="#{menu.sales}"></span>
+							<span class="badge badge-success">6</span></a>
+						<div id="submenu-7" class="collapse submenu">
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/shelves/list}"><span th:text="#{menu.shelves}"></span>
+								</a></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/sales/list}"><span th:text="#{menu.sales}"></span>
+								</a></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									th:href="@{/customers/list}"><span
+										th:text="#{menu.customers}"></span> </a></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									data-toggle="collapse" aria-expanded="false"
+									data-target="#submenu-11" aria-controls="submenu-11"><span
+										th:text="#{menu.reports}"></span></a>
+									<div id="submenu-11" class="collapse submenu">
+										<ul class="nav flex-column">
+											<li class="nav-item"><a class="nav-link" href="#"
+												th:href="@{/daily-sales/daily}"><span
+													th:text="#{label.sale.daily.summary}"></span></a></li>
+											<li class="nav-item"><a class="nav-link" href="#"
+												th:href="@{/daily-sales/monthly}"><span
+													th:text="#{label.sale.monthly.summary}"></span></a></li>
+
+										</ul>
+									</div></li>
+							</ul>
+
+						</div></li>
+					<li class="nav-item "><a class="nav-link active" href="#"
+						data-toggle="collapse" aria-expanded="false"
+						data-target="#submenu-8" aria-controls="submenu-8"><i
+							class="fas fa-th-list"></i><span th:text="#{menu.reports}"></span>
+							<span class="badge badge-success">6</span></a>
+						<div id="submenu-8" class="collapse submenu">
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"><span
+										th:text="#{menu.inflows}"></span> </a></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"><span
+										th:text="#{menu.outflows}"></span> </a></li>
+							</ul>
+						</div></li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+</div>

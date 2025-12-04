@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.inflow.list}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-header d-flex">
+					<h5
+						th:text="#{label.inflow.list}+ ' - ' + ${warehouse.warehouseName}+' ACTION INFLOW'"></h5>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table id="inflowsTable"
+							class="table table-striped table-bordered first">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th th:text="#{label.general.name}"></th>
+									<th th:text="#{label.general.code}"></th>
+									<th th:text="#{label.general.barcode}"></th>
+									<th th:text="#{label.general.sale.price}"></th>
+									<th th:text="#{label.general.purchase.price}"></th>
+									<th th:text="#{label.general.quantity}"></th>
+									<th th:text="#{label.button.actions}"></th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- ============================================================== -->
+		<!-- end users table  -->
+		<!-- ============================================================== -->
+	</div>
+	<!-- ============================================================== -->
+	<!-- start update price modal  -->
+	<!-- ============================================================== -->
+	<div class="modal fade" id="updatePriceModal" tabindex="-1"
+		role="dialog">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<form th:action="@{/inflows/updatePrice}" method="post">
+					<div class="modal-header">
+						<h5 class="modal-title" th:text="#{label.general.update.value}"></h5>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<input type="hidden" id="itemId" name="itemId"> <input
+							type="hidden" id="updateType" name="type">
+						<div class="form-group">
+							<label for="newValue" th:text="#{label.general.new.value}"></label>
+							<input type="number" step="0.01" id="newValue" name="value"
+								class="form-control" required>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" th:text="#{label.button.cancel}">Cancel</button>
+						<button type="submit" class="btn btn-primary"
+							th:text="#{label.button.update}"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end update price modal  -->
+	<!-- ============================================================== -->
+	<!-- ============================================================== -->
+	<!-- start inflow modal  -->
+	<!-- ============================================================== -->
+	<div class="modal fade" id="inflowModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<form th:action="@{/inflows/save}" method="post">
+					<div class="modal-header">
+						<h5 class="modal-title"
+							th:text="#{label.warehouse.stock.in.recording}"></h5>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<input type="hidden" id="itemId" name="itemId"> <input
+							type="hidden" id="warehouseId" name="warehouseId">
+						<div class="form-group">
+							<label th:text="#{label.general.name}"></label> <input
+								type="text" id="itemName" name="itemName" class="form-control"
+								readonly="readonly">
+						</div>
+						<div class="form-group">
+							<label th:text="#{label.general.current}"></label> <input
+								type="text" step="0.01" id="oldValue" name="oldValue"
+								class="form-control" readonly="readonly">
+						</div>
+						<div class="form-group">
+							<label for="newValue" th:text="#{label.general.quantity}"></label>
+							<input type="number" step="0.01" min="0.01" id="newValue"
+								name="newValue" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label for="supplier" th:text="#{label.general.supplier}"></label>
+							<input type="text"  id="supplier"
+								name="supplier" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label for="expirationDate" th:text="#{label.general.expire.date}"></label>
+							<input type="date"  id="supplier"
+								name="expirationDate" class="form-control" required>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" th:text="#{label.button.cancel}"></button>
+						<button type="submit" class="btn btn-primary"
+							th:text="#{label.button.update}"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end inflow modal  -->
+	<!-- ============================================================== -->
+	<!-- start inflow modal  -->
+	<!-- ============================================================== -->
+	<div class="modal fade" id="outflowModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<form th:action="@{/inflows/out}" method="post">
+					<div class="modal-header">
+						<h5 class="modal-title"
+							th:text="#{label.warehouse.stock.out.recording}"></h5>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<input type="hidden" id="itemId" name="itemId"> <input
+							type="hidden" id="warehouseId" name="warehouseId">
+						<div class="form-group">
+							<label th:text="#{label.general.name}"></label> <input
+								type="text" id="itemName" name="itemName" class="form-control"
+								readonly="readonly">
+						</div>
+						<div class="form-group">
+							<label th:text="#{label.general.current}"></label> <input
+								type="text" step="0.01" id="oldValue" name="oldValue"
+								class="form-control" readonly="readonly">
+						</div>
+						<div class="form-group">
+							<label for="newValue" th:text="#{label.general.quantity}"></label>
+							<input type="number" step="0.01" min="0.01" id="newValue"
+								name="newValue" class="form-control" required>
+						</div>
+						<div class="form-group">
+							<label for="stand" th:text="#{label.general.stand}"></label>
+							<select class="form-control selectpicker" id="locationId" name="locationId" 
+								required="required">
+								<option value="" th:text="#{label.general.select}"></option>
+								<option th:each="it : ${stands}" th:value="${it.id}"
+									th:text="${it.locationCode}+'-'+${it.locationName}+'-'+${it.managerName}"></option>
+							</select>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" th:text="#{label.button.cancel}"></button>
+						<button type="submit" class="btn btn-primary"
+							th:text="#{label.button.update}"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end inflow modal  -->
+	<!-- ============================================================== -->
+</div>
+<div layout:fragment="page-scripts">
+	<script>
+		// URL for first table
+		const INFLOWS_DATA_URL = BASE_URL + "inflows/list/data";
+	</script>
+	<script th:src="@{/assets/niwe/js/add-inflow-tables.js}"></script>
+</div>
+</html>

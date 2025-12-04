@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.error.page}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<div class="ecommerce-widget">
+
+		<div class="row">
+			<div
+				class="offset-xl-2 col-xl-8 offset-lg-2 col-lg-8 col-md-12 col-sm-12 col-12">
+				<div class="error-section">
+					<div class="error-section-content">
+						<h1 class="display-3">Page Not Found</h1>
+						<a href="#" th:href="@{/}" class="btn btn-secondary btn-lg">Back
+							to homepage</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

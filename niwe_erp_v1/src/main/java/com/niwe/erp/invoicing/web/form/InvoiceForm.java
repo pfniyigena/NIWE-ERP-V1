@@ -1,0 +1,35 @@
+package com.niwe.erp.invoicing.web.form;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import com.niwe.erp.invoicing.domain.InvoiceStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
+@Data
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+public class InvoiceForm {
+	private UUID id;
+	private String invoiceNumber;
+	private LocalDate invoiceDate;
+	private LocalDate dueDate;
+	@Builder.Default
+	private List<InvoiceLineForm> invoiceLines = new ArrayList<>();
+	private BigDecimal totalAmount;
+	private BigDecimal taxAmount;
+	@Builder.Default
+	private InvoiceStatus status = InvoiceStatus.DRAFT;
+
+}

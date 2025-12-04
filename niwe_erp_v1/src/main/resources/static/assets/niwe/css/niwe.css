@@ -1,0 +1,21 @@
+/* Remove padding/margin from dashboard content 
+.dashboard-content {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+*/
+/* Global compact DataTable rows */
+.dataTable td {
+    padding: 4px 6px;      /* smaller padding */
+    line-height: 1.5;      /* tighter line height */
+    vertical-align: middle;
+       /* slightly smaller text */
+}
+
+/* Optional: responsive adjustments for small screens */
+@media (max-width: 768px) {
+    .dataTable td {
+        padding: 3px 4px;
+        font-size: 0.8rem;
+    }
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/fonts/circular-std/style.css}">
+<link rel="stylesheet" th:href="@{/assets/libs/css/style.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/fonts/fontawesome/css/fontawesome-all.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/charts/chartist-bundle/chartist.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/charts/morris-bundle/morris.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/fonts/material-design-iconic-font/css/materialdesignicons.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/charts/c3charts/c3.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/fonts/flag-icon-css/flag-icon.min.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/bootstrap-select/css/bootstrap-select.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/multi-select/css/multi-select.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/datatables/css/buttons.bootstrap4.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/datatables/css/dataTables.bootstrap4.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/datatables/css/fixedHeader.bootstrap4.css}">
+<link rel="stylesheet"
+	th:href="@{/assets/vendor/datatables/css/select.bootstrap4.css}">
+<link rel="stylesheet" th:href="@{/assets/niwe/css/niwe.css}">
+<title layout:title-pattern="$CONTENT_TITLE"></title>
+</head>
+
+<body>
+	<!-- Define BASE_URL first -->
+	<script th:inline="javascript">
+		const BASE_URL = /*[[@{/}]]*/"";
+	</script>
+	<span id="lblUpdateSale" th:text="#{label.button.update.sale}"></span>
+	<span id="lblUpdateCost" th:text="#{label.button.update.cost}"></span>
+	<span id="lblInflow" th:text="#{label.button.inflow}"></span>
+	<span id="lblOutflow" th:text="#{label.button.outflow}"></span>
+	<span id="lblView" th:text="#{label.button.view}"></span>
+	
+	<!-- ============================================================== -->
+	<!-- main wrapper -->
+	<!-- ============================================================== -->
+	<div class="dashboard-main-wrapper">
+		<!-- ============================================================== -->
+		<!-- navbar -->
+		<div th:replace="~{fragments/header :: header}"></div>
+		<!-- end navbar -->
+		<!-- ============================================================== -->
+		<!-- ============================================================== -->
+		<!-- left sidebar -->
+		<!-- ============================================================== -->
+		<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+		<!-- ============================================================== -->
+		<!-- end left sidebar -->
+		<!-- ============================================================== -->
+		<!-- ============================================================== -->
+		<!-- wrapper  -->
+		<!-- ============================================================== -->
+		<div class="dashboard-wrapper">
+			<div class="dashboard-ecommerce">
+				<div class="container-fluid dashboard-content ">
+					<div th:replace="~{fragments/notification :: notification}"></div>
+					<div layout:fragment="content">
+						<!-- Default fallback (you will never see this) -->
+						<h1>Page content goes here</h1>
+					</div>
+
+				</div>
+			</div>
+			<!-- ============================================================== -->
+			<!-- footer -->
+			<!-- ============================================================== -->
+			<div th:replace="~{fragments/footer :: footer}"></div>
+			<!-- ============================================================== -->
+			<!-- end footer -->
+			<!-- ============================================================== -->
+		</div>
+		<!-- ============================================================== -->
+		<!-- end wrapper  -->
+		<!-- ============================================================== -->
+	</div>
+	<!-- ============================================================== -->
+	<!-- end main wrapper  -->
+	<!-- ============================================================== -->
+	<!-- Optional JavaScript -->
+	<!-- jquery 3.3.1 -->
+	<script th:src="@{/assets/vendor/jquery/jquery-3.3.1.min.js}"></script>
+	<!-- bootstap bundle js -->
+	<script th:src="@{/assets/vendor/bootstrap/js/bootstrap.bundle.js}"></script>
+	<!-- slimscroll js -->
+	<script th:src="@{/assets/vendor/slimscroll/jquery.slimscroll.js}"></script>
+	<!-- main js -->
+	<script th:src="@{/assets/libs/js/main-js.js}"></script>
+	<script
+		th:src="@{/assets/vendor/bootstrap-select/js/bootstrap-select.js}"></script>
+	<script
+		th:src="@{/assets/vendor/multi-select/js/jquery.multi-select.js}"></script>
+	<!-- chart chartist js -->
+	<script
+		th:src="@{/assets/vendor/charts/chartist-bundle/chartist.min.js}"></script>
+	<!-- sparkline js -->
+	<script th:src="@{/assets/vendor/charts/sparkline/jquery.sparkline.js}"></script>
+	<!-- morris js -->
+	<script th:src="@{/assets/vendor/charts/morris-bundle/raphael.min.js}"></script>
+	<script th:src="@{/assets/vendor/charts/morris-bundle/morris.js}"></script>
+	<!-- chart c3 js -->
+	<script th:src="@{/assets/vendor/charts/c3charts/c3.min.js}"></script>
+	<script th:src="@{/assets/vendor/charts/c3charts/d3-5.4.0.min.js}"></script>
+	<script th:src="@{/assets/vendor/charts/c3charts/C3chartjs.js}"></script>
+	<script th:src="@{/assets/libs/js/dashboard-ecommerce.js}"></script>
+	<script
+		th:src="@{/assets/vendor/datatables/js/jquery.dataTables.min.js}"></script>
+	<script
+		th:src="@{/assets/vendor/datatables/js/buttons.bootstrap4.min.js}"></script>
+	<script th:src="@{/assets/vendor/datatables/js/data-table.js}"></script>
+	<script
+		th:src="@{/assets/vendor/datatables/js/dataTables.bootstrap4.min.js}"></script>
+	<script th:src="@{/assets/niwe/js/niwe.js}"></script>
+	<!-- Then allow pages to load their own scripts -->
+	<div layout:fragment="page-scripts"></div>
+</body>
+
+</html>

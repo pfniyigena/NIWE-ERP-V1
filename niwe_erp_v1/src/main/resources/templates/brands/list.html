@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.brand.list}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<h2 class="pageheader-title" th:text="#{label.brand.list}"></h2>
+				<div class="page-breadcrumb">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#"
+								class="breadcrumb-link"><span th:text="#{menu.settings}"></span></a></li>
+							<li class="breadcrumb-item"><a href="#"
+								th:href="@{/brands/list}"> <span
+									th:text="#{label.brand.list}"></span></a></li>
+							<li class="breadcrumb-item active" aria-current="page"><span
+								th:text="#{label.brand.list}"></span></li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-header d-flex">
+					<h5 th:text="#{label.brand.list}"></h5>
+					<div class="toolbar ml-auto">
+						<button type="button" class="btn btn-warning btn-sm"
+							style="height: 32px; width: 32px; padding: 0;"
+							data-toggle="modal" data-target="#importBrandModal"
+							th:title="#{label.button.import}">
+							<i class="fa fa-upload"></i>
+						</button>
+						<a href="#" th:href="@{/brands/new}"
+							class="btn btn-primary btn-sm "><span
+							th:text="#{label.button.add}"></span></a>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered first">
+							<thead>
+								<tr>
+									<th th:text="#{label.general.name}"></th>
+									<th th:text="#{label.general.code}"></th>
+									<th th:text="#{label.button.actions}"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="list : ${lists}">
+									<td th:text="${list.brandName}"></td>
+									<td th:text="${list.internalCode}"></td>
+									<td><a href="#"
+										th:href="@{'/brands/update/' + ${list.id}}"
+										class="text-primary" th:title="#{label.button.edit}"><em
+											class="fas fa-pencil-alt"></em></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- ============================================================== -->
+		<!-- end users table  -->
+		<!-- ============================================================== -->
+	</div>
+	<div class="modal fade" id="importBrandModal" tabindex="-1"
+		role="dialog">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<form th:action="@{/brands/upload}" method="post"
+					enctype="multipart/form-data">
+					<div class="modal-header">
+						<h4 class="modal-title text-primary"
+							th:text="#{label.item.import.form}"></h4>
+					</div>
+					<div class="modal-body">
+
+						<div class="mb-3">
+							<label for="file" class="form-label"
+								th:text="#{label.general.file}"></label> <input type="file"
+								id="file" name="file" class="form-control form-control-bold"
+								required accept=".xlsx" />
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" th:text="#{label.button.cancel}"></button>
+						<button type="submit" class="btn btn-primary"
+							th:text="#{label.button.import}"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

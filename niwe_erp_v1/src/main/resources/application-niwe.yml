@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: niwe_erp
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/niwe_erp_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: postgres
+    password: npf2020.
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Africa/Kigali
+    open-in-view: true
+
+  flyway:
+    enabled: false
+    schemas: public
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations:
+      - classpath:db/migration/common
+      - classpath:db/migration/dev
+
+  messages:
+    basename: messages
+    encoding: UTF-8
+  mail:
+    host: mail.mangatek.rw
+    port: 465
+    username: support@mangatek.rw
+    password: npf2020...
+    test-connection: false
+
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+            checkserveridentity: false
+            trust: "*"
+          allow8bitmime: true
+server:
+  servlet:
+    context-path: /niwe_erp
+  port: 9391
+  tomcat:
+    max-swallow-size: 100MB
+  compression:
+    enabled: true
+    mime-types: 
+      - application/json
+      - application/javascript
+      - text/css
+      - text/html
+      - text/xml
+      - text/plain
+logging:
+  level:
+    com.zaxxer.hikari.HikariDataSource: DEBUG
+    com.zaxxer.hikari: TRACE
+    org.springframework.web.reactive.function.client.WebClient: DEBUG
+    reactor.netty.http.client: DEBUG
+    root: INFO
+    com.niwe: DEBUG
+  file:
+    name: logs/app.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+printer:
+  ip: 192.168.1.100       # your printer IP
+  port: 9100
+  is-58mm: false          # ← set true for 58mm paper
+  has-logo: true
+  kick-drawer: true
+mangatek:
+  mail:
+    sender: support@mangatek.rw

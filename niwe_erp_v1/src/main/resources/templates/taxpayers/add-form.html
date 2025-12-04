@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.taxpayer.details}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<h2 class="pageheader-title" th:text="#{label.taxpayer.details}"></h2>
+				<div class="page-breadcrumb">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#"
+								class="breadcrumb-link"><span th:text="#{menu.settings}"></span></a></li>
+							<li class="breadcrumb-item"><a href="#"
+								th:href="@{/taxpayers/list}"> <span
+									th:text="#{label.taxpayer.list}"></span></a></li>
+							<li class="breadcrumb-item active" aria-current="page"><span
+								th:text="#{label.taxpayer.details}"></span></li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<h5 class="card-header" th:text="#{label.taxpayer.details}"></h5>
+				<div class="card-body">
+					<form style="border-radius: 0px;" th:object="${coreTaxpayer}"
+						th:action="@{/taxpayers/new}" method="post">
+						<input type="hidden" th:field="*{id}" />
+						<div class="row">
+							<!-- Column 1 -->
+							<div class="col-md-6">
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.name}" for="taxpayerName"></label>
+									<div class="col-6 col-sm-10">
+										<input type="text" class="form-control"
+											th:classappend="${#fields.hasErrors('taxpayerName')} ? 'is-invalid'"
+											th:field="*{taxpayerName}"
+											th:placeholder="#{label.general.name}" required>
+										<div class="invalid-feedback"
+											th:if="${#fields.hasErrors('taxpayerName')}">
+											<span th:errors="*{taxpayerName}"></span>
+
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.code}" for="description"></label>
+									<div class="col-6 col-sm-10">
+										<input type="text" class="form-control is-valid"
+											th:field="*{internalCode}" readonly="readonly"
+											th:placeholder="#{label.general.code}" required>
+										<div class="invalid-feedback"
+											th:if="${#fields.hasErrors('internalCode')}">
+											<span th:errors="*{internalCode}"></span>
+
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.email}" for="taxpayerEmail"></label>
+									<div class="col-6 col-sm-10">
+										<input type="email" class="form-control"
+											th:classappend="${#fields.hasErrors('taxpayerEmail')} ? 'is-invalid'"
+											th:field="*{taxpayerEmail}"
+											th:placeholder="#{label.general.email}" required>
+										<div class="invalid-feedback"
+											th:if="${#fields.hasErrors('taxpayerEmail')}">
+											<span th:errors="*{taxpayerEmail}"></span>
+
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.taxpayer.fiscalYear}" for="fiscalYear"></label>
+									<div class="col-6 col-sm-10">
+										<div th:if="${coreTaxpayer.fiscalYear == null}">
+											<select class="selectpicker" th:field="*{fiscalYear}"
+												required="required">
+												<option value="" th:text="#{label.general.select}"></option>
+												<option th:each="year : ${fiscalYears}" th:value="${year}"
+													th:text="${#messages.msg('label.taxpayer.fiscalYear.' + year)}"></option>
+											</select>
+										</div>
+										<div th:if="${coreTaxpayer.fiscalYear != null}">
+											<select class="selectpicker" th:field="*{fiscalYear}"
+												required="required" disabled="disabled">
+												<option value="" th:text="#{label.general.select}"></option>
+												<option th:each="year : ${fiscalYears}" th:value="${year}"
+													th:text="${#messages.msg('label.taxpayer.fiscalYear.' + year)}"></option>
+											</select> <input type="hidden" th:field="*{fiscalYear}" />
+										</div>
+
+										<div class="invalid-feedback"
+											th:if="${#fields.hasErrors('fiscalYear')}">
+											<span th:errors="*{fiscalYear}"></span>
+
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label text-sm-left"
+										th:text="#{menu.inventory}" for="useInventory"></label>
+									<div class="col-6 col-sm-10">
+										<div th:if="*{useInventory}">
+											<input type="checkbox" th:field="*{useInventory}"
+												disabled="disabled"
+												th:classappend="${#fields.hasErrors('useInventory')} ? 'is-invalid'">
+											<input type="hidden" th:field="*{useInventory}" />
+										</div>
+
+										<div th:unless="*{useInventory}">
+											<input type="checkbox" th:field="*{useInventory}"
+												th:classappend="${#fields.hasErrors('useInventory')} ? 'is-invalid'">
+
+										</div>
+
+										<div class="invalid-feedback"
+											th:if="${#fields.hasErrors('useInventory')}">
+											<span th:errors="*{useInventory}"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- Column 2 -->
+							<div class="col-md-6">
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.tinNumber}" for="tinNumber"></label>
+									<div class="col-6 col-sm-10">
+										<input type="text" class="form-control"
+											th:classappend="${#fields.hasErrors('tinNumber')} ? 'is-invalid'"
+											th:field="*{tinNumber}"
+											th:placeholder="#{label.general.tinNumber}" required>
+										<div class="invalid-feedback"
+											th:if="${#fields.hasErrors('tinNumber')}">
+											<span th:errors="*{tinNumber}"></span>
+
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.phone}" for="taxpayerPhoneNumber"></label>
+									<div class="col-6 col-sm-10">
+										<input type="text" class="form-control"
+											th:classappend="${#fields.hasErrors('taxpayerPhoneNumber')} ? 'is-invalid'"
+											th:field="*{taxpayerPhoneNumber}"
+											th:placeholder="#{label.general.phone}" required>
+										<div class="invalid-feedback"
+											th:if="${#fields.hasErrors('taxpayerPhoneNumber')}">
+											<span th:errors="*{taxpayerPhoneNumber}"></span>
+
+										</div>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.general.address}" for="taxpayerAddress"></label>
+									<div class="col-6 col-sm-10">
+										<input type="text" class="form-control"
+											th:classappend="${#fields.hasErrors('taxpayerAddress')} ? 'is-invalid'"
+											th:field="*{taxpayerAddress}"
+											th:placeholder="#{label.general.address}" required>
+										<div class="invalid-feedback"
+											th:if="${#fields.hasErrors('taxpayerAddress')}">
+											<span th:errors="*{taxpayerAddress}"></span>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-6 col-sm-3 col-form-label text-sm-right"></div>
+							<div class="col-12 col-sm-6 col-lg-4 pt-1">
+								<button type="submit" class="btn btn-rounded btn-success"
+									th:text="#{label.button.save}"></button>
+
+								<a href="#" th:href="@{/taxpayers/list}"
+									class="btn btn-rounded btn-danger"
+									th:text="#{label.button.back}"></a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>
