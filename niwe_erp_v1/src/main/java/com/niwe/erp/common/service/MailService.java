@@ -2,25 +2,25 @@ package com.niwe.erp.common.service;
 
 import java.io.File;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.core.io.ByteArrayResource;
+
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
-public class MailService{
+public class MailService {
 
-	@Autowired
-	private JavaMailSender javaMailSender;
+	private final JavaMailSender javaMailSender;
 	@Value("${mangatek.mail.sender}")
 	private String emailSender;
 	public void sendEmailText(String emailAddress, String subject, String message) {
@@ -56,6 +56,7 @@ public class MailService{
 		}
 
 	}
+
 	public void sendEmailsWithAttachment(String[] emailAddresses, String subject, String message) {
 		try {
 			MimeMessage msg = javaMailSender.createMimeMessage();
@@ -76,6 +77,7 @@ public class MailService{
 		}
 
 	}
+
 	public void sendEmailsText(String[] emailAddresses, String subject, String message) {
 		try {
 			SimpleMailMessage msg = new SimpleMailMessage();
