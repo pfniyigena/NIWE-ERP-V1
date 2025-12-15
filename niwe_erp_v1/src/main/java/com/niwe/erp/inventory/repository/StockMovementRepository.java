@@ -10,10 +10,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.niwe.erp.core.domain.CoreItem;
 import com.niwe.erp.inventory.domain.StockMovement;
 import com.niwe.erp.inventory.web.view.StockMovementListView;
 
 public interface StockMovementRepository extends JpaRepository<StockMovement, UUID> {
+	List<StockMovement> findByItem(CoreItem item);
 
 	List<StockMovement> findByMovementDateBetween(Instant start, Instant end);
 

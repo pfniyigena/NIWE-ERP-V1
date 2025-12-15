@@ -54,12 +54,4 @@ $(document).ready(function() {
 			modal.find('#newValue').val($(this).data('value'));
 		});
 		
-	// Modal opener for dynamically rendered links
-	$(document).on('click', '.open-update-modal', function() {
-		const modal = $('#inflowModal');
-		modal.find('#itemId').val($(this).data('id'));
-		modal.find('#warehouseId').val($(this).data('warehouse'));
-		modal.find('#itemName').val($(this).data('name'));
-		modal.find('#oldValue').val($(this).data('quantity'));
-	});
 });

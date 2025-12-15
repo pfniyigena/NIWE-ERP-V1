@@ -1,10 +1,14 @@
 package com.niwe.erp.web.config;
 
+import java.util.Locale;
+
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
@@ -16,12 +20,6 @@ import com.niwe.erp.core.service.CoreItemClassificationService;
 
 import lombok.AllArgsConstructor;
 import nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect;
-
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.util.Locale;
 
 @Configuration
 @AllArgsConstructor
@@ -65,9 +63,9 @@ public class NikaErpLocaleConfig implements WebMvcConfigurer {
 		return builder -> builder.modules(new JavaTimeModule());
 	}
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler("/**").addResourceLocations("classpath:/static/").setCachePeriod(31556926); // 1
-																												// year
-	}
+	/*
+	 * @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	 * registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
+	 * .setCachePeriod(31556926); // 1 // year }
+	 */
 }

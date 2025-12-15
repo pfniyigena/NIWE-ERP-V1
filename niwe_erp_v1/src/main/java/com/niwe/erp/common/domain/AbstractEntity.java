@@ -23,7 +23,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -44,7 +43,7 @@ public abstract class AbstractEntity implements Serializable {
 	@Id
 	@UuidGenerator
 	@Column(name = "ID", nullable = false, unique = true, updatable = false)
-	@EqualsAndHashCode.Include 
+	@EqualsAndHashCode.Include
 	private UUID id;
 
 	/**
@@ -70,12 +69,10 @@ public abstract class AbstractEntity implements Serializable {
 	@Column(name = "STATE")
 	@Enumerated(EnumType.STRING)
 	@lombok.ToString.Include
-	@Builder.Default
-	private EState state=EState.ACTIVE;
+	private EState state;
 	@JsonIgnore
 	@Version
 	public int version;
-	
 
 	/**
 	 * This constructor is required by JPA. All subclasses of this class will
@@ -83,7 +80,8 @@ public abstract class AbstractEntity implements Serializable {
 	 */
 	protected AbstractEntity() {
 		createdAt = Instant.now();
-		modifiedAt =Instant.now();
+		modifiedAt = Instant.now();
+		state = EState.ACTIVE;
 	}
 
 }

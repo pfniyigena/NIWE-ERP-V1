@@ -255,6 +255,12 @@
         <spring.profiles.active>niwe</spring.profiles.active>
       </properties>
     </profile>
+    <profile>
+      <id>honest</id>
+      <properties>
+        <spring.profiles.active>honest</spring.profiles.active>
+      </properties>
+    </profile>
 		<!-- ✅ GraalVM Native build profile -->
     <profile>
       <id>native</id>

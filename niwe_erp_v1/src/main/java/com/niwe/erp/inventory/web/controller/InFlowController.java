@@ -1,6 +1,7 @@
 package com.niwe.erp.inventory.web.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -59,6 +60,7 @@ public class InFlowController {
 		model.addAttribute("warehouseId", warehouse.getId());
 		return NikaErpInventoryUrlConstants.IN_FLOWS_LIST_PAGE;
 	}
+
 	@GetMapping("/add/inflow/table")
 	public String addInflowTable(Model model) {
 		Warehouse warehouse = warehouseService.findMain();
@@ -68,6 +70,7 @@ public class InFlowController {
 		model.addAttribute("warehouseId", warehouse.getId());
 		return NikaErpInventoryUrlConstants.IN_FLOWS_ADD_INFLOW_TABLE_PAGE;
 	}
+
 	@GetMapping("/add/outflow/table")
 	public String addOutflowTable(Model model) {
 		Warehouse warehouse = warehouseService.findMain();
@@ -77,6 +80,7 @@ public class InFlowController {
 		model.addAttribute("warehouseId", warehouse.getId());
 		return NikaErpInventoryUrlConstants.IN_FLOWS_ADD_OUTFLOW_TABLE_PAGE;
 	}
+
 	@PostMapping(value = "/list/data", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Map<String, Object> getData(@RequestBody DataTablesRequest request) {
@@ -98,9 +102,13 @@ public class InFlowController {
 
 	@PostMapping("/save")
 	public String receiveToWarehouse(@RequestParam String itemId, @RequestParam String warehouseId,
-			@RequestParam BigDecimal newValue, RedirectAttributes redirectAttributes) {
-		
-		inventoryService.receiveToWarehouse(itemId, warehouseId, newValue, "");
+			@RequestParam BigDecimal newValue, @RequestParam BigDecimal newUnitPrice,
+			@RequestParam BigDecimal newUnitCost, @RequestParam String newBarcode, @RequestParam String supplier,
+			@RequestParam String expirationDate, RedirectAttributes redirectAttributes) {
+		LocalDate date = (expirationDate == null || expirationDate.isEmpty()) ? null : LocalDate.parse(expirationDate);
+		log.info("newUnitPrice:{}", newUnitPrice);
+		inventoryService.receiveToWarehouse(itemId, warehouseId, newValue, "", newUnitPrice, newUnitCost, newBarcode,
+				supplier, date);
 		redirectAttributes.addFlashAttribute("success", "Success.");
 		return NikaErpInventoryUrlConstants.IN_FLOWS_LIST_REDITECT_URL;
 	}

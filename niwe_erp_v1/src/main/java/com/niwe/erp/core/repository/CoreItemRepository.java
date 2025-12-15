@@ -37,7 +37,7 @@ public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 			    t.taxValue
 			    )
 			    FROM CoreItem b
-			    JOIN b.tax t
+			    JOIN b.tax t where b.deleted=false
 			""")
 	List<CoreItemForm> findAllAsForm();
 
@@ -55,7 +55,7 @@ public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 			    t.taxValue
 			    )
 			    FROM CoreItem b
-			    JOIN b.tax t
+			    JOIN b.tax t WHERE b.deleted=false
 			""")
 	Page<CoreItemForm> findAllAsForm(Pageable pageable);
 
@@ -74,10 +74,11 @@ public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 			    )
 			    FROM CoreItem b
 			    JOIN b.tax t
-			    WHERE (:itemName IS NULL OR LOWER(b.itemName) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			    WHERE ((:itemName IS NULL OR LOWER(b.itemName) LIKE LOWER(CONCAT('%', :itemName, '%')))
 			       OR (:itemCode IS NULL OR LOWER(b.itemCode) LIKE LOWER(CONCAT('%', :itemCode, '%')))
 			       OR (:internalCode IS NULL OR LOWER(b.internalCode) LIKE LOWER(CONCAT('%', :internalCode, '%')))
-			       OR (:barcode IS NULL OR LOWER(b.barcode) LIKE LOWER(CONCAT('%', :barcode, '%')))
+			       OR (:barcode IS NULL OR LOWER(b.barcode) LIKE LOWER(CONCAT('%', :barcode, '%')))) AND
+			       b.deleted=false
 			""")
 	List<CoreItemForm> findAllAsFormByItemNameContainingIgnoreCaseOrItemCodeContainingIgnoreCaseOrBarcodeContainingIgnoreCase(
 			@Param("itemName") String itemName, @Param("itemCode") String itemCode,
@@ -141,7 +142,7 @@ public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 			    JOIN b.classification c
 			    JOIN b.unit u
 			    JOIN b.country p
-			    WHERE b.lastUpdated > :lastUpdated
+			    WHERE b.lastUpdated > :lastUpdated AND b.deleted=false
 			""")
 	Page<CoreItemListDTO> findByLastUpdatedAfter(@Param("lastUpdated") LocalDateTime lastUpdated, Pageable pageable);
 

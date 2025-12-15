@@ -23,6 +23,20 @@ $(document).ready(function() {
 			{ data: 'itemName' },
 			{ data: 'itemCode' },
 			{ data: 'barcode' },
+			,
+			{
+				data: "unitCost",
+				render: function(data, type, row) {
+					return `<a href="#" data-toggle="modal" 
+						                               data-target="#updatePriceModal" 
+						                               data-id="${row.itemId}" 
+						                               data-type="cost" 
+						                               data-value="${row.unitCost}"
+						                               class="text-success open-update-modal">
+						                                <span>${row.unitCost}</span>
+						                            </a>`;
+				}
+			},
 			{
 				data: "unitPrice",
 				render: function(data, type, row) {
@@ -33,19 +47,6 @@ $(document).ready(function() {
 			                               data-value="${row.unitPrice}"
 			                               class="text-success open-update-modal">
 			                                <span>${row.unitPrice}</span>
-			                            </a>`;
-				}
-			},
-			{
-				data: "unitCost",
-				render: function(data, type, row) {
-					return `<a href="#" data-toggle="modal" 
-			                               data-target="#updatePriceModal" 
-			                               data-id="${row.itemId}" 
-			                               data-type="cost" 
-			                               data-value="${row.unitCost}"
-			                               class="text-success open-update-modal">
-			                                <span>${row.unitCost}</span>
 			                            </a>`;
 				}
 			},

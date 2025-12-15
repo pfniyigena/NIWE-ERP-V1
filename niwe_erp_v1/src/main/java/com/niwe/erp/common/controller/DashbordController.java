@@ -1,4 +1,4 @@
-package com.niwe.erp.core.web.controller;
+package com.niwe.erp.common.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -8,7 +8,9 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.niwe.erp.common.util.NiweErpCommonUrlConstants;
 import com.niwe.erp.sale.domain.DailySalesSummaryPayment;
 import com.niwe.erp.sale.domain.Sale;
 import com.niwe.erp.sale.domain.TransactionType;
@@ -19,23 +21,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
+@RequestMapping(value = NiweErpCommonUrlConstants.DASHBOARDS_URL)
 @Slf4j
 @RequiredArgsConstructor
-public class LoginController {
+public class DashbordController {
 	private final DailySalesSummaryRepository dailySalesSummaryRepository;
 	private final SaleService saleService;
 	private BigDecimal cashAmount = BigDecimal.ZERO;
 	private BigDecimal momoAmount = BigDecimal.ZERO;
 	private BigDecimal vubaAmount = BigDecimal.ZERO;
-	private BigDecimal visaAmount= BigDecimal.ZERO;
+	private BigDecimal visaAmount = BigDecimal.ZERO;
 
-	@GetMapping("/")
-	public String inde(Model model) {
+	@GetMapping("/sales")
+	public String sales(Model model) {
 		log.info("---------INDEX----------------------------------");
 		cashAmount = BigDecimal.ZERO;
 		momoAmount = BigDecimal.ZERO;
 		vubaAmount = BigDecimal.ZERO;
-		visaAmount= BigDecimal.ZERO;
+		visaAmount = BigDecimal.ZERO;
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		BigDecimal totalTax = BigDecimal.ZERO;
 		BigDecimal totalSales = BigDecimal.ZERO;
@@ -90,16 +93,12 @@ public class LoginController {
 		model.addAttribute("momo", momoAmount);
 		model.addAttribute("visa", visaAmount);
 		model.addAttribute("vuba", vubaAmount);
-		return "index";
+		return NiweErpCommonUrlConstants.DASHBOARDS_SALE_PAGE;
 	}
 
-	@GetMapping("/login")
-	public String login() {
-		return "login";
+	@GetMapping("/inventory")
+	public String inventory(Model model) {
+		return NiweErpCommonUrlConstants.DASHBOARDS_INVENTORY_PAGE;
 	}
 
-	@GetMapping("/v2")
-	public String index() {
-		return "index-2";
-	}
 }

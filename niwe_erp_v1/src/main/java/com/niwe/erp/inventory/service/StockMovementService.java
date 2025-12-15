@@ -2,6 +2,7 @@ package com.niwe.erp.inventory.service;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -69,7 +70,7 @@ public class StockMovementService {
 
 	@Transactional
 	public StockMovement logReceive(Warehouse warehouse, CoreItem item, BigDecimal qty, String reference,
-			MovementType movementType) {
+			MovementType movementType, LocalDate expirationDate) {
 
 		BigDecimal prevWh = warehouseStockService.getQuantity(warehouse.getId(), item.getId());
 		BigDecimal newWh = prevWh.add(qty);
@@ -80,7 +81,7 @@ public class StockMovementService {
 		StockMovement sm = StockMovement.builder().item(item).fromWarehouse(null)
 				.toWarehouse(Warehouse.builder().id(warehouse.getId()).build()).movedQuantity(qty)
 				.movementType(movementType).previousWarehouseQuantity(prevWh).currentWarehouseQuantity(newWh)
-				.movementDate(Instant.now()).reference(reference).build();
+				.movementDate(Instant.now()).reference(reference).expirationDate(expirationDate).build();
 		return stockMovementRepository.save(sm);
 	}
 
@@ -203,4 +204,12 @@ public class StockMovementService {
 		return lastMovement;
 	}
 
+	public List<StockMovement> findByItem(CoreItem item) {
+		return stockMovementRepository.findByItem(item);
+	}
+
+	public void deleteStockMovement(StockMovement stockMovement) {
+		stockMovementRepository.delete(stockMovement);
+
+	}
 }

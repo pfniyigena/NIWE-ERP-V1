@@ -21,10 +21,13 @@ import jakarta.persistence.LockModeType;
 
 public interface LocationStockRepository extends JpaRepository<LocationStock, UUID> {
 	Optional<LocationStock> findByLocationAndItem(InventoryLocation location, CoreItem item);
+
 	Optional<LocationStock> findByLocationIdAndItemId(UUID locationId, UUID itemId);
+
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("select ls from LocationStock ls where ls.location.id = :locationId and ls.item.id = :itemId")
 	Optional<LocationStock> findByLocationAndItemForUpdate(UUID locationId, UUID itemId);
+
 	@Query("""
 			    SELECT ls
 			    FROM LocationStock ls
@@ -34,6 +37,7 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			    ORDER BY ls.modifiedAt ASC
 			""")
 	List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId);
+
 	@Query("""
 			SELECT ls FROM LocationStock ls
 			WHERE ls.item.id = :itemId
@@ -42,8 +46,10 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			ORDER BY ls.createdAt DESC
 			""")
 	List<LocationStock> findAvailableByWarehouseAndItem(UUID warehouseId, UUID itemId);
+
 	@Query("SELECT s FROM LocationStock s WHERE s.item.id = :itemId")
 	List<LocationStock> findByItemId(@Param("itemId") UUID itemId);
+
 	@Query(value = """
 			SELECT
 			    p.id AS itemId,
@@ -58,10 +64,11 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			FROM core_item p
 			LEFT JOIN inventory_location_stock ls
 			    ON ls.item_id = p.id
-			    WHERE (:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
 			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
 			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
-			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND p.deleted=false
 
 			ORDER BY p.item_name ASC
 			""", countQuery = """
@@ -69,10 +76,11 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			     FROM core_item p
 			LEFT JOIN inventory_location_stock ls
 			    ON ws.item_id = p.id
-			    WHERE (:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			    WHERE ( (:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
 			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
 			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
-			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND p.deleted=false
 			     """, nativeQuery = true)
 
 	Page<OutflowItemListView> findAllItemsWithLocationStock(String itemName, String itemCode, String internalCode,
@@ -99,7 +107,7 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			LEFT JOIN inventory_location_stock ls
 			    ON ls.item_id = ci.id
 			   AND ls.location_id = loc.id
-			WHERE wh.id = :warehouseId
+			WHERE wh.id = :warehouseId AND ci.deleted=false
 			  AND (
 			        :search IS NULL
 			     OR LOWER(ci.item_name)     LIKE LOWER(CONCAT('%', :search, '%'))
@@ -114,7 +122,7 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			JOIN inventory_warehouse wh ON loc.warehouse_id = wh.id
 			LEFT JOIN inventory_location_stock ls
 			    ON ls.item_id = ci.id AND ls.location_id = loc.id
-			WHERE wh.id = :warehouseId
+			WHERE wh.id = :warehouseId AND ci.deleted=false
 			  AND (:search IS NULL
 			    OR LOWER(ci.item_name)     LIKE LOWER(CONCAT('%', :search, '%'))
 			    OR LOWER(ci.internal_code) LIKE LOWER(CONCAT('%', :search, '%'))

@@ -21,16 +21,7 @@
 						<form th:action="@{/items/filter}" method="get"
 							class="form-inline align-items-center mr-2">
 							<div class="input-group input-group-sm">
-								<input type="text" name="searchTerm" th:value="${searchTerm}"
-									class="form-control form-control-sm"
-									placeholder="Search by name, code, or barcode"
-									style="width: 280px !important; min-width: 200px; max-width: 400px; flex: none !important;" />
 								<div class="input-group-append">
-									<button type="submit" class="btn btn-primary btn-sm"
-										style="height: 32px; width: 32px; padding: 0;"
-										th:title="#{label.button.search}">
-										<i class="fa fa-search"></i>
-									</button>
 									<a th:href="@{/items/list}" class="btn btn-secondary btn-sm"
 										th:title="#{label.button.reset}"> <span
 										class="fa fa-times"></span>
@@ -59,8 +50,8 @@
 									<th th:text="#{label.general.name}"></th>
 									<th th:text="#{label.general.code}"></th>
 									<th th:text="#{label.general.barcode}"></th>
-									<th th:text="#{label.general.sale.price}"></th>
 									<th th:text="#{label.general.purchase.price}"></th>
+									<th th:text="#{label.general.sale.price}"></th>
 									<th th:text="#{label.general.tax}"></th>
 									<th th:text="#{label.button.actions}"></th>
 								</tr>

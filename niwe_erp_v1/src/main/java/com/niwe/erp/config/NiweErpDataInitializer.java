@@ -41,6 +41,8 @@ public class NiweErpDataInitializer implements ApplicationRunner {
 
 	private static final List<String> CRUD_ACTIONS = List.of("CREATE", "READ", "UPDATE", "DELETE");
 	private static final String ROLE_ADMIN = "ROLE_ADMIN";
+	private static final String ROLE_STOCK = "ROLE_STOCK";
+	private static final String ROLE_SALES = "ROLE_SALES";
 	private static final String ROLE_USER = "ROLE_USER";
 
 	@Override
@@ -86,6 +88,10 @@ public class NiweErpDataInitializer implements ApplicationRunner {
 				.save(CoreRole.builder().name(ROLE_ADMIN).description(ROLE_ADMIN).permissions(adminPerms).build()));
 		CoreRole user = roleRepository.findByName(ROLE_USER).orElseGet(() -> roleRepository
 				.save(CoreRole.builder().name(ROLE_USER).description(ROLE_USER).permissions(userPerms).build()));
+		CoreRole stock = roleRepository.findByName(ROLE_STOCK).orElseGet(() -> roleRepository
+				.save(CoreRole.builder().name(ROLE_STOCK).description(ROLE_STOCK).permissions(userPerms).build()));
+		CoreRole sales = roleRepository.findByName(ROLE_SALES).orElseGet(() -> roleRepository
+				.save(CoreRole.builder().name(ROLE_SALES).description(ROLE_SALES).permissions(userPerms).build()));
 
 		if (coreUserRepository.findByUsername("admin").isEmpty()) {
 			CoreUser u = new CoreUser();
@@ -120,10 +126,34 @@ public class NiweErpDataInitializer implements ApplicationRunner {
 			roleRepository.findByName("ROLE_USER").ifPresent(r -> u.setRole(r));
 			coreUserRepository.save(u);
 		}
+		if (coreUserRepository.findByUsername("stock").isEmpty()) {
+			CoreUser u = new CoreUser();
+			u.setUsername("stock");
+			u.setEmail("stock2020@gmail.com");
+			u.setPassword(new BCryptPasswordEncoder().encode("stock"));
+			u.setFullname("Stock User");
+			u.setEnabled(true);
+			u.setTaxpayer(coreTaxpayer);
+			roleRepository.findByName("ROLE_STOCK").ifPresent(r -> u.setRole(r));
+			coreUserRepository.save(u);
+		}
+		if (coreUserRepository.findByUsername("sales").isEmpty()) {
+			CoreUser u = new CoreUser();
+			u.setUsername("sales");
+			u.setEmail("sales2020@gmail.com");
+			u.setPassword(new BCryptPasswordEncoder().encode("sales"));
+			u.setFullname("Sales User");
+			u.setEnabled(true);
+			u.setTaxpayer(coreTaxpayer);
+			roleRepository.findByName("ROLE_SALES").ifPresent(r -> u.setRole(r));
+			coreUserRepository.save(u);
+		}
 		// Log summary
 		log.info("Seeded {} permissions.", permissionMap.size());
 		log.info("Role {} has {} permissions.", ROLE_ADMIN, admin.getPermissions().size());
 		log.info("Role {} has {} permissions.", ROLE_USER, user.getPermissions().size());
+		log.info("Role {} has {} permissions.", ROLE_STOCK, stock.getPermissions().size());
+		log.info("Role {} has {} permissions.", ROLE_SALES, sales.getPermissions().size());
 
 	}
 }

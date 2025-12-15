@@ -57,6 +57,11 @@ public class NiweErpCoreUrlConstants {
 	
 	public static final String ITEMS_ADD_FORM_PAGE = "items/add-form";
 	/**
+	 * The ITEMS_ADD_ITEM_TABLE_PAGE
+	 */
+	
+	public static final String ITEMS_ADD_ITEM_TABLE_PAGE = "items/add-item-table";
+	/**
 	 * The ITEMS_LIST_REDITECT_URL
 	 */
 	public static final String ITEMS_LIST_REDITECT_URL = "redirect:/items/list";
@@ -65,6 +70,12 @@ public class NiweErpCoreUrlConstants {
 	 * The ITEMS_LIST_V2_REDITECT_URL
 	 */
 	public static final String ITEMS_LIST_V2_REDITECT_URL = "redirect:/items/list/v2";
+	
+	
+	/**
+	 * The ITEMS_ADD_ITEM_TABLE_REDITECT_URL
+	 */
+	public static final String ITEMS_ADD_ITEM_TABLE_REDITECT_URL = "redirect:/items/add/item/table";
 	/**
 	 * The ITEMS_VIEW_FORM_PAGE
 	 */

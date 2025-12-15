@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,8 +28,11 @@ import com.niwe.erp.core.service.CoreItemNatureService;
 import com.niwe.erp.core.service.CoreItemService;
 import com.niwe.erp.core.service.CoreQuantityUnitService;
 import com.niwe.erp.core.service.CoreTaxpayerService;
-import com.niwe.erp.core.util.annotation.CanManageItems;
 import com.niwe.erp.core.web.util.NiweErpCoreUrlConstants;
+import com.niwe.erp.inventory.domain.InventoryLocation;
+import com.niwe.erp.inventory.domain.Warehouse;
+import com.niwe.erp.inventory.service.LocationService;
+import com.niwe.erp.inventory.service.WarehouseService;
 import com.niwe.erp.invoicing.service.TaxTypeService;
 
 import lombok.AllArgsConstructor;
@@ -41,6 +43,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = NiweErpCoreUrlConstants.ITEMS_URL)
 @AllArgsConstructor
 public class CoreItemController {
+	private final WarehouseService warehouseService;
+	private final LocationService locationService;
 	private final CoreItemService coreItemService;
 	private final CoreCountryService coreCountryService;
 	private final CoreItemClassificationService coreItemClassificationService;
@@ -60,7 +64,7 @@ public class CoreItemController {
 		return NiweErpCoreUrlConstants.ITEMS_LIST_PAGE;
 	}
 
-	@CanManageItems
+	// @CanManageItems
 	@GetMapping(path = "/new")
 	public String newItem(Model model) {
 		model.addAttribute("item", CoreItem.builder().build());
@@ -68,12 +72,25 @@ public class CoreItemController {
 		return NiweErpCoreUrlConstants.ITEMS_ADD_FORM_PAGE;
 	}
 
-	@PreAuthorize("hasAnyAuthority('COREITEM_CREATE', 'COREITEM_UPDATE')")
+	// @CanManageItems
+	@GetMapping(path = "/add/item/table")
+	public String newAddItemTable(Model model) {
+		Warehouse warehouse = warehouseService.findMain();
+		List<InventoryLocation> stands = locationService.findByWarehouseId(warehouse.getId());
+		model.addAttribute("stands", stands);
+		model.addAttribute("warehouse", warehouse);
+		model.addAttribute("warehouseId", warehouse.getId());
+		return NiweErpCoreUrlConstants.ITEMS_ADD_ITEM_TABLE_PAGE;
+	}
+
+	// @PreAuthorize("hasAnyAuthority('COREITEM_CREATE', 'COREITEM_UPDATE')")
 	@PostMapping(path = "/new")
-	public String saveItem(CoreItem item, RedirectAttributes redirectAttrs, BindingResult bindingResult, Model model) {
+	public String saveItem(CoreItem item, RedirectAttributes redirectAttributes, BindingResult bindingResult,
+			Model model) {
 		log.debug(String.format("------calling saveItem:{%s}", item));
 		coreItemService.save(item);
-		return NiweErpCoreUrlConstants.ITEMS_LIST_REDITECT_URL;
+		redirectAttributes.addFlashAttribute("success", "Success.");
+		return NiweErpCoreUrlConstants.ITEMS_ADD_ITEM_TABLE_REDITECT_URL;
 	}
 
 	@GetMapping(path = "/update/{id}")
@@ -88,10 +105,17 @@ public class CoreItemController {
 	@GetMapping(path = "/view/{id}")
 	public String viewItemInfo(@PathVariable String id, Model model) {
 		CoreItem item = coreItemService.findById(id);
-
 		model.addAttribute("item", item);
 		setData(model);
 		return NiweErpCoreUrlConstants.ITEMS_VIEW_FORM_PAGE;
+	}
+
+	@PostMapping("/delete")
+	public String deleteItem(@RequestParam String itemId, RedirectAttributes redirectAttributes) {
+		log.info("----deleteItem id:{}", itemId);
+		coreItemService.deleteItemById(itemId);
+		redirectAttributes.addFlashAttribute("success", "Delete Success.");
+		return NiweErpCoreUrlConstants.ITEMS_ADD_ITEM_TABLE_REDITECT_URL;
 	}
 
 	@GetMapping(path = "/duplicate/{id}")
@@ -142,8 +166,8 @@ public class CoreItemController {
 			@RequestParam BigDecimal value, RedirectAttributes redirectAttributes) {
 		log.info("----Price update id:{},type:{},value:{}", itemId, type, value);
 		coreItemService.updateUnitPriceOrUnitCost(itemId, type, value);
-		redirectAttributes.addFlashAttribute("success", "Success.");
-		return NiweErpCoreUrlConstants.ITEMS_LIST_REDITECT_URL;
+		redirectAttributes.addFlashAttribute("success", "Update Success");
+		return NiweErpCoreUrlConstants.ITEMS_ADD_ITEM_TABLE_REDITECT_URL;
 	}
 
 	@GetMapping("/list")

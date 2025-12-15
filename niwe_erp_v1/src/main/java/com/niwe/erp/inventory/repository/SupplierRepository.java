@@ -10,5 +10,6 @@ import com.niwe.erp.inventory.domain.Supplier;
 public interface SupplierRepository extends JpaRepository<Supplier, UUID> {
 
 	Optional<Supplier> findBySupplierTin(String supplierTin);
+	Optional<Supplier> findBySupplierNameContainingIgnoreCase(String supplierName);
 
 }

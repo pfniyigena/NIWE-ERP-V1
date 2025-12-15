@@ -40,7 +40,7 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			        SUM(ws.quantity) AS totalQuantity,
 			        i.unitCost AS unitCost
 			    FROM WarehouseStock ws
-			    JOIN ws.item i
+			    JOIN ws.item i WHERE i.deleted=false
 			    GROUP BY i.id, i.itemCode, i.itemName, i.unitCost
 			""")
 	List<StockValuationProjection> findValuationSummary();
@@ -53,7 +53,7 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			    SUM(ws.totalquantity) AS totalQuantity,
 			    i.unit_cost AS unitCost
 			FROM mv_stock_valuation ws
-			JOIN core_item i ON i.id = ws.itemid
+			JOIN core_item i ON i.id = ws.itemid where i.deleted=false
 			GROUP BY i.id, i.item_code, i.item_name, i.unit_cost
 			ORDER BY i.item_name
 			""", nativeQuery = true)
@@ -71,7 +71,7 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			    i.unitCost * SUM(s.quantity)
 			)
 			FROM WarehouseStock s
-			JOIN s.item i
+			JOIN s.item i where i.deleted=false
 			GROUP BY i.id, i.itemCode, i.itemName, i.unitCost
 			""")
 	Page<ProductStockValuationDto> aggregateStockValuation(Pageable pageable);
@@ -88,8 +88,9 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			)
 			FROM WarehouseStock s
 			JOIN s.item i
-			WHERE (:name IS NULL OR LOWER(i.itemName) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%')))
-			OR (:code IS NULL OR LOWER(i.itemCode) LIKE LOWER(CONCAT('%', CAST(:code AS string), '%')))
+			WHERE ((:name IS NULL OR LOWER(i.itemName) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%')))
+			OR (:code IS NULL OR LOWER(i.itemCode) LIKE LOWER(CONCAT('%', CAST(:code AS string), '%'))))
+			AND i.deleted=false
 			GROUP BY i.id, i.itemCode, i.itemName, i.unitCost
 			""")
 	Page<ProductStockValuationDto> aggregateStockValuation(@Param("name") String name, @Param("code") String code,
@@ -113,10 +114,11 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			LEFT JOIN inventory_warehouse_stock ws
 			    ON ws.item_id = p.id
 			    AND ws.warehouse_id = :warehouseId
-			    WHERE (:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
 			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
 			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
-			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND p.deleted=false
 
 			ORDER BY p.item_name ASC
 			""", countQuery = """
@@ -125,10 +127,11 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			LEFT JOIN inventory_warehouse_stock ws
 			    ON ws.item_id = p.id
 			    AND ws.warehouse_id = :warehouseId
-			    WHERE (:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
 			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
 			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
-			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND p.deleted=false
 			     """, nativeQuery = true)
 
 	Page<InflowItemListView> findAllItemsWithWarehouseStock(UUID warehouseId, String itemName, String itemCode,

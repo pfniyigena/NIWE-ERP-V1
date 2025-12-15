@@ -2,6 +2,7 @@ package com.niwe.erp.inventory.domain;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 import com.niwe.erp.common.domain.AbstractEntity;
 import com.niwe.erp.core.domain.CoreItem;
@@ -123,4 +124,9 @@ public class StockMovement extends AbstractEntity {
 	@Column(name = "CURRENT_LOCATION_QUANTITY")
 	@Builder.Default
 	private BigDecimal currentLocationQuantity=BigDecimal.ZERO;
+	/**
+	 * The expirationDate
+	 */
+	@Column(name = "EXPIRATION_DATE")
+	private LocalDate expirationDate;
 }

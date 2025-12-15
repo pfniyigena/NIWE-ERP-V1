@@ -34,8 +34,8 @@
 									<th th:text="#{label.general.name}"></th>
 									<th th:text="#{label.general.code}"></th>
 									<th th:text="#{label.general.barcode}"></th>
-									<th th:text="#{label.general.sale.price}"></th>
 									<th th:text="#{label.general.purchase.price}"></th>
+									<th th:text="#{label.general.sale.price}"></th>									
 									<th th:text="#{label.general.quantity}"></th>
 									<th th:text="#{label.button.actions}"></th>
 								</tr>
@@ -91,7 +91,7 @@
 	<!-- ============================================================== -->
 	<!-- start inflow modal  -->
 	<!-- ============================================================== -->
-	<div class="modal fade" id="inflowModal" tabindex="-1" role="dialog">
+	<div class="modal fade" id="inflowModalList" tabindex="-1" role="dialog">
 		<div class="modal-dialog modal-sm" role="document">
 			<div class="modal-content">
 				<form th:action="@{/inflows/save}" method="post">

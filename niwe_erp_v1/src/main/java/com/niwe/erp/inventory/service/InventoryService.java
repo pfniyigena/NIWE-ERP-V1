@@ -1,17 +1,22 @@
 package com.niwe.erp.inventory.service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.niwe.erp.common.exception.ResourceNotFoundException;
+import com.niwe.erp.common.service.SequenceNumberService;
 import com.niwe.erp.core.domain.CoreItem;
 import com.niwe.erp.core.repository.CoreItemRepository;
 import com.niwe.erp.inventory.domain.InventoryLocation;
 import com.niwe.erp.inventory.domain.MovementType;
+import com.niwe.erp.inventory.domain.Supplier;
 import com.niwe.erp.inventory.domain.Warehouse;
+import com.niwe.erp.inventory.repository.SupplierRepository;
 import com.niwe.erp.inventory.repository.WarehouseRepository;
 
 import lombok.AllArgsConstructor;
@@ -25,14 +30,30 @@ public class InventoryService {
 	private final WarehouseRepository warehouseRepository;
 	private final LocationService locationService;
 	private final StockMovementService movementService;
+	private final SupplierRepository supplierRepository;
+	private final SequenceNumberService sequenceNumberService;
 
 	@Transactional
-	public void receiveToWarehouse(String itemId, String warehouseId, BigDecimal qty, String reference) {
+	public void receiveToWarehouse(String itemId, String warehouseId, BigDecimal qty, String reference,
+			BigDecimal newUnitPrice, BigDecimal newUnitCost, String newBarcode, String supplier,
+			LocalDate expirationDate) {
 		CoreItem item = coreItemRepository.findById(UUID.fromString(itemId))
 				.orElseThrow(() -> new ResourceNotFoundException("Item not found" + itemId));
 		Warehouse warehouse = warehouseRepository.findById(UUID.fromString(warehouseId))
 				.orElseThrow(() -> new ResourceNotFoundException("Warehouse not found " + warehouseId));
-		movementService.logReceive(warehouse, item, qty, reference, MovementType.GOOD_RECEIVED_NOTE);
+		movementService.logReceive(warehouse, item, qty, reference, MovementType.GOOD_RECEIVED_NOTE, expirationDate);
+		item.setUnitPrice(newUnitPrice);
+		item.setUnitCost(newUnitCost);
+		item.setBarcode(newBarcode);
+		item.setLastUpdated(LocalDateTime.now());
+		item.setExpirationDate(expirationDate);
+		coreItemRepository.save(item);
+		if (supplier != null && !supplier.isEmpty()) {
+			Supplier sup = supplierRepository.findBySupplierNameContainingIgnoreCase(supplier)
+					.orElseGet(() -> Supplier.builder().internalCode(sequenceNumberService.getNextSupplierCode())
+							.supplierName(supplier).supplierTin(supplier).supplierPhone(supplier).build());
+			supplierRepository.save(sup);
+		}
 	}
 
 	/**

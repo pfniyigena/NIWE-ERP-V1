@@ -29,8 +29,8 @@
 									<th th:text="#{label.general.name}"></th>
 									<th th:text="#{label.general.code}"></th>
 									<th th:text="#{label.general.barcode}"></th>
-									<th th:text="#{label.general.sale.price}"></th>
 									<th th:text="#{label.general.purchase.price}"></th>
+									<th th:text="#{label.general.sale.price}"></th>
 									<th th:text="#{label.general.quantity}"></th>
 									<th th:text="#{label.button.actions}"></th>
 								</tr>
@@ -116,13 +116,14 @@
 						</div>
 						<div class="form-group">
 							<label for="supplier" th:text="#{label.general.supplier}"></label>
-							<input type="text"  id="supplier"
-								name="supplier" class="form-control" required>
+							<input type="text" id="supplier" name="supplier"
+								class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label for="expirationDate" th:text="#{label.general.expire.date}"></label>
-							<input type="date"  id="supplier"
-								name="expirationDate" class="form-control" required>
+							<label for="expirationDate"
+								th:text="#{label.general.expire.date}"></label> <input
+								type="date" id="supplier" name="expirationDate"
+								class="form-control" required>
 						</div>
 					</div>
 
@@ -170,9 +171,9 @@
 								name="newValue" class="form-control" required>
 						</div>
 						<div class="form-group">
-							<label for="stand" th:text="#{label.general.stand}"></label>
-							<select class="form-control selectpicker" id="locationId" name="locationId" 
-								required="required">
+							<label for="stand" th:text="#{label.general.stand}"></label> <select
+								class="form-control selectpicker" id="locationId"
+								name="locationId" required="required">
 								<option value="" th:text="#{label.general.select}"></option>
 								<option th:each="it : ${stands}" th:value="${it.id}"
 									th:text="${it.locationCode}+'-'+${it.locationName}+'-'+${it.managerName}"></option>

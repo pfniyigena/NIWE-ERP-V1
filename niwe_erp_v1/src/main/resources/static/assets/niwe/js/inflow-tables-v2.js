@@ -29,6 +29,20 @@ $(document).ready(function() {
 			{ data: 'itemCode' },
 			{ data: 'barcode' },
 			{
+				data: "unitCost",
+				render: function(data, type, row) {
+					return `<a href="#" data-toggle="modal" 
+									                               data-target="#updatePriceModal" 
+									                               data-id="${row.itemId}" 
+									                               data-type="cost" 
+									                               data-value="${row.unitCost}"
+									                               class="btn btn-primary open-update-modal"
+																   title="${labelUpdateCost}">
+									                                <span>${row.unitCost}</span>
+									                            </a>`;
+				}
+			},
+			{
 				data: "unitPrice",
 				render: function(data, type, row) {
 					return `<a href="#" data-toggle="modal" 
@@ -42,20 +56,7 @@ $(document).ready(function() {
 						                            </a>`;
 				}
 			},
-			{
-				data: "unitCost",
-				render: function(data, type, row) {
-					return `<a href="#" data-toggle="modal" 
-						                               data-target="#updatePriceModal" 
-						                               data-id="${row.itemId}" 
-						                               data-type="cost" 
-						                               data-value="${row.unitCost}"
-						                               class="btn btn-primary open-update-modal"
-													   title="${labelUpdateCost}">
-						                                <span>${row.unitCost}</span>
-						                            </a>`;
-				}
-			},
+
 			{
 				data: "quantity",
 				render: function(data, type, row) {
@@ -101,14 +102,6 @@ $(document).ready(function() {
 		modal.find('#newValue').val($(this).data('value'));
 	});
 
-	// Modal opener for dynamically rendered links
-	$(document).on('click', '.open-update-modal', function() {
-		const modal = $('#inflowModal');
-		modal.find('#itemId').val($(this).data('id'));
-		modal.find('#warehouseId').val($(this).data('warehouse'));
-		modal.find('#itemName').val($(this).data('name'));
-		modal.find('#oldValue').val($(this).data('quantity'));
-	});
 	// Modal opener for dynamically rendered links
 	$(document).on('click', '.open-update-modal', function() {
 		const modal = $('#outflowModal');

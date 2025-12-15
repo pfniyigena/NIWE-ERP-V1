@@ -1,8 +1,5 @@
 $(document).ready(function() {
-	let labelUpdateSale = document.getElementById("lblUpdateSale").textContent;
-	let labelUpdateCost = document.getElementById("lblUpdateCost").textContent;
 	let labelInflow = document.getElementById("lblInflow").textContent;
-	let labelOutflow = document.getElementById("lblOutflow").textContent;
 	let labelView = document.getElementById("lblView").textContent;
 	$('#inflowsTable').DataTable({
 		processing: true,
@@ -28,8 +25,8 @@ $(document).ready(function() {
 			{ data: 'itemName' },
 			{ data: 'itemCode' },
 			{ data: 'barcode' },
-			{ data: 'unitPrice' },
 			{ data: 'unitCost' },
+			{ data: 'unitPrice' },
 			{ data: 'quantity' },
 			{
 				data: 'itemId',
@@ -37,7 +34,7 @@ $(document).ready(function() {
 				render: function(data, type, row) {
 					return `<div class="input-group-append">
 					        <a href="#" data-toggle="modal" data-target="#inflowModal" data-id="${row.itemId}" data-name="${row.itemName}"
-							data-quantity="${row.quantity}" data-warehouse="${row.warehouseId}" class="btn btn-danger open-update-modal" title="${labelInflow}">
+							data-quantity="${row.quantity}" data-price="${row.unitPrice}" data-barcode="${row.barcode}" data-purchase="${row.unitCost}" data-warehouse="${row.warehouseId}" class="btn btn-danger open-update-modal" title="${labelInflow}">
 							<i class="fas fa-calendar-plus"></i></a>	
 							<a href="${BASE_URL}inflows/view/${row.itemId}/${row.warehouseId}" class="btn btn-success" title="${labelView}"><i class="fa fa-eye"></i></a>
 							</div>`;
@@ -51,26 +48,14 @@ $(document).ready(function() {
 	});
 	// Modal opener for dynamically rendered links
 	$(document).on('click', '.open-update-modal', function() {
-		const modal = $('#updatePriceModal');
-		modal.find('#itemId').val($(this).data('id'));
-		modal.find('#updateType').val($(this).data('type'));
-		modal.find('#newValue').val($(this).data('value'));
-	});
-
-	// Modal opener for dynamically rendered links
-	$(document).on('click', '.open-update-modal', function() {
 		const modal = $('#inflowModal');
 		modal.find('#itemId').val($(this).data('id'));
 		modal.find('#warehouseId').val($(this).data('warehouse'));
 		modal.find('#itemName').val($(this).data('name'));
 		modal.find('#oldValue').val($(this).data('quantity'));
-	});
-	// Modal opener for dynamically rendered links
-	$(document).on('click', '.open-update-modal', function() {
-		const modal = $('#outflowModal');
-		modal.find('#itemId').val($(this).data('id'));
-		modal.find('#warehouseId').val($(this).data('warehouse'));
-		modal.find('#itemName').val($(this).data('name'));
-		modal.find('#oldValue').val($(this).data('quantity'));
+		modal.find('#newUnitPrice').val($(this).data('price'));
+		modal.find('#newUnitCost').val($(this).data('purchase'));
+		modal.find('#newBarcode').val($(this).data('barcode'));
+		
 	});
 });

@@ -1,5 +1,6 @@
 package com.niwe.erp.core.web.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,6 +43,7 @@ public class UserController {
 		return NiweErpCoreUrlConstants.USERS_ADD_FORM_PAGE;
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(path = "/new")
 	public String saveUser(@Valid @ModelAttribute CoreUser user, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes, Model model) {

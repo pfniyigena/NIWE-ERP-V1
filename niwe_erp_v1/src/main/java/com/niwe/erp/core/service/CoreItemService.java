@@ -1,6 +1,7 @@
 package com.niwe.erp.core.service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,7 @@ public class CoreItemService {
 	private final TaxTypeRepository taxTypeRepository;
 	private final WarehouseRepository warehouseRepository;
 	private final StockMovementService stockMovementService;
+	private final AuditService auditService;
 
 	public List<CoreItemForm> findAllAsForm() {
 		return coreItemRepository.findAllAsForm();
@@ -111,12 +113,12 @@ public class CoreItemService {
 			saved.setItemCode(item.getItemCode());
 			saved.setUnitPrice(item.getUnitPrice());
 			saved.setUnitCost(item.getUnitCost());
-			saved.setCountry(item.getCountry());
-			saved.setClassification(item.getClassification());
+			saved.setCountry(coreCountryRepository.findByIsDefault(true).get(0));
+			saved.setClassification(coreItemClassificationRepository.findByIsDefault(true).get(0));
 			saved.setBrand(item.getBrand());
 			saved.setCategory(item.getCategory());
-			saved.setUnit(item.getUnit());
-			saved.setNature(item.getNature());
+			saved.setUnit(coreQuantityUnitRepository.findByIsDefault(true).get(0));
+			saved.setNature(coreItemNatureService.findByIsDefault(true).get(0));
 			saved.setTax(item.getTax());
 			saved.setTaxpayer(item.getTaxpayer());
 			saved.setInternalCode(item.getInternalCode());
@@ -124,7 +126,12 @@ public class CoreItemService {
 			saved.setTaxpayer(coreUserService.getCurrentUserEntity().getTaxpayer());
 		} else {
 			item.setTaxpayer(coreUserService.getCurrentUserEntity().getTaxpayer());
+
 			saved = item;
+			saved.setUnit(coreQuantityUnitRepository.findByIsDefault(true).get(0));
+			saved.setNature(coreItemNatureService.findByIsDefault(true).get(0));
+			saved.setCountry(coreCountryRepository.findByIsDefault(true).get(0));
+			saved.setClassification(coreItemClassificationRepository.findByIsDefault(true).get(0));
 
 		}
 		coreItemRepository.save(saved);
@@ -137,7 +144,7 @@ public class CoreItemService {
 
 		for (Warehouse warehouse : warehouseRepository.findAll()) {
 			stockMovementService.logReceive(warehouse, saved, saved.getQuanityInitial(), saved.getInternalCode(),
-					MovementType.STOCK_INITIAL);
+					MovementType.STOCK_INITIAL, null);
 		}
 
 	}
@@ -234,7 +241,7 @@ public class CoreItemService {
 	private void logMovement(Warehouse defaultWarehouse, List<CoreItem> enrichedProducts) {
 		enrichedProducts.forEach((n) -> {
 			stockMovementService.logReceive(defaultWarehouse, n, n.getQuanityInitial(), n.getInternalCode(),
-					MovementType.STOCK_INITIAL);
+					MovementType.STOCK_INITIAL, null);
 
 		});
 
@@ -304,5 +311,15 @@ public class CoreItemService {
 
 	public long countAll() {
 		return coreItemRepository.count();
+	}
+
+	@Transactional
+	public void deleteItemById(String itemId) {
+		CoreItem item = findById(itemId);
+		auditService.logDelete("CoreItem", item.getId(), item, coreUserService.getCurrentUserEntity().getUsername());
+		item.setDeleted(true);
+		item.setDeletedBy(coreUserService.getCurrentUserEntity().getUsername());
+		item.setDeletedAt(Instant.now());
+
 	}
 }

@@ -29,7 +29,6 @@ public class SupplierController {
 
 	@GetMapping(path = "/list")
 	public String listSuppliers(Model model) {
-
 		List<Supplier> list = supplierService.findAll();
 		log.debug("--------------Calling listSuppliers-------------------" + list.size());
 		model.addAttribute("lists", list);

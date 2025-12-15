@@ -1,7 +1,11 @@
 package com.niwe.erp.core.domain;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.hibernate.annotations.SQLRestriction;
 
 import com.niwe.erp.common.domain.AbstractEntity;
 import com.niwe.erp.invoicing.domain.TaxType;
@@ -27,6 +31,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @Entity
 @Table(name = "CORE_ITEM")
+@SQLRestriction("deleted = false")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -150,9 +155,24 @@ public class CoreItem extends AbstractEntity {
 	 */
 	@Column(name = "LAST_UPDATED")
 	private LocalDateTime lastUpdated;
+	/**
+	 * The expirationDate
+	 */
+	@Column(name = "EXPIRATION_DATE")
+	private LocalDate expirationDate;
+	/**
+	 * The stockLevel
+	 */
 	@Column(name = "STOCK_LEVEL")
 	@Builder.Default
 	private Integer stockLevel = 0;
+	@Column(name = "DELETED", nullable = false)
+	@Builder.Default
+	private boolean deleted = false;
+	@Column(name = "DELETED_AT")
+	private Instant deletedAt;
+	@Column(name = "DELETED_BY")
+	private String deletedBy;
 
 	// Copy constructor
 	public CoreItem(CoreItem copy) {

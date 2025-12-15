@@ -28,8 +28,8 @@ $(document).ready(function() {
 			{ data: 'itemName' },
 			{ data: 'itemCode' },
 			{ data: 'barcode' },
-			{ data: 'unitPrice' },
 			{ data: 'unitCost' },
+			{ data: 'unitPrice' },
 			{ data: 'quantity' },
 			{
 				data: 'itemId',
@@ -56,18 +56,11 @@ $(document).ready(function() {
 
 	// Modal opener for dynamically rendered links
 	$(document).on('click', '.open-update-modal', function() {
-		const modal = $('#inflowModal');
+		const modal = $('#inflowModalList');
 		modal.find('#itemId').val($(this).data('id'));
 		modal.find('#warehouseId').val($(this).data('warehouse'));
 		modal.find('#itemName').val($(this).data('name'));
 		modal.find('#oldValue').val($(this).data('quantity'));
 	});
-	// Modal opener for dynamically rendered links
-	$(document).on('click', '.open-update-modal', function() {
-		const modal = $('#outflowModal');
-		modal.find('#itemId').val($(this).data('id'));
-		modal.find('#warehouseId').val($(this).data('warehouse'));
-		modal.find('#itemName').val($(this).data('name'));
-		modal.find('#oldValue').val($(this).data('quantity'));
-	});
+	
 });
