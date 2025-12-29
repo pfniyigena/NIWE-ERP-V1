@@ -1,15 +1,18 @@
 package com.niwe.erp.inventory.service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.niwe.erp.common.exception.ResourceNotFoundException;
 import com.niwe.erp.common.service.SequenceNumberService;
+import com.niwe.erp.core.service.AuditService;
+import com.niwe.erp.core.service.CoreUserService;
 import com.niwe.erp.inventory.domain.Supplier;
 import com.niwe.erp.inventory.repository.SupplierRepository;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 public class SupplierService {
 	private final SupplierRepository supplierRepository;
 	private final SequenceNumberService sequenceNumberService;
-
+	private final CoreUserService coreUserService;
+	private final AuditService auditService;
+	@Transactional
 	public Supplier save(Supplier supplier) {
 		log.info("=============Supplier:{}", supplier);
 		if (supplier.getId() != null || supplierRepository.findBySupplierTin(supplier.getSupplierTin()).isPresent()) {
@@ -31,7 +36,7 @@ public class SupplierService {
 		}
 
 	}
-
+	@Transactional
 	public Supplier update(Supplier supplier) {
 		Supplier exist = supplierRepository.findById(supplier.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("Supplier not found with id " + supplier.getId()));
@@ -50,6 +55,16 @@ public class SupplierService {
 	public Supplier findById(String id) {
 		return supplierRepository.findById(UUID.fromString(id))
 				.orElseThrow(() -> new ResourceNotFoundException("Supplier not found with id " + id));
+	}
+
+	@Transactional
+	public void delete(String id) {
+		Supplier supplier = findById(id);
+		auditService.logDelete("Supplier", supplier.getId(), supplier,
+				coreUserService.getCurrentUserEntity().getUsername());
+		supplier.setDeleted(true);
+		supplier.setDeletedBy(coreUserService.getCurrentUserEntity().getUsername());
+		supplier.setDeletedAt(Instant.now());
 	}
 
 }

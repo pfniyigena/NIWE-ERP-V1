@@ -88,7 +88,7 @@
 									required="required">
 									<option value="">-- Select --</option>
 									<option th:each="it : ${warehouses}" th:value="${it.id}"
-										th:text="${it.warehouseName}"></option>
+										th:text="${it.internalCode}+'-'+${it.warehouseName}"></option>
 								</select>
 							</div>
 						</div>

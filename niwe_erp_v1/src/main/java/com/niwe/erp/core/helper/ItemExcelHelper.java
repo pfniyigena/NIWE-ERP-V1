@@ -16,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.niwe.erp.core.domain.CoreItem;
 import com.niwe.erp.core.domain.ItemBrand;
 import com.niwe.erp.core.domain.ItemCategory;
+import com.niwe.erp.sale.domain.Customer;
 
 public class ItemExcelHelper {
 
@@ -91,6 +92,29 @@ public class ItemExcelHelper {
 				// Read String columns safely
 				p.setExternalId(getIntegerValue(currentRow.getCell(0)));
 				p.setBrandName(getStringValue(currentRow.getCell(1)));
+				products.add(p);
+			}
+			return products;
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to parse Excel file: " + e.getMessage(), e);
+		}
+	}
+	public static List<Customer> excelToCustomers(InputStream is) {
+		try (Workbook workbook = new XSSFWorkbook(is)) {
+			Sheet sheet = workbook.getSheetAt(0);
+			Iterator<Row> rows = sheet.iterator();
+			List<Customer> products = new ArrayList<>();
+			int rowNumber = 0;
+			while (rows.hasNext()) {
+				Row currentRow = rows.next();
+				// Skip header row
+				if (rowNumber++ == 0)
+					continue;
+				Customer p = new Customer();
+				p.setCustomerName(getStringValue(currentRow.getCell(0)));
+				p.setCustomerTin(getStringValue(currentRow.getCell(1)));
+				p.setCustomerPhone(getStringValue(currentRow.getCell(2)));
+				p.setCustomerEmail(getStringValue(currentRow.getCell(3)));
 				products.add(p);
 			}
 			return products;

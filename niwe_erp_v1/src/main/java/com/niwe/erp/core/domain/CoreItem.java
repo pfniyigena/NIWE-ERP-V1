@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLRestriction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.niwe.erp.common.domain.AbstractEntity;
 import com.niwe.erp.invoicing.domain.TaxType;
 
@@ -109,12 +110,14 @@ public class CoreItem extends AbstractEntity {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ITEM_NATURE_ID")
+	@JsonIgnore
 	private CoreItemNature nature;
 	/**
 	 * The classification
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ITEM_CLASSIFICATION_ID")
+	@JsonIgnore
 	private CoreItemClassification classification;
 
 	/**
@@ -122,6 +125,7 @@ public class CoreItem extends AbstractEntity {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "QUANTITY_UNIT_ID", nullable = true)
+	@JsonIgnore
 	private CoreQuantityUnit unit;
 
 	/**
@@ -129,6 +133,7 @@ public class CoreItem extends AbstractEntity {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "COUNTY_ID", nullable = true)
+	@JsonIgnore
 	private CoreCountry country;
 
 	/**
@@ -136,12 +141,14 @@ public class CoreItem extends AbstractEntity {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "CATEGORY_ID", nullable = true)
+	@JsonIgnore
 	private ItemCategory category;
 	/**
 	 * The brand
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "BRAND_ID", nullable = true)
+	@JsonIgnore
 	private ItemBrand brand;
 
 	/**
@@ -149,6 +156,7 @@ public class CoreItem extends AbstractEntity {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TAXPAYER_ID", nullable = true)
+	@JsonIgnore
 	private CoreTaxpayer taxpayer;
 	/**
 	 * The lastUpdated
@@ -166,11 +174,20 @@ public class CoreItem extends AbstractEntity {
 	@Column(name = "STOCK_LEVEL")
 	@Builder.Default
 	private Integer stockLevel = 0;
+	/**
+	 * The deleted
+	 */
 	@Column(name = "DELETED", nullable = false)
 	@Builder.Default
 	private boolean deleted = false;
+	/**
+	 * The deletedAt
+	 */
 	@Column(name = "DELETED_AT")
 	private Instant deletedAt;
+	/**
+	 * The deletedBy
+	 */
 	@Column(name = "DELETED_BY")
 	private String deletedBy;
 

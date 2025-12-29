@@ -2,7 +2,7 @@ jQuery(document).ready(function($) {
 	'use strict';
 	setTimeout(function() {
 		$(".alert").alert('close');
-	}, 1000); // 1 seconds
+	}, 5000); // 5 seconds
 	$('#keep-order').multiSelect({
 		keepOrder: true
 	});

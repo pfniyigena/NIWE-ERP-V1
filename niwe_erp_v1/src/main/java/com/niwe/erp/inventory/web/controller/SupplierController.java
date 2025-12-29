@@ -60,4 +60,18 @@ public class SupplierController {
 		model.addAttribute("supplier", supplier);
 		return NiweErpSaleUrlConstants.SUPPLIERS_ADD_FORM_PAGE;
 	}
+
+	@GetMapping(path = "/view/{id}")
+	public String view(@PathVariable String id, Model model) {
+		Supplier supplier = supplierService.findById(id);
+		model.addAttribute("supplier", supplier);
+		return NiweErpSaleUrlConstants.SUPPLIERS_VIEW_PAGE;
+	}
+
+	@GetMapping(path = "/delete/{id}")
+	public String delete(@PathVariable String id, RedirectAttributes redirectAttributes, Model model) {
+		supplierService.delete(id);
+		redirectAttributes.addFlashAttribute("success", "Deletion Success.");
+		return NiweErpSaleUrlConstants.SUPPLIERS_LIST_REDITECT_URL;
+	}
 }

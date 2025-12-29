@@ -1,5 +1,9 @@
 package com.niwe.erp.inventory.domain;
 
+import java.time.Instant;
+
+import org.hibernate.annotations.SQLRestriction;
+
 import com.niwe.erp.common.domain.AbstractEntity;
 
 import jakarta.persistence.Column;
@@ -7,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,6 +23,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @Entity
 @Table(name = "INVENTORY_SUPPLIER")
+@SQLRestriction("deleted = false")
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -47,4 +53,20 @@ public class Supplier extends AbstractEntity {
 	 */
 	@Column(name = "SUPPLIER_PHONE", nullable = true)
 	private String supplierPhone;
+	/**
+	 * The deleted
+	 */
+	@Column(name = "DELETED", nullable = false)
+	@Builder.Default
+	private boolean deleted = false;
+	/**
+	 * The deletedAt
+	 */
+	@Column(name = "DELETED_AT")
+	private Instant deletedAt;
+	/**
+	 * The deletedBy
+	 */
+	@Column(name = "DELETED_BY")
+	private String deletedBy;
 }

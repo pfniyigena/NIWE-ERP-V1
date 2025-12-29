@@ -41,6 +41,12 @@
 				<div class="card-header d-flex">
 					<h5 th:text="#{label.customer.list}"></h5>
 					<div class="toolbar ml-auto">
+						<button type="button" class="btn btn-warning btn-sm"
+							style="height: 32px; width: 32px; padding: 0;"
+							data-toggle="modal" data-target="#importCustomersModal"
+							th:title="#{label.button.import}">
+							<i class="fa fa-upload"></i>
+						</button>
 						<a href="#" th:href="@{/customers/new}"
 							class="btn btn-primary btn-sm "><span
 							th:text="#{label.button.add}"></span></a>
@@ -79,5 +85,40 @@
 		<!-- end users table  -->
 		<!-- ============================================================== -->
 	</div>
+	<!-- ============================================================== -->
+	<!-- start upload modal  -->
+	<!-- ============================================================== -->
+	<div class="modal fade" id="importCustomersModal" tabindex="-1"
+		role="dialog">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<form th:action="@{/customers/upload}" method="post"
+					enctype="multipart/form-data">
+					<div class="modal-header">
+						<h4 class="modal-title text-primary"
+							th:text="#{label.item.import.form}"></h4>
+					</div>
+					<div class="modal-body">
+
+						<div class="mb-3">
+							<label for="file" class="form-label"
+								th:text="#{label.general.file}"></label> <input type="file"
+								id="file" name="file" class="form-control form-control-bold"
+								required accept=".xlsx" />
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" th:text="#{label.button.cancel}"></button>
+						<button type="submit" class="btn btn-primary"
+							th:text="#{label.button.import}"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end upload moda modal  -->
+	<!-- ============================================================== -->
 </div>
 </html>

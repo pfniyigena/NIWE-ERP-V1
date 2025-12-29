@@ -1,6 +1,8 @@
 package com.niwe.erp.sale.web.controller;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,8 +11,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.niwe.erp.core.web.util.NiweErpCoreUrlConstants;
 import com.niwe.erp.sale.domain.Customer;
 import com.niwe.erp.sale.service.CustomerService;
 import com.niwe.erp.sale.web.util.NiweErpSaleUrlConstants;
@@ -60,5 +65,17 @@ public class CustomerController {
 		Customer customer = customerService.findById(id);
 		model.addAttribute("customer", customer);
 		return NiweErpSaleUrlConstants.CUSTOMERS_ADD_FORM_PAGE;
+	}
+	@PostMapping("/upload")
+	public String uploadFile(@RequestParam MultipartFile file, RedirectAttributes redirectAttributes, Model model)
+			throws IOException {
+		String contentType = file.getContentType();
+		if (!Objects.equals(contentType, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
+			model.addAttribute("error", "Please upload an Excel file (.xlsx)");
+			return NiweErpCoreUrlConstants.ITEMS_ADD_FORM_PAGE;
+		}
+		customerService.impotExcelFile(file);
+		redirectAttributes.addFlashAttribute("success", "Success.");
+		return NiweErpSaleUrlConstants.CUSTOMERS_LIST_REDITECT_URL;
 	}
 }

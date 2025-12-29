@@ -1,12 +1,18 @@
 package com.niwe.erp.sale.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.niwe.erp.common.exception.ResourceNotFoundException;
 import com.niwe.erp.common.service.SequenceNumberService;
+import com.niwe.erp.core.helper.ItemExcelHelper;
 import com.niwe.erp.sale.domain.Customer;
 import com.niwe.erp.sale.repository.CustomerRepository;
 
@@ -49,9 +55,23 @@ public class CustomerService {
 		return customerRepository.findAll();
 	}
 
+	public Page<Customer> findAllPageable(Pageable pageable) {
+
+		return customerRepository.findAll(pageable);
+	}
+
+
 	public Customer findById(String id) {
 		return customerRepository.findById(UUID.fromString(id))
 				.orElseThrow(() -> new ResourceNotFoundException("Customer not found with id " + id));
+	}
+
+	@Transactional
+	public void impotExcelFile(MultipartFile file) throws IOException {
+		List<Customer> brands = ItemExcelHelper.excelToCustomers(file.getInputStream());
+		brands.forEach((n) -> {
+			save(n);
+		});
 	}
 
 }

@@ -19,7 +19,7 @@ import com.niwe.erp.core.view.CoreItemListView;
 public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 
 	Optional<CoreItem> findByInternalCode(String internalCode);
-
+	boolean existsByBarcodeAndDeletedFalse(String barcode);
 	List<CoreItem> findByItemNameContainingIgnoreCaseOrItemCodeContainingIgnoreCaseOrBarcodeContainingIgnoreCase(
 			String itemName, String itemCode, String barcode);
 
@@ -119,6 +119,7 @@ public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 			    )
 			    FROM CoreItem b
 			    JOIN b.tax t JOIN b.classification c JOIN b.unit u JOIN b.country p
+			    WHERE b.deleted=false
 			""")
 	Page<CoreItemListDTO> findAllAsDto(Pageable pageable);
 

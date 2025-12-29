@@ -27,4 +27,9 @@ public class NiweErpApiUrlConstants {
 	 * The API_ITEMS_URL
 	 */
 	public static final String API_SALES_URL = "sales";
+	
+	/**
+	 * The API_ITEMS_URL
+	 */
+	public static final String API_CUSTOMERS_URL = "customers";
 }

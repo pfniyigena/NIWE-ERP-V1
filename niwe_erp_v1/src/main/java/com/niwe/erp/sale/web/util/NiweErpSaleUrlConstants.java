@@ -110,6 +110,10 @@ public class NiweErpSaleUrlConstants {
 	 */
 	public static final String SUPPLIERS_ADD_FORM_PAGE = "suppliers/add-form";
 	/**
+	 * The SUPPLIERS_VIEW_PAGE
+	 */
+	public static final String SUPPLIERS_VIEW_PAGE = "suppliers/view";
+	/**
 	 * The CUSTOMERS_LIST_REDITECT_URL
 	 */
 	public static final String SUPPLIERS_LIST_REDITECT_URL = "redirect:/suppliers/list";

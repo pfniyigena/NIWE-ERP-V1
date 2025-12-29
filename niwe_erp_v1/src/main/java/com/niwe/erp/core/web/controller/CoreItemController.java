@@ -96,7 +96,6 @@ public class CoreItemController {
 	@GetMapping(path = "/update/{id}")
 	public String findById(@PathVariable String id, Model model) {
 		CoreItem item = coreItemService.findById(id);
-
 		model.addAttribute("item", item);
 		setData(model);
 		return NiweErpCoreUrlConstants.ITEMS_ADD_FORM_PAGE;

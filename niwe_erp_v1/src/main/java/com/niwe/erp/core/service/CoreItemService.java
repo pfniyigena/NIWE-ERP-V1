@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.niwe.erp.common.exception.ResourceNotFoundException;
+import com.niwe.erp.common.exception.ViewNotFoundException;
 import com.niwe.erp.common.service.SequenceNumberService;
 import com.niwe.erp.core.domain.CoreCountry;
 import com.niwe.erp.core.domain.CoreItem;
@@ -86,6 +87,9 @@ public class CoreItemService {
 			coreItem.setExternalItemCode(code);
 		if (coreItem.getItemCode() == null || coreItem.getItemCode().isEmpty())
 			coreItem.setItemCode(code);
+
+		coreItem.setBarcode(
+				coreItem.getBarcode() != null && coreItem.getBarcode().isBlank() ? null : coreItem.getBarcode());
 		return coreItemRepository.save(coreItem);
 
 	}
@@ -101,6 +105,8 @@ public class CoreItemService {
 	}
 
 	public CoreItem save(CoreItem item) {
+		
+		
 		if (item.getInternalCode() == null || item.getInternalCode().isEmpty()) {
 			item.setInternalCode(sequenceNumberService.getNextItemCode());
 		}
@@ -125,8 +131,11 @@ public class CoreItemService {
 			saved.setStockLevel(item.getStockLevel());
 			saved.setTaxpayer(coreUserService.getCurrentUserEntity().getTaxpayer());
 		} else {
+			String normalized = normalizeBarcode(item.getBarcode());
+			if (normalized != null && coreItemRepository.existsByBarcodeAndDeletedFalse(normalized)) {
+			    throw new ViewNotFoundException("Barcode already exists "+normalized);
+			}
 			item.setTaxpayer(coreUserService.getCurrentUserEntity().getTaxpayer());
-
 			saved = item;
 			saved.setUnit(coreQuantityUnitRepository.findByIsDefault(true).get(0));
 			saved.setNature(coreItemNatureService.findByIsDefault(true).get(0));
@@ -134,6 +143,8 @@ public class CoreItemService {
 			saved.setClassification(coreItemClassificationRepository.findByIsDefault(true).get(0));
 
 		}
+		saved.setBarcode(saved.getBarcode() != null && saved.getBarcode().isBlank() ? null : saved.getBarcode());
+
 		coreItemRepository.save(saved);
 		createWarehouseInventory(saved);
 		return saved;
@@ -230,6 +241,8 @@ public class CoreItemService {
 				p.setUnit(packaging);
 				p.setTax(tax);
 				p.setTaxpayer(coreUserService.getCurrentUserEntity().getTaxpayer());
+				p.setBarcode(p.getBarcode() != null && p.getBarcode().isBlank() ? null : p.getBarcode());
+
 			}).toList();
 			coreItemRepository.saveAll(enrichedProducts);
 			logMovement(defaultWarehouse, enrichedProducts);
@@ -301,6 +314,9 @@ public class CoreItemService {
 		List<CoreItem> enrichedProducts = list.stream().map(p -> {
 			CoreItem item = findByInternalCode(p.internalCode());
 			item.setLastUpdated(LocalDateTime.now());
+			item.setBarcode(
+					item.getBarcode() != null && item.getBarcode().isBlank() ? null : item.getBarcode()
+				);
 			return item;
 
 		}).toList();
@@ -321,5 +337,11 @@ public class CoreItemService {
 		item.setDeletedBy(coreUserService.getCurrentUserEntity().getUsername());
 		item.setDeletedAt(Instant.now());
 
+	}
+	private String normalizeBarcode(String barcode) {
+	    if (barcode == null || barcode.trim().isEmpty()) {
+	        return null;
+	    }
+	    return barcode.trim();
 	}
 }

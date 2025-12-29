@@ -1,5 +1,7 @@
 package com.niwe.erp.sale.domain;
 
+import java.time.LocalDateTime;
+
 import com.niwe.erp.common.domain.AbstractEntity;
 
 import jakarta.persistence.Column;
@@ -47,4 +49,15 @@ public class Customer extends AbstractEntity {
 	 */
 	@Column(name = "CUSTOMER_PHONE", nullable = true)
 	private String customerPhone;
+	/**
+	 * The customerPhone
+	 */
+	@Column(name = "CUSTOMER_EMAIL", nullable = true)
+	private String customerEmail;
+	
+	/**
+	 * The lastUpdated
+	 */
+	@Column(name = "LAST_UPDATED")
+	private LocalDateTime lastUpdated;
 }
