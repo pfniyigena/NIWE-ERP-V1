@@ -254,7 +254,8 @@ public class WarehouseStockService {
 		WarehouseStock ws = warehouseStockRepository.findByWarehouseAndItemForUpdate(warehouseId, item.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("No warehouse stock"));
 		if (ws.getQuantity().compareTo(qty) < 0) {
-			throw new ResourceNotFoundException("Insufficient warehouse stock");
+			//throw new ResourceNotFoundException("Insufficient warehouse stock");
+			log.info("==========Insufficient warehouse stock=========");
 		}
 		ws.setQuantity(ws.getQuantity().subtract(qty));
 		warehouseStockRepository.save(ws);

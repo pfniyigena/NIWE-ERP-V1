@@ -106,7 +106,7 @@ public class InFlowController {
 			@RequestParam BigDecimal newUnitCost, @RequestParam String newBarcode, @RequestParam String supplier,
 			@RequestParam String expirationDate, RedirectAttributes redirectAttributes) {
 		LocalDate date = (expirationDate == null || expirationDate.isEmpty()) ? null : LocalDate.parse(expirationDate);
-		log.info("newUnitPrice:{}", newUnitPrice);
+		log.info("newUnitPrice:{},Quantity:{}", newUnitPrice,newValue);
 		inventoryService.receiveToWarehouse(itemId, warehouseId, newValue, "", newUnitPrice, newUnitCost, newBarcode,
 				supplier, date);
 		redirectAttributes.addFlashAttribute("success", "Success.");
@@ -116,8 +116,8 @@ public class InFlowController {
 	@PostMapping("/out")
 	public String transferWarehouseToLocation(@RequestParam String itemId, @RequestParam String warehouseId,
 			@RequestParam BigDecimal newValue, @RequestParam String locationId, RedirectAttributes redirectAttributes) {
-		log.info("transferWarehouseToLocation where warehouseId:{},locationId:{},itemId:{}", warehouseId, locationId,
-				itemId);
+		log.info("transferWarehouseToLocation where warehouseId:{},locationId:{},itemId:{},Quantity:{}", warehouseId, locationId,
+				itemId,newValue);
 		inventoryService.transferWarehouseToLocation(warehouseId, locationId, itemId, newValue, "");
 		redirectAttributes.addFlashAttribute("success", "Success.");
 		return NikaErpInventoryUrlConstants.IN_FLOWS_LIST_REDITECT_URL;

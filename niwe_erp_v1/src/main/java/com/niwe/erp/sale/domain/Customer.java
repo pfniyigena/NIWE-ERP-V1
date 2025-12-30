@@ -6,6 +6,8 @@ import com.niwe.erp.common.domain.AbstractEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -60,4 +62,10 @@ public class Customer extends AbstractEntity {
 	 */
 	@Column(name = "LAST_UPDATED")
 	private LocalDateTime lastUpdated;
+	
+	@PrePersist
+	@PreUpdate
+	public void updateTimestamp() {
+		this.lastUpdated = LocalDateTime.now();
+	}
 }

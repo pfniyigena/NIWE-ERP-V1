@@ -65,10 +65,8 @@ public class ItemApiController {
 		Pageable pageable = PageRequest.of(niweCommonRequest.pageSize(), niweCommonRequest.recordSize(), sort);
 		Page<CoreItemListDTO> page = coreItemService.findByLastUpdatedAfter(shelf.getLastSyn(), pageable);
 		List<CoreItemListDTO> list = page.getContent();
-		if(list.isEmpty()) {
 		shelf.setLastSyn(LocalDateTime.now());
 		shelfService.save(shelf);
-		}
 		NiweCommonResponse niweCommonResponse = new NiweCommonResponse(list, "000", "SUCCESS", page.getTotalPages());
 		log.info("Get updates Items from response: {}", niweCommonResponse);
 		return ResponseEntity.ok(niweCommonResponse);

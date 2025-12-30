@@ -64,5 +64,11 @@ public class Shelf extends AbstractEntity {
 	@Transient
 	@Builder.Default
 	private Long numberOfProductsNotSynchronized=0L;
+	/**
+	 * The lastSynCustomer
+	 */
+	@Column(name = "LAST_SYN_CUSTOMER")
+	@Builder.Default
+	private LocalDateTime lastSynCustomer=LocalDateTime.now();
 	
 }
