@@ -42,10 +42,14 @@ public class InventoryService {
 		Warehouse warehouse = warehouseRepository.findById(UUID.fromString(warehouseId))
 				.orElseThrow(() -> new ResourceNotFoundException("Warehouse not found " + warehouseId));
 		movementService.logReceive(warehouse, item, qty, reference, MovementType.GOOD_RECEIVED_NOTE, expirationDate);
+		if (newUnitPrice!=null)
 		item.setUnitPrice(newUnitPrice);
+		if (newUnitCost!=null)
 		item.setUnitCost(newUnitCost);
+		if(newBarcode !=null && !newBarcode.isEmpty())
 		item.setBarcode(newBarcode);
 		item.setLastUpdated(LocalDateTime.now());
+		if(expirationDate!=null)
 		item.setExpirationDate(expirationDate);
 		coreItemRepository.save(item);
 		if (supplier != null && !supplier.isEmpty()) {
