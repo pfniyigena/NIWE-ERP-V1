@@ -32,7 +32,7 @@ public class ItemCategory  extends AbstractEntity{/**
 	/**
 	 * The internalCode
 	 */
-	@Column(name = "EXTERNAL_ID",unique = true)
+	@Column(name = "EXTERNAL_ID")
 	private int externalId;
 	/**
 	 * The tinNumber

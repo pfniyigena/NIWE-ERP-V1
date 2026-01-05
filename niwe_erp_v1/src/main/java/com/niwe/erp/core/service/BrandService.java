@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.niwe.erp.common.exception.ResourceNotFoundException;
+import com.niwe.erp.common.exception.ViewCustomerException;
 import com.niwe.erp.common.service.SequenceNumberService;
 import com.niwe.erp.core.domain.ItemBrand;
 import com.niwe.erp.core.helper.ItemExcelHelper;
@@ -56,6 +57,16 @@ public class BrandService {
 			n.setInternalCode(sequenceNumberService.getNextItemBrandCode());
 			itemBrandRepository.save(n);
 		});
+	}
+
+	public void deleteItemById(String categoryId) {
+		try {
+			ItemBrand brand = findById(categoryId);
+			itemBrandRepository.delete(brand);
+		} catch (Exception e) {
+			throw new ViewCustomerException("You can not delete used  Brand");
+		}
+
 	}
 
 }

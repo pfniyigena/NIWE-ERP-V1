@@ -105,8 +105,9 @@ public class CoreItemService {
 	}
 
 	public CoreItem save(CoreItem item) {
-		
-		
+
+		boolean initialStock = false;
+
 		if (item.getInternalCode() == null || item.getInternalCode().isEmpty()) {
 			item.setInternalCode(sequenceNumberService.getNextItemCode());
 		}
@@ -133,7 +134,7 @@ public class CoreItemService {
 		} else {
 			String normalized = normalizeBarcode(item.getBarcode());
 			if (normalized != null && coreItemRepository.existsByBarcodeAndDeletedFalse(normalized)) {
-			    throw new ViewNotFoundException("Barcode already exists "+normalized);
+				throw new ViewNotFoundException("Barcode already exists " + normalized);
 			}
 			item.setTaxpayer(coreUserService.getCurrentUserEntity().getTaxpayer());
 			saved = item;
@@ -141,23 +142,23 @@ public class CoreItemService {
 			saved.setNature(coreItemNatureService.findByIsDefault(true).get(0));
 			saved.setCountry(coreCountryRepository.findByIsDefault(true).get(0));
 			saved.setClassification(coreItemClassificationRepository.findByIsDefault(true).get(0));
-
+			initialStock = true;
 		}
 		saved.setBarcode(saved.getBarcode() != null && saved.getBarcode().isBlank() ? null : saved.getBarcode());
-
 		coreItemRepository.save(saved);
-		createWarehouseInventory(saved);
+		createWarehouseInventory(saved, initialStock);
 		return saved;
 
 	}
 
-	private void createWarehouseInventory(CoreItem saved) {
+	private void createWarehouseInventory(CoreItem saved, boolean initialStock) {
+		if (initialStock && saved.getQuantityInitial().compareTo(BigDecimal.ZERO)>0) {
 
-		for (Warehouse warehouse : warehouseRepository.findAll()) {
-			stockMovementService.logReceive(warehouse, saved, saved.getQuanityInitial(), saved.getInternalCode(),
+			Warehouse warehouse = warehouseRepository.findByIsMain(true).get();
+			stockMovementService.logReceive(warehouse, saved, saved.getQuantityInitial(), saved.getInternalCode(),
 					MovementType.STOCK_INITIAL, null);
-		}
 
+		}
 	}
 
 	public CoreItem findById(String id) {
@@ -253,7 +254,7 @@ public class CoreItemService {
 
 	private void logMovement(Warehouse defaultWarehouse, List<CoreItem> enrichedProducts) {
 		enrichedProducts.forEach((n) -> {
-			stockMovementService.logReceive(defaultWarehouse, n, n.getQuanityInitial(), n.getInternalCode(),
+			stockMovementService.logReceive(defaultWarehouse, n, n.getQuantityInitial(), n.getInternalCode(),
 					MovementType.STOCK_INITIAL, null);
 
 		});
@@ -314,9 +315,7 @@ public class CoreItemService {
 		List<CoreItem> enrichedProducts = list.stream().map(p -> {
 			CoreItem item = findByInternalCode(p.internalCode());
 			item.setLastUpdated(LocalDateTime.now());
-			item.setBarcode(
-					item.getBarcode() != null && item.getBarcode().isBlank() ? null : item.getBarcode()
-				);
+			item.setBarcode(item.getBarcode() != null && item.getBarcode().isBlank() ? null : item.getBarcode());
 			return item;
 
 		}).toList();
@@ -338,10 +337,11 @@ public class CoreItemService {
 		item.setDeletedAt(Instant.now());
 
 	}
+
 	private String normalizeBarcode(String barcode) {
-	    if (barcode == null || barcode.trim().isEmpty()) {
-	        return null;
-	    }
-	    return barcode.trim();
+		if (barcode == null || barcode.trim().isEmpty()) {
+			return null;
+		}
+		return barcode.trim();
 	}
 }

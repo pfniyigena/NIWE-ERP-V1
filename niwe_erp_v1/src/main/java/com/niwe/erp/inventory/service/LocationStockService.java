@@ -97,11 +97,22 @@ public class LocationStockService {
 		return locationStockRepository.findOutflowItems(warehouseId, searchValue, pageable);
 	}
 
-	List<LocationStockView> getAvailableLocationsFIFO(UUID warehouseId, UUID itemId) {
+	public List<LocationStockView> getAvailableLocationsFIFO(UUID warehouseId, UUID itemId) {
 		return locationStockRepository.getAvailableLocationsFIFO(warehouseId, itemId);
 	}
 
-	List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId) {
+	public List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId) {
 		return locationStockRepository.findLocationsFIFO(warehouseId, itemId);
+	}
+	
+	public List<OutflowItemListView> findAllOutflowItems() {
+		return locationStockRepository.findAllOutflowItems();
+	}
+	
+	public Page<OutflowItemListView> findAllOutflowItems(Pageable pageable) {
+		return locationStockRepository.findOutflowItemsNative(pageable);
+	}
+	public Page<OutflowItemListView> findAllOutflowItems(String search,Pageable pageable) {
+		return locationStockRepository.searchOutflowItems2(search,pageable);
 	}
 }

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.niwe.erp.common.exception.ResourceNotFoundException;
+import com.niwe.erp.common.exception.ViewCustomerException;
 import com.niwe.erp.common.service.SequenceNumberService;
 import com.niwe.erp.core.domain.ItemCategory;
 import com.niwe.erp.core.helper.ItemExcelHelper;
@@ -64,6 +65,16 @@ public class CategoryService {
 			n.setInternalCode(sequenceNumberService.getNextItemCategoryCode());
 			itemCategoryRepository.save(n);
 		});
+	}
+
+	public void deleteItemById(String categoryId) {
+		try {
+			ItemCategory category = findById(categoryId);
+			itemCategoryRepository.delete(category);
+		} catch (Exception e) {
+			throw new ViewCustomerException("You can not delete used  Category");
+		}
+
 	}
 
 }

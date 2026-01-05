@@ -32,7 +32,7 @@ public class ItemBrand  extends AbstractEntity{/**
 	/**
 	 * The externalId
 	 */
-	@Column(name = "EXTERNAL_ID",unique = true)
+	@Column(name = "EXTERNAL_ID")
 	private int externalId;
 	/**
 	 * The tinNumber

@@ -72,13 +72,13 @@
 									</div>
 								</div>
 
-								<div class="form-group row">
+								<div class="form-group row" th:if="${item.id == null}">
 									<label class="col-2 col-sm-2 col-form-label text-sm-left"
-										th:text="#{label.stock.level}" for="stockLevel"></label>
+										th:text="#{label.stock.initial}" for="quantityInitial"></label>
 									<div class="col-6 col-sm-6">
 										<input type="number" min="0" class="form-control is-valid"
-											th:field="*{stockLevel}"
-											th:placeholder="#{label.stock.level}">
+											th:field="*{quantityInitial}"
+											th:placeholder="#{label.stock.initial}">
 									</div>
 								</div>
 
@@ -118,6 +118,15 @@
 											<option th:each="it : ${brands}" th:value="${it.id}"
 												th:text="${it.brandName}"></option>
 										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-2 col-sm-2 col-form-label text-sm-left"
+										th:text="#{label.stock.level}" for="stockLevel"></label>
+									<div class="col-6 col-sm-6">
+										<input type="number" min="0" class="form-control is-valid"
+											th:field="*{stockLevel}"
+											th:placeholder="#{label.stock.level}">
 									</div>
 								</div>
 

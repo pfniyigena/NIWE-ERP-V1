@@ -19,7 +19,6 @@ import com.niwe.erp.core.domain.ItemCategory;
 import com.niwe.erp.core.service.CategoryService;
 import com.niwe.erp.core.web.util.NiweErpCoreUrlConstants;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +45,7 @@ public class ItemCategoryController {
 	}
 
 	@PostMapping(path = "/new")
-	public String saveitemCategory(@Valid ItemCategory itemCategory, BindingResult bindingResult,
+	public String saveitemCategory(ItemCategory itemCategory, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes, Model model) {
 
 		log.debug(String.format("------calling saveitemCategory:{%s}", itemCategory));
@@ -77,6 +76,14 @@ public class ItemCategoryController {
 		}
 		categoryService.impotExcelFile(file);
 		redirectAttributes.addFlashAttribute("success", "Success.");
+		return NiweErpCoreUrlConstants.CATEGORIES_LIST_REDITECT_URL;
+	}
+	
+	@PostMapping("/delete")
+	public String deleteItem(@RequestParam String categoryId, RedirectAttributes redirectAttributes) {
+		log.info("----deleteItem id:{}", categoryId);
+		categoryService.deleteItemById(categoryId);
+		redirectAttributes.addFlashAttribute("success", "Delete Success.");
 		return NiweErpCoreUrlConstants.CATEGORIES_LIST_REDITECT_URL;
 	}
 }

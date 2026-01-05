@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout/main}">
 <head>
-<title th:text="#{label.outflow.list}"></title>
+<title th:text="#{label.outflow.report}"></title>
 </head>
 <div layout:fragment="content">
 	<!-- ============================================================== -->
@@ -57,8 +57,8 @@
 <div layout:fragment="page-scripts">
 	<script>
 		// URL for first table
-		const INFLOWS_DATA_URL = BASE_URL + "outflows/list/data/v2";
+		const INFLOWS_DATA_URL = BASE_URL + "outflows/list/data/report";
 	</script>
-	<script th:src="@{/assets/niwe/js/outflow-tables.js}"></script>
+	<script th:src="@{/assets/niwe/js/outflow-report.js}"></script>
 </div>
 </html>

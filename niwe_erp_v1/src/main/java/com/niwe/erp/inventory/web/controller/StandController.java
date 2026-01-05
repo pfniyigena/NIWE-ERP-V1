@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.niwe.erp.inventory.domain.InventoryLocation;
@@ -68,6 +69,13 @@ public class StandController {
 		model.addAttribute("stand", stand);
 		setData(model);
 		return NikaErpInventoryUrlConstants.STANDS_ADD_FORM_PAGE;
+	}
+	@PostMapping("/delete")
+	public String deleteItem(@RequestParam String standId, RedirectAttributes redirectAttributes) {
+		log.info("----deleteItem id:{}", standId);
+		locationService.deleteItemById(standId);
+		redirectAttributes.addFlashAttribute("success", "Delete Success.");
+		return NikaErpInventoryUrlConstants.STANDS_LIST_REDITECT_URL;
 	}
 
 	private void setData(Model model) {

@@ -55,6 +55,12 @@ public class OutFlowController {
 		model.addAttribute("warehouse", warehouse);
 		return NikaErpInventoryUrlConstants.OUT_FLOWS_LIST_PAGE;
 	}
+	@GetMapping("/report")
+	public String report(Model model) {
+		Warehouse warehouse = warehouseService.findMain();
+		model.addAttribute("warehouse", warehouse);
+		return NikaErpInventoryUrlConstants.OUT_FLOWS_REPORT_PAGE;
+	}
 
 	@PostMapping(value = "/list/data", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
@@ -119,5 +125,28 @@ public class OutFlowController {
 		log.info("INFLOWS DATA: [{}]", page.getTotalElements()); // ← NOW YOU WILL SEE IT!
 		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
 				page.getTotalElements(), "data", page.getContent());
+	}
+
+	@PostMapping(value = "/list/data/report", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> findAllOutflowItems(@RequestBody DataTablesRequest request) {
+
+		Warehouse warehouse = warehouseService.findMain();
+		log.info("SEARCH VALUE RECEIVED: [{}]", request.search().value()); // ← NOW YOU WILL SEE IT!
+		String searchValue = request.search().value() == null ? "" : request.search().value().trim();
+		// Get sorting
+		String sortColumn = "itemName"; // default
+		String sortDir = "asc";
+		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
+				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
+
+		Page<OutflowItemListView> itemsPage = locationStockService.findAllOutflowItems(searchValue,pageable);
+		log.info("OUTFLOW DATA: [{}]", itemsPage.getTotalElements()); // ← NOW YOU WILL SEE IT!
+		 return Map.of("draw", request.draw(), "recordsTotal",
+		 coreItemService.countAll(), "recordsFiltered",
+		 itemsPage.getTotalElements(), "data", itemsPage.getContent(), "warehouse",
+		 warehouse);
+		 
+
 	}
 }

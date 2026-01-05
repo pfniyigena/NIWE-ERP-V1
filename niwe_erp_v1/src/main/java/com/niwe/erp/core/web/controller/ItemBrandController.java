@@ -19,7 +19,6 @@ import com.niwe.erp.core.domain.ItemBrand;
 import com.niwe.erp.core.service.BrandService;
 import com.niwe.erp.core.web.util.NiweErpCoreUrlConstants;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,7 +45,7 @@ public class ItemBrandController {
 	}
 
 	@PostMapping(path = "/new")
-	public String saveitemBrand(@Valid ItemBrand itemBrand, BindingResult bindingResult,
+	public String saveitemBrand(ItemBrand itemBrand, BindingResult bindingResult,
 			RedirectAttributes redirectAttributes, Model model) {
 
 		log.debug(String.format("------calling saveitemBrand:{%s}", itemBrand));
@@ -78,5 +77,11 @@ public class ItemBrandController {
 		redirectAttributes.addFlashAttribute("success", "Success.");
 		return NiweErpCoreUrlConstants.BRANDS_LIST_REDITECT_URL;
 	}
-
+	@PostMapping("/delete")
+	public String deleteItem(@RequestParam String brandId, RedirectAttributes redirectAttributes) {
+		log.info("----deleteItem id:{}", brandId);
+		brandService.deleteItemById(brandId);
+		redirectAttributes.addFlashAttribute("success", "Delete Success.");
+		return NiweErpCoreUrlConstants.CATEGORIES_LIST_REDITECT_URL;
+	}
 }

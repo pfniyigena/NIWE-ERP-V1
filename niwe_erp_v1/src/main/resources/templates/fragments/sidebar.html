@@ -83,8 +83,8 @@
 						<div id="submenu-3" class="collapse submenu">
 							<ul class="nav flex-column">
 								<li class="nav-item"><a class="nav-link" href="#"
-									th:href="@{/items/add/item/table}"><span th:text="#{menu.items}"></span>
-								</a></li>
+									th:href="@{/items/add/item/table}"><span
+										th:text="#{menu.items}"></span> </a></li>
 								<li class="nav-item"><a class="nav-link" href="#"
 									th:href="@{/categories/list}"><span
 										th:text="#{menu.item.categories}"></span> </a></li>
@@ -130,8 +130,8 @@
 							</ul>
 							<ul class="nav flex-column">
 								<li class="nav-item"><a class="nav-link" href="#"
-									th:href="@{/inflows/add/inflow/table}"><span th:text="#{menu.inflows}"></span>
-								</a></li>
+									th:href="@{/inflows/add/inflow/table}"><span
+										th:text="#{menu.inflows}"></span> </a></li>
 							</ul>
 							<ul class="nav flex-column">
 								<li class="nav-item"><a class="nav-link" href="#"
@@ -142,6 +142,19 @@
 								<li class="nav-item"><a class="nav-link" href="#"
 									th:href="@{/suppliers/list}"><span
 										th:text="#{menu.suppliers}"></span> </a></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									data-toggle="collapse" aria-expanded="false"
+									data-target="#submenu-31" aria-controls="submenu-31"><span
+										th:text="#{menu.reports}"></span></a>
+									<div id="submenu-31" class="collapse submenu">
+										<ul class="nav flex-column">
+											<li class="nav-item"><a class="nav-link" href="#"
+												th:href="@{/outflows/report}"><span
+													th:text="#{menu.outflows}"></span></a></li>
+										</ul>
+									</div></li>
 							</ul>
 						</div></li>
 					<li sec:authorize="hasAnyRole('ADMIN')" class="nav-item "><a

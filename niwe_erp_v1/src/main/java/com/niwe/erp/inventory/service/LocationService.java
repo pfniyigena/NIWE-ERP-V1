@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.niwe.erp.common.exception.ResourceNotFoundException;
 import com.niwe.erp.common.service.SequenceNumberService;
 import com.niwe.erp.inventory.domain.InventoryLocation;
+import com.niwe.erp.inventory.domain.Warehouse;
 import com.niwe.erp.inventory.repository.InventoryLocationRepository;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LocationService {
 	private final SequenceNumberService sequenceNumberService;
-
+	private final WarehouseService warehouseService;
 	private final InventoryLocationRepository inventoryLocationRepository;
 
 	public InventoryLocation findById(String locationId) {
@@ -43,7 +44,6 @@ public class LocationService {
 		}
 
 		if (stand.getId() != null) {
-
 			location = inventoryLocationRepository.getReferenceById(stand.getId());
 			location.setInternalCode(code);
 			location.setLocationCode(stand.getLocationCode());
@@ -51,12 +51,20 @@ public class LocationService {
 			location.setManagerName(stand.getManagerName());
 		} else {
 
+			Warehouse warehouse = warehouseService.findMain();
 			location = stand;
 			location.setInternalCode(code);
+			location.setWarehouse(warehouse);
 
 		}
 
 		return inventoryLocationRepository.save(location);
+
+	}
+
+	public void deleteItemById(String standId) {
+		InventoryLocation location = findById(standId);
+		inventoryLocationRepository.delete(location);
 
 	}
 }

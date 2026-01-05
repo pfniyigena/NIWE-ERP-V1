@@ -149,6 +149,11 @@ public class NikaErpInventoryUrlConstants {
 	 * The IN_FLOWS_LIST_REDITECT_URL
 	 */
 	public static final String OUT_FLOWS_LIST_REDITECT_URL = "redirect:/outflows/list";
+	
+	/**
+	 * The OUT_FLOWS_REPORT_PAGE
+	 */
+	public static final String OUT_FLOWS_REPORT_PAGE = "outflows/report";
 	/**
 	 * The STANDS_URL
 	 */

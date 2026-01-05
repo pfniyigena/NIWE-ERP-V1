@@ -42,16 +42,9 @@
 				<div class="card-body">
 					<form style="border-radius: 0px;" th:object="${itemCategory}"
 						th:action="@{/categories/new}" method="post">
-						<input type="hidden" th:field="*{id}" />
-						<div class="form-group row">
-							<label class="col-2 col-sm-2 col-form-label text-sm-left"
-								th:text="#{label.general.code}" for="internalCode"></label>
-							<div class="col-6 col-sm-6">
-								<input type="text" class="form-control is-valid"
-									readonly="readonly" th:field="*{internalCode}"
-									th:placeholder="#{label.general.code}">
-							</div>
-						</div>
+						<input type="hidden" th:field="*{id}" /> <input type="hidden"
+							class="form-control is-valid" readonly="readonly"
+							th:field="*{internalCode}" />
 						<div class="form-group row">
 							<label class="col-2 col-sm-2 col-form-label text-sm-left"
 								th:text="#{label.general.name}" for="categoryName"></label>

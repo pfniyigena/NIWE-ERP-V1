@@ -99,7 +99,7 @@ public class CoreItem extends AbstractEntity {
 	 */
 	@Column(name = "QUANTITY_INITIAL", nullable = true)
 	@Builder.Default
-	private BigDecimal quanityInitial = BigDecimal.ZERO;
+	private BigDecimal quantityInitial = BigDecimal.ZERO;
 	/**
 	 * The tax
 	 */

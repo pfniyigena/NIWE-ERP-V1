@@ -17,8 +17,7 @@
 					<nav aria-label="breadcrumb">
 						<ol class="breadcrumb">
 							<li class="breadcrumb-item"><a href="#"
-								class="breadcrumb-link"><span
-									th:text="#{menu.inventory}"></span></a></li>
+								class="breadcrumb-link"><span th:text="#{menu.inventory}"></span></a></li>
 							<li class="breadcrumb-item"><a href="#"
 								th:href="@{/stands/list}"> <span
 									th:text="#{label.stand.list}"></span></a></li>
@@ -45,21 +44,20 @@
 						th:action="@{/stands/new}" method="post">
 						<input type="hidden" th:field="*{id}" />
 						<div class="form-group row">
-							<label class="col-2 col-sm-2 col-form-label text-sm-left"
-								th:text="#{label.general.code}" for="internalCode"></label>
-							<div class="col-6 col-sm-6">
-								<input type="text" class="form-control is-valid" readonly="readonly"
-									th:field="*{internalCode}" th:placeholder="#{label.general.code}"
-									>
-							</div>
+
+
+							<input type="hidden" class="form-control is-valid"
+								readonly="readonly" th:field="*{internalCode}"
+								th:placeholder="#{label.general.code}">
+
 						</div>
 						<div class="form-group row">
 							<label class="col-2 col-sm-2 col-form-label text-sm-left"
 								th:text="#{label.general.code}" for="locationCode"></label>
 							<div class="col-6 col-sm-6">
 								<input type="text" class="form-control is-valid"
-									th:field="*{locationCode}" th:placeholder="#{label.general.code}"
-									required>
+									th:field="*{locationCode}"
+									th:placeholder="#{label.general.code}" required>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -67,8 +65,8 @@
 								th:text="#{label.general.name}" for="locationName"></label>
 							<div class="col-6 col-sm-6">
 								<input type="text" class="form-control is-valid"
-									th:field="*{locationName}" th:placeholder="#{label.general.name}"
-									required>
+									th:field="*{locationName}"
+									th:placeholder="#{label.general.name}" required>
 							</div>
 						</div>
 						<div class="form-group row">
@@ -76,11 +74,11 @@
 								th:text="#{label.general.manager}" for="managerName"></label>
 							<div class="col-6 col-sm-6">
 								<input type="text" class="form-control is-valid"
-									th:field="*{managerName}" th:placeholder="#{label.general.manager}"
-									required>
+									th:field="*{managerName}"
+									th:placeholder="#{label.general.manager}" required>
 							</div>
 						</div>
-						<div class="form-group row">
+						<!-- <div class="form-group row">
 							<label class="col-2 col-sm-2 col-form-label text-sm-left"
 								th:text="#{label.general.warehouse}" for="warehouse"></label>
 							<div class="col-6 col-sm-6">
@@ -91,7 +89,7 @@
 										th:text="${it.internalCode}+'-'+${it.warehouseName}"></option>
 								</select>
 							</div>
-						</div>
+						</div> -->
 						<div class="form-group row">
 							<div class="col-6 col-sm-3 col-form-label text-sm-right"></div>
 							<div class="col-6 col-sm-6">

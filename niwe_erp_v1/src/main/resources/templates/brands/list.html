@@ -67,8 +67,14 @@
 									<td th:text="${list.internalCode}"></td>
 									<td><a href="#"
 										th:href="@{'/brands/update/' + ${list.id}}"
-										class="text-primary" th:title="#{label.button.edit}"><em
-											class="fas fa-pencil-alt"></em></a></td>
+										class="btn btn-primary" th:title="#{label.button.edit}"><em
+											class="fas fa-pencil-alt"></em></a>
+											<a href="#" data-toggle="modal"
+										data-target="#deleteBrandModal" th:data-id="${list.id}"
+										class="btn btn-danger open-update-modal"
+										th:title="#{label.button.delete}"><em
+											class="fas fa-trash-alt"></em></a>
+											</td>
 								</tr>
 							</tbody>
 						</table>
@@ -109,5 +115,43 @@
 			</div>
 		</div>
 	</div>
+	<div class="modal fade" id="deleteBrandModal" tabindex="-1"
+		role="dialog">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<form th:action="@{/brands/delete}" method="post">
+					<div class="modal-header">
+						<h5 class="modal-title" th:text="#{label.general.delete.category}"></h5>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<input type="hidden" id="brandId" name="brandId">
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" th:text="#{label.button.cancel}"></button>
+						<button type="submit" class="btn btn-primary"
+							th:text="#{label.button.delete}"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll(".open-update-modal");
+    const modal = document.getElementById("deleteBrandModal");
+    const brandIdInput = modal.querySelector("#brandId");
+
+    links.forEach(link => {
+        link.addEventListener("click", () => {
+            const id = link.getAttribute("data-id");
+            brandIdInput.value = id;
+        });
+    });
+});
+</script>
 </div>
 </html>

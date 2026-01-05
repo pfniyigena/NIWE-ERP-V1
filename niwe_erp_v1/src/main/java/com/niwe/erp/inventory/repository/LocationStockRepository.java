@@ -142,4 +142,158 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			    ORDER BY l.createdAt ASC
 			""")
 	List<LocationStockView> getAvailableLocationsFIFO(UUID warehouseId, UUID itemId);
+
+	@Query("""
+			    SELECT
+			        i.id AS itemId,
+			        i.itemName AS itemName,
+			        i.itemCode AS itemCode,
+			        i.barcode AS barcode,
+			        i.unitPrice AS unitPrice,
+			        i.unitCost AS unitCost,
+			        ls.quantity AS quantity,
+			        l.id AS locationId,
+			        w.id AS warehouseId,
+			        l.locationCode AS locationCode,
+			        l.locationName AS locationName,
+			        l.priority AS priority
+			    FROM LocationStock ls
+			    JOIN ls.item i
+			    JOIN ls.location l
+			    JOIN l.warehouse w
+			    WHERE i.deleted = false
+			""")
+	List<OutflowItemListView> findAllOutflowItems();
+
+	@Query("""
+			    SELECT
+			        i.id AS itemId,
+			        i.itemName AS itemName,
+			        i.itemCode AS itemCode,
+			        i.barcode AS barcode,
+			        i.unitPrice AS unitPrice,
+			        i.unitCost AS unitCost,
+			        ls.quantity AS quantity,
+			        l.id AS locationId,
+			        w.id AS warehouseId,
+			        l.locationCode AS locationCode,
+			        l.locationName AS locationName,
+			        l.priority AS priority
+			    FROM LocationStock ls
+			    JOIN ls.item i
+			    JOIN ls.location l
+			    JOIN l.warehouse w
+			    WHERE i.deleted = false
+			      AND ls.quantity > 0
+			""")
+	Page<OutflowItemListView> findOutflowItems(Pageable pageable);
+
+	@Query(value = """
+			SELECT
+			    i.id AS itemId,
+			    i.item_name AS itemName,
+			    i.item_code AS itemCode,
+			    i.barcode AS barcode,
+			    i.unit_price AS unitPrice,
+			    i.unit_cost AS unitCost,
+			    ls.quantity AS quantity,
+			    l.id AS locationId,
+			    w.id AS warehouseId,
+			    l.location_code AS locationCode,
+			    l.location_name AS locationName,
+			    l.priority AS priority
+			FROM inventory_location_stock ls
+			JOIN core_item i ON i.id = ls.item_id
+			JOIN inventory_location l ON l.id = ls.location_id
+			JOIN warehouse w ON w.id = l.warehouse_id
+			WHERE i.deleted = false
+			  AND ls.quantity > 0
+			ORDER BY l.priority DESC, i.item_name
+			""", nativeQuery = true)
+	List<OutflowItemListView> findAllOutflowItemsNative();
+
+	@Query(value = """
+			SELECT
+			    i.id AS itemId,
+			    i.item_name AS itemName,
+			    i.item_code AS itemCode,
+			    i.barcode AS barcode,
+			    i.unit_price AS unitPrice,
+			    i.unit_cost AS unitCost,
+			    ls.quantity AS quantity,
+			    l.id AS locationId,
+			    w.id AS warehouseId,
+			    l.location_code AS locationCode,
+			    l.location_name AS locationName,
+			    l.priority AS priority
+			FROM inventory_location_stock ls
+			JOIN core_item i ON i.id = ls.item_id
+			JOIN inventory_location l ON l.id = ls.location_id
+			JOIN warehouse w ON w.id = l.warehouse_id
+			WHERE i.deleted = false
+			  AND ls.quantity > 0
+			""", countQuery = """
+			SELECT COUNT(*)
+			FROM inventory_location_stock ls
+			JOIN core_item i ON i.id = ls.item_id
+			WHERE i.deleted = false
+			  AND ls.quantity > 0
+			""", nativeQuery = true)
+	Page<OutflowItemListView> findOutflowItemsNative(Pageable pageable);
+
+	@Query("""
+			    SELECT
+			        i.id AS itemId,
+			        i.itemName AS itemName,
+			        i.itemCode AS itemCode,
+			        i.barcode AS barcode,
+			        i.unitPrice AS unitPrice,
+			        i.unitCost AS unitCost,
+			        ls.quantity AS quantity,
+			        l.id AS locationId,
+			        w.id AS warehouseId,
+			        l.locationCode AS locationCode,
+			        l.locationName AS locationName,
+			        l.priority AS priority
+			    FROM LocationStock ls
+			    JOIN ls.item i
+			    JOIN ls.location l
+			    JOIN l.warehouse w
+			    WHERE i.deleted = false
+			      AND ls.quantity > 0
+			      AND (
+			           LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
+			        OR LOWER(i.itemCode) LIKE LOWER(CONCAT('%', :search, '%'))
+			        OR LOWER(i.itemName) LIKE LOWER(CONCAT('%', :search, '%'))
+			      )
+			""")
+	Page<OutflowItemListView> searchOutflowItems(@Param("search") String search, Pageable pageable);
+
+	@Query("""
+			    SELECT
+			        i.id AS itemId,
+			        i.itemName AS itemName,
+			        i.itemCode AS itemCode,
+			        i.barcode AS barcode,
+			        i.unitPrice AS unitPrice,
+			        i.unitCost AS unitCost,
+			        ls.quantity AS quantity,
+			        l.id AS locationId,
+			        w.id AS warehouseId,
+			        l.locationCode AS locationCode,
+			        l.locationName AS locationName,
+			        l.priority AS priority
+			    FROM LocationStock ls
+			    JOIN ls.item i
+			    JOIN ls.location l
+			    JOIN l.warehouse w
+			    WHERE i.deleted = false
+			      AND (
+			           LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
+			        OR LOWER(i.itemCode) LIKE LOWER(CONCAT('%', :search, '%'))
+			        OR LOWER(i.itemName) LIKE LOWER(CONCAT('%', :search, '%'))
+			      )
+			""")
+	Page<OutflowItemListView> searchOutflowItems2(@Param("search") String search, Pageable pageable);
+
 }

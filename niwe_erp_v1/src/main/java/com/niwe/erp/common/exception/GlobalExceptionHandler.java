@@ -19,5 +19,11 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error/001";
     }
+    @ExceptionHandler(ViewCustomerException.class)
+    public String handleViewCustomerException(ViewCustomerException ex, Model model) {
+        model.addAttribute("errorTitle", "Resource Not Found");
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error/002";
+    }
 }
 

@@ -1,0 +1,1 @@
+CREATE INDEX idx_location_stock_location_item ON inventory_location_stock (location_id, item_id);

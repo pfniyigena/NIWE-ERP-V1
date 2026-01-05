@@ -16,6 +16,5 @@ jQuery(document).ready(function($) {
 			lengthMenu: [10, 25, 50, 100]
 		});
 	});
-
 });
 
