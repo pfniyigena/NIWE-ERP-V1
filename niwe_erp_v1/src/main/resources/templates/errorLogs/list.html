@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.log.list}"></title>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<div class="page-breadcrumb">
+					<nav aria-label="breadcrumb">
+						<ol class="breadcrumb">
+							<li class="breadcrumb-item"><a href="#"
+								class="breadcrumb-link"><span th:text="#{menu.logs}"></span></a></li>
+							<li class="breadcrumb-item"><a href="#"
+								th:href="@{/logs/list}"> <span
+									th:text="#{label.stand.list}"></span></a></li>
+							<li class="breadcrumb-item active" aria-current="page"><span
+								th:text="#{label.stand.list}"></span></li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-header d-flex">
+					<h5 th:text="#{label.stand.list}"></h5>
+					<div class="toolbar ml-auto">
+						<a href="#" th:href="@{/stands/new}"
+							class="btn btn-primary btn-sm "><span
+							th:text="#{label.button.add}"></span></a>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered first">
+							<thead>
+								<tr>
+									<th th:text="#{label.general.date}"></th>
+									<th th:text="#{label.general.type}"></th>
+									<th th:text="#{label.general.name}"></th>
+									<th th:text="#{label.button.actions}"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="list : ${lists}">
+									<td th:text="${list.modifiedAt}"></td>
+									<td th:text="${list.errorType}"></td>
+									<td th:text="${list.errorName}"></td>
+									<td><a href="#" th:href="@{'/logs/view/' + ${list.id}}"
+										class="btn btn-primary" th:title="#{label.button.view}"><em
+											class="fa fa-eye"></em></a> <a href="#"
+										data-toggle="modal" data-target="#deleteErrorModal"
+										th:data-id="${list.id}"
+										class="btn btn-danger open-update-modal"
+										th:title="#{label.button.delete}"><em
+											class="fas fa-trash-alt"></em></a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- ============================================================== -->
+		<!-- end users table  -->
+		<!-- ============================================================== -->
+	</div>
+	<div class="modal fade" id="deleteErrorModal" tabindex="-1"
+		role="dialog">
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<form th:action="@{/logs/delete}" method="post">
+					<div class="modal-header">
+						<h5 class="modal-title" th:text="#{label.general.delete.stand}"></h5>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+
+					<div class="modal-body">
+						<input type="hidden" id="logId" name="logId">
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal" th:text="#{label.button.cancel}"></button>
+						<button type="submit" class="btn btn-primary"
+							th:text="#{label.button.delete}"></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll(".open-update-modal");
+    const modal = document.getElementById("deleteErrorModal");
+    const standIdInput = modal.querySelector("#logId");
+
+    links.forEach(link => {
+        link.addEventListener("click", () => {
+            const id = link.getAttribute("data-id");
+            standIdInput.value = id;
+        });
+    });
+});
+</script>
+
+</div>
+
+</html>

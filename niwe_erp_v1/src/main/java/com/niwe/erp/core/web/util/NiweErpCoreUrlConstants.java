@@ -231,5 +231,25 @@ public class NiweErpCoreUrlConstants {
 	 * The BRANDS_LIST_REDITECT_URL
 	 */
 	public static final String BRANDS_LIST_REDITECT_URL = "redirect:/brands/list";
+	
+	/**
+	 * The BRANDS_URL
+	 */
+	public static final String LOGS_URL = "logs";
+	
+	/**
+	 * The BRANDS_LIST_URL
+	 */
+	public static final String LOGS_LIST_URL = "errorLogs/list";
+	
+	/**
+	 * The LOGS_LIST_REDITECT_URL
+	 */
+	public static final String LOGS_LIST_REDITECT_URL = "redirect:/logs/list";
+	
+	/**
+	 * The BRANDS_LIST_URL
+	 */
+	public static final String LOGS_VIEW_URL = "errorLogs/view";
 
 }

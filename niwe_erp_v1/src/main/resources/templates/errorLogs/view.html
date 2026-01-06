@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/main}">
+<head>
+<title th:text="#{label.log.details}"></title>
+<!-- Inline Card Component -->
+<style>
+.info-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: .25rem 0;
+	border-bottom: 1px solid #f1f1f1;
+}
+
+.info-label {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	color: #6c757d;
+	font-weight: 600;
+	margin-right: 1rem;
+	white-space: nowrap;
+}
+
+.info-value {
+	font-size: 1rem;
+	font-weight: 500;
+	text-align: right;
+	flex-grow: 1;
+}
+</style>
+</head>
+<div layout:fragment="content">
+	<!-- ============================================================== -->
+	<!-- pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-header">
+				<h2 class="pageheader-title" th:text="#{label.log.details}"></h2>
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end pageheader -->
+	<!-- ============================================================== -->
+	<div class="row">
+		<!-- ============================================================== -->
+		<!-- users table  -->
+		<!-- ============================================================== -->
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card">
+				<div class="card-body">
+					<!-- ============================================================== -->
+					<!-- basic pills  -->
+					<!-- ============================================================== -->
+					<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 mb-5">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="info-item">
+									<span class="info-label" th:text="#{label.general.name}"></span>
+									<span class="info-value" th:text="${log.errorName}"></span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							 
+							<div class="col-md-12">
+								<div class="info-item">
+									<span class="info-label" th:text="#{label.general.description}"></span>
+									<span class="info-value" th:text="${log.errorDescription}"></span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<a th:href="@{/logs/list}"
+						class="btn btn-secondary btn-sm" th:title="#{label.button.back}">
+						<span class="fa fa-times"></span>
+					</a>
+				</div>
+				<!-- ============================================================== -->
+				<!-- end basic pills  -->
+				<!-- ============================================================== -->
+			</div>
+		</div>
+	</div>
+	<!-- ============================================================== -->
+	<!-- end users table  -->
+	<!-- ============================================================== -->
+</div>
+</div>
+</html>

@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.niwe.erp.common.service.NotificationService;
 import com.niwe.erp.core.domain.CoreItem;
+import com.niwe.erp.core.domain.ErrorLogType;
+import com.niwe.erp.core.service.ErrorLogService;
 import com.niwe.erp.inventory.domain.InventoryLocation;
 import com.niwe.erp.inventory.domain.LocationStock;
 import com.niwe.erp.inventory.domain.MovementType;
@@ -35,6 +37,7 @@ public class StockMovementService {
 	private final WarehouseStockService warehouseStockService;
 	private final LocationStockService locationStockService;
 	private final NotificationService notificationService;
+	private final ErrorLogService errorLogService;
 
 	public List<StockMovement> findAll() {
 		return stockMovementRepository.findAll();
@@ -176,8 +179,11 @@ public class StockMovementService {
 		BigDecimal remaining = saleQty;
 		List<LocationStock> locations = locationStockService.findLocationsFIFONoStock(warehouseId, item.getId());
 		if (locations.size() == 0) {
-			throw new IllegalStateException(
-					"No stock  locations:for Item:" + item.getItemName() + "-" + item.getInternalCode());
+
+			String error = String.format("No stand transaction for item: %s - %s - %s", item.getItemName(),
+					item.getInternalCode(), item.getBarcode());
+			errorLogService.save(error, error, ErrorLogType.INVENTORY);
+			throw new IllegalStateException(error);
 		}
 
 		StockMovement lastMovement = null;
@@ -185,17 +191,20 @@ public class StockMovementService {
 		BigDecimal available = loc.getQuantity();
 		BigDecimal prevLoc = available;
 		BigDecimal newLoc = available.subtract(remaining);
-			// Decrease only location stock
-			locationStockService.decreaseWithNegativeStock(loc.getLocation().getId(), loc.getItem(), remaining);
-			// Log stock movement
-			StockMovement sm = StockMovement.builder().item(loc.getItem()).fromLocation(loc.getLocation())
-					.toLocation(null).movementType(MovementType.SALE).movedQuantity(remaining)
-					.previousLocationQuantity(prevLoc).currentLocationQuantity(newLoc).movementDate(Instant.now())
-					.reference(reference).build();
-			lastMovement = stockMovementRepository.save(sm);
+		// Decrease only location stock
+		locationStockService.decreaseWithNegativeStock(loc.getLocation().getId(), loc.getItem(), remaining);
+		// Log stock movement
+		StockMovement sm = StockMovement.builder().item(loc.getItem()).fromLocation(loc.getLocation()).toLocation(null)
+				.movementType(MovementType.SALE).movedQuantity(remaining).previousLocationQuantity(prevLoc)
+				.currentLocationQuantity(newLoc).movementDate(Instant.now()).reference(reference).build();
+		lastMovement = stockMovementRepository.save(sm);
 		if (newLoc.compareTo(BigDecimal.ZERO) > 0) {
-			notificationService
-					.sentEmail("Not enough stock in locations:" + item.getItemName() + "-" + item.getInternalCode());
+			String error = String.format("Not enough stock on stand:%s- %s - %s - %s",
+					loc.getLocation().getLocationName(), item.getItemName(), item.getInternalCode(), item.getBarcode());
+			errorLogService.save(error, error, ErrorLogType.INVENTORY);
+			// notificationService
+			// .sentEmail("Not enough stock in locations:" + item.getItemName() + "-" +
+			// item.getInternalCode());
 
 			// throw new IllegalStateException(
 			// "Not enough stock in locations: Available Stock in:" + remaining + " for

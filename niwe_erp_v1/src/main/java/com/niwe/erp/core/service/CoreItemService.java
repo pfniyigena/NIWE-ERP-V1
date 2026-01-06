@@ -24,6 +24,7 @@ import com.niwe.erp.core.domain.CoreItemClassification;
 import com.niwe.erp.core.domain.CoreItemNature;
 import com.niwe.erp.core.domain.CoreQuantityUnit;
 import com.niwe.erp.core.domain.EItemNature;
+import com.niwe.erp.core.domain.ErrorLogType;
 import com.niwe.erp.core.dto.CoreItemListDTO;
 import com.niwe.erp.core.form.CoreItemForm;
 import com.niwe.erp.core.helper.ItemExcelHelper;
@@ -58,6 +59,7 @@ public class CoreItemService {
 	private final WarehouseRepository warehouseRepository;
 	private final StockMovementService stockMovementService;
 	private final AuditService auditService;
+	private final ErrorLogService errorLogService;
 
 	public List<CoreItemForm> findAllAsForm() {
 		return coreItemRepository.findAllAsForm();
@@ -170,6 +172,16 @@ public class CoreItemService {
 	public CoreItem findByInternalCode(String internalCode) {
 		return coreItemRepository.findByInternalCode(internalCode).orElseThrow(
 				() -> new ResourceNotFoundException("Product not found with internalCode: " + internalCode));
+
+	}
+	public CoreItem findByInternalCodeApi(String internalCode) {
+		return coreItemRepository.findByInternalCode(internalCode).orElseThrow(
+				() -> {
+					String error = String.format("No Item  for item: %s", internalCode
+							);
+					errorLogService.save(error, error, ErrorLogType.ITEM);
+					throw new IllegalStateException(error);
+				});
 
 	}
 

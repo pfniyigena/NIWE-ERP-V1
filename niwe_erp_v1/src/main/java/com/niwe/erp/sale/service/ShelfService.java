@@ -215,7 +215,7 @@ public class ShelfService {
 	}
 
 	private SaleItem mapToSaleLine(SaleItemRequest saleItemRequest) {
-		CoreItem coreItem = coreItemService.findByInternalCode(saleItemRequest.itemCode());
+		CoreItem coreItem = coreItemService.findByInternalCodeApi(saleItemRequest.itemCode());
 		return SaleItem.builder().item(coreItem).itemName(coreItem.getItemName()).quantity(saleItemRequest.quantity())
 				.salePrice(saleItemRequest.unitPrice()).itemSeq(saleItemRequest.itemSequence())
 				.taxAmount(saleItemRequest.totalTax())
