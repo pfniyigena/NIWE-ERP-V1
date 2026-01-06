@@ -33,10 +33,19 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			    FROM LocationStock ls
 			    WHERE ls.location.warehouse.id = :warehouseId
 			      AND ls.item.id = :itemId
-			      AND ls.quantity > 0
 			    ORDER BY ls.modifiedAt ASC
 			""")
-	List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId);
+	List<LocationStock> findLocationsFIFONoStock(UUID warehouseId, UUID itemId);
+	
+	@Query("""
+		    SELECT ls
+		    FROM LocationStock ls
+		    WHERE ls.location.warehouse.id = :warehouseId
+		      AND ls.item.id = :itemId
+		      AND ls.quantity > 0
+		    ORDER BY ls.modifiedAt ASC
+		""")
+List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId);
 
 	@Query("""
 			SELECT ls FROM LocationStock ls

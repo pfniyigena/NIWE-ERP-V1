@@ -34,8 +34,20 @@ public class SaleApiController {
 	@PostMapping(headers = NiweErpApiUrlConstants.NIWE_API_V1)
 	public ResponseEntity<NiweCommonResponse> receiveSale(@RequestBody SaleRequest request) {
 		log.info("ReceiveSale from request: {}", request);
-		shelfService.receiveSaleFromExternalShelf(request);
-		NiweCommonResponse niweCommonResponse = new NiweCommonResponse(null, "000", "SUCCESS", 0);
+		NiweCommonResponse niweCommonResponse = null;
+		try {
+			boolean result = shelfService.receiveSaleFromExternalShelf(request);
+			if (result) {
+				niweCommonResponse = new NiweCommonResponse(null, "000", "SUCCESS", 0);
+			} else {
+				niweCommonResponse = new NiweCommonResponse(null, "001", "FAILED", 0);
+			}	
+		} catch(IllegalStateException e) {
+			niweCommonResponse = new NiweCommonResponse(null, "001", e.getMessage(), 0);	
+			
+		}
+		
+
 		log.info("ReceiveSale from response: {}", niweCommonResponse);
 		return ResponseEntity.ok(niweCommonResponse);
 	}

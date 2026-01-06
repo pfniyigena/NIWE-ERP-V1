@@ -37,9 +37,11 @@ import com.niwe.erp.web.api.dto.SaleItemRequest;
 import com.niwe.erp.web.api.dto.SaleRequest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ShelfService {
 	private final SaleRepository saleRepository;
 	private final ShelfRepository shelfRepository;
@@ -137,6 +139,14 @@ public class ShelfService {
 		});
 
 	}
+	private void logApiMovement(Sale sale) {
+		sale.getItems().forEach((n) -> {
+			inventoryService.sellApiFromLocation(sale.getWarehouse().getId(), n.getItem().getId(), n.getQuantity(),
+					sale.getInternalCode());
+
+		});
+
+	}
 
 	private SaleItem mapToSaleLine(ShelfLineForm shelfLineForm) {
 		CoreItem coreItem = coreItemService.findByInternalCode(shelfLineForm.getInternalCode());
@@ -152,55 +162,56 @@ public class ShelfService {
 	}
 
 	@Transactional
-	public void receiveSaleFromExternalShelf(SaleRequest request) {
+	public boolean receiveSaleFromExternalShelf(SaleRequest request) {
+			if (saleRepository.findByExternalCode(request.externalReference()).isPresent()) {
+				return true;
+			}
+			String internalCode = sequenceNumberService.getNextSaleCode();
+			Shelf shelf = findByInternalCode(request.niweHeaderRequest().shelfCode());
+			Customer customer = customerService.save(Customer.builder().customerName(request.customerName())
+					.customerTin(request.customerTin()).customerPhone(request.customerPhone()).build());
+			Sale sale = new Sale();
+			sale.setWarehouse(shelf.getWarehouse());
+			sale.setTaxpayer(shelf.getWarehouse().getTaxpayer());
+			sale.setShelf(shelf);
+			sale.setCustomer(customer);
+			sale.setCustomerName(request.customerName());
+			sale.setCustomerPhone(request.customerPhone());
+			sale.setCustomerTin(request.customerTin());
+			sale.setSourceChannel(EChannel.API);
+			TransactionType transactionType = TransactionType.SALE;
+			if (!request.transactionType().equals("S")) {
+				transactionType = TransactionType.REFUND;
+			}
+			sale.setTransactionType(transactionType);
+			sale.setSaleDate(DataParserUtil.instantFromDateString(request.saleDate()));
+			sale.setExternalCode(request.externalReference());
+			sale.setPaymentMethod(paymentMethodService.save(request.paymentMethod()));
+			sale.setConfirmedBy(request.confirmedBy());
+			sale.setInternalCode(internalCode);
+			sale.setTotalGrossAmount(request.totalGrossAmount());
+			sale.setTotalDiscountAmount(request.totalDiscountAmount());
+			sale.setTotalTaxAmount(request.totalTaxAmount());
+			sale.setTotalAmountInclusiveTax(request.totalAmount());
+			sale.setTotalAmountHorsTax(request.totalAmount().subtract(request.totalTaxAmount()));
+			sale.setTotalAmountToPay(request.totalAmount());
+			List<SaleItem> lines = request.items().stream().map(itemRequest -> {
+				SaleItem line = mapToSaleLine(itemRequest);
+				line.setPurchasePrice(line.getItem().getUnitCost());
+				sale.setTotalCost(sale.getTotalCost().add((line.getItem().getUnitCost().multiply(line.getQuantity()))));
+				return line;
 
-		if (saleRepository.findByExternalCode(request.externalReference()).isPresent()) {
-			return;
-		}
-		Shelf shelf = findByInternalCode(request.niweHeaderRequest().shelfCode());
-		Customer customer = customerService.save(Customer.builder().customerName(request.customerName())
-				.customerTin(request.customerTin()).customerPhone(request.customerPhone()).build());
-		Sale sale = new Sale();
-		sale.setWarehouse(shelf.getWarehouse());
-		sale.setTaxpayer(shelf.getWarehouse().getTaxpayer());
-		sale.setShelf(shelf);
-		sale.setCustomer(customer);
-		sale.setCustomerName(request.customerName());
-		sale.setCustomerPhone(request.customerPhone());
-		sale.setCustomerTin(request.customerTin());
-		sale.setSourceChannel(EChannel.API);
-		TransactionType transactionType = TransactionType.SALE;
-		if (!request.transactionType().equals("S")) {
-			transactionType = TransactionType.REFUND;
-		}
-		sale.setTransactionType(transactionType);
-		sale.setSaleDate(DataParserUtil.instantFromDateString(request.saleDate()));
-		sale.setExternalCode(request.externalReference());
-		sale.setPaymentMethod(paymentMethodService.save(request.paymentMethod()));
-		sale.setConfirmedBy(request.confirmedBy());
-		sale.setInternalCode(sequenceNumberService.getNextSaleCode());
-		sale.setTotalGrossAmount(request.totalGrossAmount());
-		sale.setTotalDiscountAmount(request.totalDiscountAmount());
-		sale.setTotalTaxAmount(request.totalTaxAmount());
-		sale.setTotalAmountInclusiveTax(request.totalAmount());
-		sale.setTotalAmountHorsTax(request.totalAmount().subtract(request.totalTaxAmount()));
-		sale.setTotalAmountToPay(request.totalAmount());
-		List<SaleItem> lines = request.items().stream().map(itemRequest -> {
-			SaleItem line = mapToSaleLine(itemRequest);
-			line.setPurchasePrice(line.getItem().getUnitCost());
-			sale.setTotalCost(sale.getTotalCost().add((line.getItem().getUnitCost().multiply(line.getQuantity()))));
-			return line;
-
-		}).toList();
-		lines.forEach((n) -> n.setSale(sale));
-		sale.setItems(lines);
-		sale.setItemNumber(lines.size());
-		sale.setStatus(SaleStatus.DONE);
-		sale.setPaymentStatus(PaymentStatus.PAID);
-		DailySalesSummary summary = dailySalesSummaryService.save(sale);
-		sale.setSummary(summary);
-		saleRepository.save(sale);
-		logMovement(sale);
+			}).toList();
+			lines.forEach((n) -> n.setSale(sale));
+			sale.setItems(lines);
+			sale.setItemNumber(lines.size());
+			sale.setStatus(SaleStatus.DONE);
+			sale.setPaymentStatus(PaymentStatus.PAID);
+			DailySalesSummary summary = dailySalesSummaryService.save(sale);
+			sale.setSummary(summary);
+			saleRepository.save(sale);
+			logApiMovement(sale);
+			return true;
 	}
 
 	private SaleItem mapToSaleLine(SaleItemRequest saleItemRequest) {

@@ -171,6 +171,41 @@ public class StockMovementService {
 	}
 
 	@Transactional
+	public StockMovement logApiSaleFromLocations(UUID warehouseId, CoreItem item, BigDecimal saleQty,
+			String reference) {
+		BigDecimal remaining = saleQty;
+		List<LocationStock> locations = locationStockService.findLocationsFIFONoStock(warehouseId, item.getId());
+		if (locations.size() == 0) {
+			throw new IllegalStateException(
+					"No stock  locations:for Item:" + item.getItemName() + "-" + item.getInternalCode());
+		}
+
+		StockMovement lastMovement = null;
+		LocationStock loc = locations.get(0);
+		BigDecimal available = loc.getQuantity();
+		BigDecimal prevLoc = available;
+		BigDecimal newLoc = available.subtract(remaining);
+			// Decrease only location stock
+			locationStockService.decreaseWithNegativeStock(loc.getLocation().getId(), loc.getItem(), remaining);
+			// Log stock movement
+			StockMovement sm = StockMovement.builder().item(loc.getItem()).fromLocation(loc.getLocation())
+					.toLocation(null).movementType(MovementType.SALE).movedQuantity(remaining)
+					.previousLocationQuantity(prevLoc).currentLocationQuantity(newLoc).movementDate(Instant.now())
+					.reference(reference).build();
+			lastMovement = stockMovementRepository.save(sm);
+		if (newLoc.compareTo(BigDecimal.ZERO) > 0) {
+			notificationService
+					.sentEmail("Not enough stock in locations:" + item.getItemName() + "-" + item.getInternalCode());
+
+			// throw new IllegalStateException(
+			// "Not enough stock in locations: Available Stock in:" + remaining + " for
+			// Item:" + item);
+		}
+
+		return lastMovement;
+	}
+
+	@Transactional
 	public StockMovement logSaleFromLocations(UUID warehouseId, CoreItem item, BigDecimal saleQty, String reference) {
 		BigDecimal remaining = saleQty;
 		List<LocationStock> locations = locationStockService.findLocationsFIFO(warehouseId, item.getId());
@@ -195,10 +230,12 @@ public class StockMovementService {
 		}
 		if (remaining.compareTo(BigDecimal.ZERO) > 0) {
 
-			notificationService.sentEmail("Not enough stock in locations");
+			notificationService
+					.sentEmail("Not enough stock in locations:" + item.getItemName() + "-" + item.getInternalCode());
 
-			throw new IllegalStateException(
-					"Not enough stock in locations: Available Stock in:" + remaining + " for Item:" + item);
+			// throw new IllegalStateException(
+			// "Not enough stock in locations: Available Stock in:" + remaining + " for
+			// Item:" + item);
 		}
 
 		return lastMovement;

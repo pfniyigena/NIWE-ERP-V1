@@ -43,7 +43,15 @@ public class LocationStockService {
 			return locationStockRepository.save(ls);
 		});
 	}
-
+	@Transactional
+	public LocationStock ensureLocationStock(UUID locationId, CoreItem item) {
+		return locationStockRepository.findByLocationIdAndItemId(locationId, item.getId()).orElseGet(() -> {
+			LocationStock ls = LocationStock.builder().location(InventoryLocation.builder().id(locationId).build())
+					.item(item).quantity(BigDecimal.ZERO)
+					.build();
+			return locationStockRepository.save(ls);
+		});
+	}
 	@Transactional
 	public void increase(UUID locationId, CoreItem item, BigDecimal qty) {
 		LocationStock ls = locationStockRepository.findByLocationAndItemForUpdate(locationId, item.getId())
@@ -53,18 +61,6 @@ public class LocationStockService {
 		ls.setLastUpdated(LocalDateTime.now());
 		locationStockRepository.save(ls);
 	}
-
-	@Transactional
-	public LocationStock ensureLocationStock(UUID locationId, CoreItem item) {
-		return locationStockRepository.findByLocationIdAndItemId(locationId, item.getId()).orElseGet(() -> {
-			LocationStock ls = LocationStock.builder().location(InventoryLocation.builder().id(locationId).build())
-					.item(item).quantity(BigDecimal.ZERO)
-
-					.build();
-			return locationStockRepository.save(ls);
-		});
-	}
-
 	@Transactional
 	public void decrease(UUID locationId, CoreItem item, BigDecimal qty) {
 		LocationStock ls = locationStockRepository.findByLocationAndItemForUpdate(locationId, item.getId())
@@ -72,6 +68,14 @@ public class LocationStockService {
 		if (ls.getQuantity().compareTo(qty) < 0) {
 			throw new ResourceNotFoundException("Insufficient location stock");
 		}
+		ls.setQuantity(ls.getQuantity().subtract(qty));
+		ls.setLastUpdated(LocalDateTime.now());
+		locationStockRepository.save(ls);
+	}
+	@Transactional
+	public void decreaseWithNegativeStock(UUID locationId, CoreItem item, BigDecimal qty) {
+		LocationStock ls = locationStockRepository.findByLocationAndItemForUpdate(locationId, item.getId())
+				.orElseThrow(() -> new ResourceNotFoundException("No location stock"));
 		ls.setQuantity(ls.getQuantity().subtract(qty));
 		ls.setLastUpdated(LocalDateTime.now());
 		locationStockRepository.save(ls);
@@ -104,6 +108,10 @@ public class LocationStockService {
 	public List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId) {
 		return locationStockRepository.findLocationsFIFO(warehouseId, itemId);
 	}
+	public List<LocationStock> findLocationsFIFONoStock(UUID warehouseId, UUID itemId) {
+		return locationStockRepository.findLocationsFIFONoStock(warehouseId, itemId);
+	}
+	
 	
 	public List<OutflowItemListView> findAllOutflowItems() {
 		return locationStockRepository.findAllOutflowItems();

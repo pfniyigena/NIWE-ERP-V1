@@ -83,4 +83,11 @@ public class InventoryService {
 		movementService.logSaleFromLocations(warehouseId, item, qty, reference);
 
 	}
+	@Transactional
+	public void sellApiFromLocation(UUID warehouseId, UUID itemId, BigDecimal qty, String reference) {
+		CoreItem item = coreItemRepository.findById(itemId)
+				.orElseThrow(() -> new ResourceNotFoundException("Item not found" + itemId));
+		movementService.logApiSaleFromLocations(warehouseId, item, qty, reference);
+
+	}
 }
