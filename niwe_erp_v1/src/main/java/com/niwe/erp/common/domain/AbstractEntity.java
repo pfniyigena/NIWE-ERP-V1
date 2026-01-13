@@ -53,11 +53,11 @@ public abstract class AbstractEntity implements Serializable {
 	@JsonIgnore
 	@Column(name = "CREATED_AT")
 	@CreatedDate
-	protected Instant createdAt;
+	private Instant createdAt;
 	@JsonIgnore
 	@Column(name = "MODIFIED_AT")
 	@LastModifiedDate
-	protected Instant modifiedAt;
+	private Instant modifiedAt;
 	@CreatedBy
 	@Basic(optional = true)
 	@Column(name = "CREATED_BY")

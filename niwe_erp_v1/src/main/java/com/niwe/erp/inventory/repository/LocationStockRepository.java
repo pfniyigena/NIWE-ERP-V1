@@ -1,5 +1,6 @@
 package com.niwe.erp.inventory.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,16 +37,16 @@ public interface LocationStockRepository extends JpaRepository<LocationStock, UU
 			    ORDER BY ls.modifiedAt ASC
 			""")
 	List<LocationStock> findLocationsFIFONoStock(UUID warehouseId, UUID itemId);
-	
+
 	@Query("""
-		    SELECT ls
-		    FROM LocationStock ls
-		    WHERE ls.location.warehouse.id = :warehouseId
-		      AND ls.item.id = :itemId
-		      AND ls.quantity > 0
-		    ORDER BY ls.modifiedAt ASC
-		""")
-List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId);
+			    SELECT ls
+			    FROM LocationStock ls
+			    WHERE ls.location.warehouse.id = :warehouseId
+			      AND ls.item.id = :itemId
+			      AND ls.quantity > 0
+			    ORDER BY ls.modifiedAt ASC
+			""")
+	List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId);
 
 	@Query("""
 			SELECT ls FROM LocationStock ls
@@ -108,7 +109,8 @@ List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId);
 			    wh.id                    AS warehouseId,
 			    loc.location_code        AS locationCode,
 			    loc.location_name        AS locationName,
-			    loc.priority             AS priority
+			    loc.priority             AS priority,
+			    loc.modified_at          AS modifiedAt
 			FROM core_item ci
 			CROSS JOIN inventory_location loc
 			JOIN inventory_warehouse wh ON loc.warehouse_id = wh.id        -- 99% of projects
@@ -123,7 +125,6 @@ List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId);
 			     OR LOWER(ci.internal_code) LIKE LOWER(CONCAT('%', :search, '%'))
 			     OR LOWER(ci.barcode)       LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
-			ORDER BY loc.priority ASC, loc.location_code ASC, ci.item_name ASC
 			""", countQuery = """
 			SELECT COUNT(*)
 			FROM core_item ci
@@ -305,4 +306,6 @@ List<LocationStock> findLocationsFIFO(UUID warehouseId, UUID itemId);
 			""")
 	Page<OutflowItemListView> searchOutflowItems2(@Param("search") String search, Pageable pageable);
 
+	@Query(value = "SELECT SUM(s.QUANTITY * p.UNIT_COST) FROM INVENTORY_LOCATION_STOCK s JOIN CORE_ITEM p ON s.ITEM_ID = p.id", nativeQuery = true)
+	BigDecimal findStandsValue();
 }

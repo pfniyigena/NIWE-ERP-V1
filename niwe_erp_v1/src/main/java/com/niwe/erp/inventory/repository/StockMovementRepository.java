@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.niwe.erp.core.domain.CoreItem;
 import com.niwe.erp.inventory.domain.StockMovement;
+import com.niwe.erp.inventory.web.view.InflowOutflowSaleView;
 import com.niwe.erp.inventory.web.view.StockMovementListView;
 
 public interface StockMovementRepository extends JpaRepository<StockMovement, UUID> {
@@ -34,6 +35,7 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			    sm.CURRENT_LOCATION_QUANTITY AS currentLocationQuantity,
 			    sm.movement_date AS movementDate,
 			    sm.movement_type AS movementType,
+			    sm.modified_at as modifiedAt,
 			    COALESCE(sm.to_warehouse_id, sm.from_warehouse_id) AS warehouseId,
 			             COALESCE(sm.to_location_id, sm.from_location_id) AS locationId
 			FROM INVENTORY_STOCK_MOVEMENT sm
@@ -47,7 +49,6 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			         OR LOWER(i.internal_code) LIKE LOWER(CONCAT('%', :search, '%'))
 			         OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
 			        )
-			ORDER BY sm.movement_date DESC
 			""", countQuery = """
 			SELECT COUNT(*)
 			FROM INVENTORY_STOCK_MOVEMENT sm
@@ -66,6 +67,7 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			""", nativeQuery = true)
 	Page<StockMovementListView> findMovements(@Param("itemId") UUID itemId, @Param("warehouseId") UUID warehouseId,
 			@Param("search") String search, Pageable pageable);
+
 	@Query(value = """
 			SELECT
 			    sm.item_id AS itemId,
@@ -81,6 +83,7 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			    sm.CURRENT_LOCATION_QUANTITY AS currentLocationQuantity,
 			    sm.movement_date AS movementDate,
 			    sm.movement_type AS movementType,
+			    sm.modified_at AS modifiedAt,
 			    COALESCE(sm.to_warehouse_id, sm.from_warehouse_id) AS warehouseId,
 			    COALESCE(sm.to_location_id, sm.from_location_id) AS locationId
 			FROM INVENTORY_STOCK_MOVEMENT sm
@@ -94,7 +97,7 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			         OR LOWER(i.internal_code) LIKE LOWER(CONCAT('%', :search, '%'))
 			         OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
 			        )
-			ORDER BY sm.movement_date DESC
+
 			""", countQuery = """
 			SELECT COUNT(*)
 			FROM INVENTORY_STOCK_MOVEMENT sm
@@ -111,7 +114,40 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			         OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
 			        )
 			""", nativeQuery = true)
-	Page<StockMovementListView> findMovementByItemAndLocations(@Param("itemId") UUID itemId, @Param("locationId") UUID locationId,
-			@Param("search") String search, Pageable pageable);
+	Page<StockMovementListView> findMovementByItemAndLocations(@Param("itemId") UUID itemId,
+			@Param("locationId") UUID locationId, @Param("search") String search, Pageable pageable);
+
+	@Query(value = """
+						SELECT
+			  DATE(t.MOVEMENT_DATE) AS day,
+
+			  SUM(
+			    CASE
+			      WHEN t.MOVEMENT_TYPE IN ('STOCK_INITIAL', 'GOOD_RECEIVED_NOTE', 'PURCHASE')
+			      THEN t.MOVED_QUANTITY
+			      ELSE 0
+			    END
+			  ) AS inflow,
+
+			  SUM(
+			    CASE
+			      WHEN t.MOVEMENT_TYPE IN ('TRANSFER','SALE_RETURN')
+			      THEN t.MOVED_QUANTITY
+			      ELSE 0
+			    END
+			  ) AS outflow,
+			    SUM(
+			    CASE
+			      WHEN t.MOVEMENT_TYPE IN ('SALE')
+			      THEN t.MOVED_QUANTITY
+			      ELSE 0
+			    END
+			  ) AS sale
+
+			FROM INVENTORY_STOCK_MOVEMENT t
+			GROUP BY DATE(t.MOVEMENT_DATE)
+			ORDER BY day DESC
+						""", nativeQuery = true)
+	List<InflowOutflowSaleView> findInflowOutflowSaleView();
 
 }

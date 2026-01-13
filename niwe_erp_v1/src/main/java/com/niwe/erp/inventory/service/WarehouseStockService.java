@@ -240,6 +240,17 @@ public class WarehouseStockService {
 				searchValue, searchValue, pageable);
 	}
 
+	public Page<InflowItemListView> findAllItems(UUID warehouseId, String searchValue, Pageable pageable) {
+
+		return warehouseStockRepository.findAllItems(warehouseId, searchValue, searchValue, searchValue, searchValue,
+				pageable);
+	}
+	public Page<InflowItemListView> findAllReorderItems(UUID warehouseId, String searchValue, Pageable pageable) {
+
+		return warehouseStockRepository.findAllReorderItems(warehouseId, searchValue, searchValue, searchValue, searchValue,
+				pageable);
+	}
+
 	@Transactional
 	public void increase(UUID warehouseId, CoreItem item, BigDecimal qty) {
 		WarehouseStock ws = warehouseStockRepository.findByWarehouseAndItemForUpdate(warehouseId, item.getId())
@@ -254,7 +265,7 @@ public class WarehouseStockService {
 		WarehouseStock ws = warehouseStockRepository.findByWarehouseAndItemForUpdate(warehouseId, item.getId())
 				.orElseThrow(() -> new ResourceNotFoundException("No warehouse stock"));
 		if (ws.getQuantity().compareTo(qty) < 0) {
-			//throw new ResourceNotFoundException("Insufficient warehouse stock");
+			// throw new ResourceNotFoundException("Insufficient warehouse stock");
 			log.info("==========Insufficient warehouse stock=========");
 		}
 		ws.setQuantity(ws.getQuantity().subtract(qty));
@@ -285,12 +296,14 @@ public class WarehouseStockService {
 		warehouseStockRepository.save(ws);
 	}
 
-	 
-
 	public WarehouseStock save(WarehouseStock stock) {
 		return warehouseStockRepository.save(stock);
 
 	}
 
-	 
+	@Transactional(readOnly = true)
+	public BigDecimal findStockValue() {
+		return warehouseStockRepository.findStockValue();
+	}
+
 }

@@ -88,12 +88,49 @@ public class InFlowController {
 		log.info("SEARCH VALUE RECEIVED: [{}]", request.search().value()); // ← NOW YOU WILL SEE IT!
 		String searchValue = request.search().value() == null ? "" : request.search().value().trim();
 		// Get sorting
-		String sortColumn = "itemName"; // default
-		String sortDir = "asc";
+		String sortColumn = "modifiedAt"; // default
+		String sortDir = "desc";
 		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
 				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
 
 		Page<InflowItemListView> itemsPage = warehouseStockService.findAllItemsWithWarehouseStock(warehouse.getId(),
+				searchValue, pageable);
+		log.info("INFLOWS DATA: [{}]", itemsPage.getTotalElements()); // ← NOW YOU WILL SEE IT!
+		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
+				itemsPage.getTotalElements(), "data", itemsPage.getContent(), "warehouse", warehouse);
+	}
+
+	@PostMapping(value = "/items/list/data", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> getItemData(@RequestBody DataTablesRequest request) {
+		Warehouse warehouse = warehouseService.findMain();
+		log.info("SEARCH VALUE RECEIVED: [{}]", request.search().value()); // ← NOW YOU WILL SEE IT!
+		String searchValue = request.search().value() == null ? "" : request.search().value().trim();
+		// Get sorting
+		String sortColumn = "modifiedAt"; // default
+		String sortDir = "desc";
+		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
+				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
+
+		Page<InflowItemListView> itemsPage = warehouseStockService.findAllItems(warehouse.getId(),
+				searchValue, pageable);
+		log.info("INFLOWS DATA: [{}]", itemsPage.getTotalElements()); // ← NOW YOU WILL SEE IT!
+		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
+				itemsPage.getTotalElements(), "data", itemsPage.getContent(), "warehouse", warehouse);
+	}
+	@PostMapping(value = "/reorder/list/data", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> getReorderItems(@RequestBody DataTablesRequest request) {
+		Warehouse warehouse = warehouseService.findMain();
+		log.info("SEARCH VALUE RECEIVED: [{}]", request.search().value()); // ← NOW YOU WILL SEE IT!
+		String searchValue = request.search().value() == null ? "" : request.search().value().trim();
+		// Get sorting
+		String sortColumn = "modifiedAt"; // default
+		String sortDir = "desc";
+		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
+				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
+
+		Page<InflowItemListView> itemsPage = warehouseStockService.findAllReorderItems(warehouse.getId(),
 				searchValue, pageable);
 		log.info("INFLOWS DATA: [{}]", itemsPage.getTotalElements()); // ← NOW YOU WILL SEE IT!
 		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
@@ -106,7 +143,8 @@ public class InFlowController {
 			@RequestParam BigDecimal newUnitCost, @RequestParam String newBarcode, @RequestParam String supplier,
 			@RequestParam String expirationDate, RedirectAttributes redirectAttributes) {
 		LocalDate date = (expirationDate == null || expirationDate.isEmpty()) ? null : LocalDate.parse(expirationDate);
-		log.info("newUnitPrice:{},Quantity:{}", newUnitPrice,newValue);
+		log.info("newUnitPrice:{},Quantity:{},itemId:{},warehouseId:{},supplier:{},expirationDate:{}", newUnitPrice,
+				newValue, itemId, warehouseId, supplier, expirationDate);
 		inventoryService.receiveToWarehouse(itemId, warehouseId, newValue, "", newUnitPrice, newUnitCost, newBarcode,
 				supplier, date);
 		redirectAttributes.addFlashAttribute("success", "Success.");
@@ -116,8 +154,8 @@ public class InFlowController {
 	@PostMapping("/out")
 	public String transferWarehouseToLocation(@RequestParam String itemId, @RequestParam String warehouseId,
 			@RequestParam BigDecimal newValue, @RequestParam String locationId, RedirectAttributes redirectAttributes) {
-		log.info("transferWarehouseToLocation where warehouseId:{},locationId:{},itemId:{},Quantity:{}", warehouseId, locationId,
-				itemId,newValue);
+		log.info("transferWarehouseToLocation where warehouseId:{},locationId:{},itemId:{},Quantity:{}", warehouseId,
+				locationId, itemId, newValue);
 		inventoryService.transferWarehouseToLocation(warehouseId, locationId, itemId, newValue, "");
 		redirectAttributes.addFlashAttribute("success", "Success.");
 		return NikaErpInventoryUrlConstants.IN_FLOWS_LIST_REDITECT_URL;
@@ -141,8 +179,8 @@ public class InFlowController {
 
 		String searchValue = request.search().value() == null ? "" : request.search().value().trim();
 		// Get sorting
-		String sortColumn = "itemName"; // default
-		String sortDir = "asc";
+		String sortColumn = "modifiedAt"; // default
+		String sortDir = "desc";
 		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
 				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
 

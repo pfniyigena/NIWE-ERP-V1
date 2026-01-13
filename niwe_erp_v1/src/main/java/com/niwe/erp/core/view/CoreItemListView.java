@@ -2,6 +2,7 @@ package com.niwe.erp.core.view;
  
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 public record CoreItemListView(
@@ -15,5 +16,6 @@ public record CoreItemListView(
         String taxCode,
         BigDecimal taxValue,
         UUID natureId,
-        UUID classificationId
+        UUID classificationId,
+        Instant modifiedAt
 ) {}

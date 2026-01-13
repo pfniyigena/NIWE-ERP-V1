@@ -49,5 +49,7 @@ public interface StockMovementListView {
 	BigDecimal getCurrentLocationQuantity();
 
 	String getMovementType();
+	
+	Instant getModifiedAt();
 
 }

@@ -33,8 +33,8 @@ public class ItemAjaxController {
 	    String searchValue = request.search().value() == null ? "" : request.search().value().trim();
 
 	    // Get sorting
-	    String sortColumn = "itemName"; // default
-	    String sortDir = "asc";
+	    String sortColumn = "modifiedAt"; // default
+	    String sortDir = "desc";
 	    Pageable pageable = PageRequest.of(
 	        request.start() / request.length(),
 	        request.length(),
@@ -43,6 +43,7 @@ public class ItemAjaxController {
 	    );
 
 	    Page<CoreItemListView> itemsPage = coreItemService.getItems(pageable, searchValue, searchValue);
+	    log.info(itemsPage.getContent().get(0).itemName());
 	    return Map.of(
 	        "draw", request.draw(),
 	        "recordsTotal", coreItemService.countAll(),

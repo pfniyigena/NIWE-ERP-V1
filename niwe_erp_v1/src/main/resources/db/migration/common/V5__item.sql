@@ -1,0 +1,1 @@
+update  inventory_warehouse_stock set modified_at=now() where modified_at is null;

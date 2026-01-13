@@ -69,9 +69,8 @@ public class OutFlowController {
 		Warehouse warehouse = warehouseService.findMain();
 		log.info("SEARCH VALUE RECEIVED: [{}]", request.search().value()); // ← NOW YOU WILL SEE IT!
 		String searchValue = request.search().value() == null ? "" : request.search().value().trim();
-		// Get sorting
-		String sortColumn = "itemName"; // default
-		String sortDir = "asc";
+		String sortColumn = "modifiedAt"; // default
+		String sortDir = "desc";
 		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
 				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
 
@@ -115,8 +114,8 @@ public class OutFlowController {
 
 		String searchValue = request.search().value() == null ? "" : request.search().value().trim();
 		// Get sorting
-		String sortColumn = "itemName"; // default
-		String sortDir = "asc";
+		String sortColumn = "modifiedAt"; // default
+		String sortDir = "desc";
 		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
 				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
 

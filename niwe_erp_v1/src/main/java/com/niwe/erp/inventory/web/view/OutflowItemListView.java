@@ -1,6 +1,7 @@
 package com.niwe.erp.inventory.web.view;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.UUID;
 
 public interface OutflowItemListView {
@@ -27,4 +28,5 @@ public interface OutflowItemListView {
 	String getLocationName();
 
 	Integer getPriority();
+	  Instant getModifiedAt();
 }

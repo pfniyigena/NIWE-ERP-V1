@@ -169,7 +169,73 @@
 				</div>
 			</div>
 		</div>
-		
+		<div class="row">
+			<!-- ============================================================== -->
+			<!-- ============================================================== -->
+			<!-- Fast Moving Products  -->
+			<!-- ============================================================== -->
+			<div class="col-xl-6 col-lg-12 col-md-6 col-sm-12 col-12">
+				<div class="card">
+					<h5 class="card-header">10 Fast Moving Products</h5>
+					<div class="card-body p-0">
+						<div class="table-responsive">
+							<table class="table">
+								<thead class="bg-light">
+									<tr class="border-0">
+										<th class="border-0">#</th>
+										<th class="border-0">Product Name</th>
+										<th class="border-0">Sold</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="list,stat : ${fastItems}">
+										<td th:text="${stat.index + 1}"></td>
+										<td th:text="${list.itemName}"></td>
+										<td th:text="${list.sold}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- ============================================================== -->
+			<!-- End Fast Moving Products-->
+			<!-- ============================================================== -->
+			<!-- ============================================================== -->
+			<!-- Dead Stock (Cash Killer) Products that are freezing your money  -->
+			<!-- ============================================================== -->
+			<div class="col-xl-6 col-lg-12 col-md-6 col-sm-12 col-12">
+				<div class="card">
+					<h5 class="card-header">60 days Dead Stock (Cash Killer)</h5>
+					<div class="card-body p-0">
+						<div class="table-responsive">
+							<table class="table">
+								<thead class="bg-light">
+									<tr class="border-0">
+										<th class="border-0">#</th>
+										<th class="border-0">Product Name</th>
+										<th class="border-0">Last Sold</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="list,stat : ${deadItems}">
+										<td th:text="${stat.index + 1}"></td>
+										<td th:text="${list.itemName}"></td>
+										<td
+											th:text="${#temporals.format(list.lastSold, 'yyyy-MM-dd', T(java.time.ZoneId).of('Africa/Kigali'))}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- ============================================================== -->
+			<!-- end Dead Stock (Cash Killer) Products that are freezing your money  -->
+			<!-- ============================================================== -->
+		</div>
+
 	</div>
 </div>
 </html>

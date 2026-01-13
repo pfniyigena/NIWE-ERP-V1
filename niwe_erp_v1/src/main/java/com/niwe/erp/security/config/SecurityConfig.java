@@ -7,9 +7,12 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import com.niwe.erp.core.service.CoreAppUserDetailsService;
 
@@ -28,13 +31,17 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
 		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers("assets/**", "/api/**", "/login", "/error", "/swagger-ui.html", "/swagger-ui/**",
+				.requestMatchers("/assets/**", "/api/**", "/login", "/error", "/swagger-ui.html", "/swagger-ui/**",
 						"/v3/api-docs/**")
 				.permitAll().requestMatchers("/admin/**").hasRole("ADMIN").anyRequest().authenticated())
 				.formLogin(form -> form.loginPage("/login").permitAll().defaultSuccessUrl("/", true))
 				.logout(logout -> logout.logoutUrl("/logout").logoutSuccessUrl("/login?logout"))
-				.exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler)).csrf(csrf -> csrf.disable());
+				.sessionManagement(session -> session.maximumSessions(1) // 🔒 only ONE active session
+						.maxSessionsPreventsLogin(false) // kick out previous login
+						.expiredUrl("/login?expired=true") // redirect when kicked out
+				).exceptionHandling(ex -> ex.accessDeniedHandler(accessDeniedHandler)).csrf(csrf -> csrf.disable());
 
 		return http.build();
 	}
@@ -50,4 +57,15 @@ public class SecurityConfig {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(11);
 	}
+
+	@Bean
+	public SessionRegistry sessionRegistry() {
+		return new SessionRegistryImpl();
+	}
+
+	@Bean
+	public HttpSessionEventPublisher httpSessionEventPublisher() {
+		return new HttpSessionEventPublisher();
+	}
+
 }

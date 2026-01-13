@@ -123,4 +123,8 @@ public class LocationStockService {
 	public Page<OutflowItemListView> findAllOutflowItems(String search,Pageable pageable) {
 		return locationStockRepository.searchOutflowItems2(search,pageable);
 	}
+	@Transactional(readOnly = true)
+	public BigDecimal findStandsValue() {
+		return locationStockRepository.findStandsValue();
+	}
 }

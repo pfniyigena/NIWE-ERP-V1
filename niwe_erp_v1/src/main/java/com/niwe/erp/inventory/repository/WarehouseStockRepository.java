@@ -1,5 +1,6 @@
 package com.niwe.erp.inventory.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +13,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.niwe.erp.core.domain.CoreItem;
+import com.niwe.erp.core.view.BrandItemView;
+import com.niwe.erp.core.view.CategoryItemView;
 import com.niwe.erp.inventory.domain.Warehouse;
 import com.niwe.erp.inventory.domain.WarehouseStock;
 import com.niwe.erp.inventory.web.dto.ProductStockValuationDto;
@@ -109,7 +112,8 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			    p.unit_price AS unitPrice,
 			    p.unit_cost AS unitCost,
 			    COALESCE(ws.quantity, 0) AS quantity,
-			    ws.warehouse_id AS warehouseId
+			    ws.warehouse_id AS warehouseId,
+			    ws.modified_at as modifiedAt
 			FROM core_item p
 			LEFT JOIN inventory_warehouse_stock ws
 			    ON ws.item_id = p.id
@@ -119,8 +123,6 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
 			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
 			       AND p.deleted=false
-
-			ORDER BY p.item_name ASC
 			""", countQuery = """
 			     SELECT COUNT(*)
 			     FROM core_item p
@@ -136,5 +138,101 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 
 	Page<InflowItemListView> findAllItemsWithWarehouseStock(UUID warehouseId, String itemName, String itemCode,
 			String internalCode, String barcode, Pageable pageable);
+
+	@Query(value = """
+			SELECT
+			    p.id AS itemId,
+			    p.item_name AS itemName,
+			    p.internal_code AS itemCode,
+			    p.barcode AS barcode,
+			    p.unit_price AS unitPrice,
+			    p.unit_cost AS unitCost,
+			    COALESCE(ws.quantity, 0) AS quantity,
+			    ws.warehouse_id AS warehouseId,
+			    p.modified_at as modifiedAt,
+			    p.STOCK_LEVEL as stockLevel
+			FROM core_item p
+			LEFT JOIN inventory_warehouse_stock ws
+			    ON ws.item_id = p.id
+			    AND ws.warehouse_id = :warehouseId
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
+			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND p.deleted=false
+			""", countQuery = """
+			     SELECT COUNT(*)
+			     FROM core_item p
+			LEFT JOIN inventory_warehouse_stock ws
+			    ON ws.item_id = p.id
+			    AND ws.warehouse_id = :warehouseId
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
+			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND p.deleted=false
+			     """, nativeQuery = true)
+
+	Page<InflowItemListView> findAllItems(UUID warehouseId, String itemName, String itemCode, String internalCode,
+			String barcode, Pageable pageable);
+
+	@Query(value = """
+			SELECT
+			    p.id AS itemId,
+			    p.item_name AS itemName,
+			    p.internal_code AS itemCode,
+			    p.barcode AS barcode,
+			    p.unit_price AS unitPrice,
+			    p.unit_cost AS unitCost,
+			    COALESCE(ws.quantity, 0) AS quantity,
+			    ws.warehouse_id AS warehouseId,
+			    p.modified_at as modifiedAt,
+			    p.STOCK_LEVEL as stockLevel
+			FROM core_item p
+			LEFT JOIN inventory_warehouse_stock ws
+			    ON ws.item_id = p.id
+			    AND ws.warehouse_id = :warehouseId
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
+			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND p.deleted=false AND ws.quantity <= p.STOCK_LEVEL
+			""", countQuery = """
+			     SELECT COUNT(*)
+			     FROM core_item p
+			LEFT JOIN inventory_warehouse_stock ws
+			    ON ws.item_id = p.id
+			    AND ws.warehouse_id = :warehouseId
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
+			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND p.deleted=false AND ws.quantity <= p.STOCK_LEVEL
+			     """, nativeQuery = true)
+
+	Page<InflowItemListView> findAllReorderItems(UUID warehouseId, String itemName, String itemCode,
+			String internalCode, String barcode, Pageable pageable);
+
+	@Query(value = "SELECT SUM(s.QUANTITY * p.UNIT_COST) FROM INVENTORY_WAREHOUSE_STOCK s JOIN CORE_ITEM p ON s.ITEM_ID = p.id", nativeQuery = true)
+	BigDecimal findStockValue();
+
+	@Query(value = """
+			SELECT c.CATEGORY_NAME AS itemName, SUM(s.QUANTITY) AS quantity
+			FROM INVENTORY_WAREHOUSE_STOCK s
+			JOIN CORE_ITEM p ON s.ITEM_ID = p.id 
+			JOIN CORE_ITEM_CATEGORY c ON p.CATEGORY_ID = c.id 
+			GROUP BY c.CATEGORY_NAME
+
+			""", nativeQuery = true)
+	List<CategoryItemView> stockByCategory();
+
+	@Query(value = """
+			SELECT c.BRAND_NAME AS itemName, SUM(s.QUANTITY) AS quantity
+			FROM INVENTORY_WAREHOUSE_STOCK s
+			JOIN CORE_ITEM p ON s.ITEM_ID = p.id
+			JOIN CORE_ITEM_BRAND c ON p.BRAND_ID = c.id
+			GROUP BY c.BRAND_NAME
+			""", nativeQuery = true)
+	List<BrandItemView> stockByBrand();
 
 }

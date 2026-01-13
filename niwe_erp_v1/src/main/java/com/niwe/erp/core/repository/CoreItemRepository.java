@@ -15,6 +15,8 @@ import com.niwe.erp.core.domain.CoreItem;
 import com.niwe.erp.core.form.CoreItemForm;
 import com.niwe.erp.core.dto.CoreItemListDTO;
 import com.niwe.erp.core.view.CoreItemListView;
+import com.niwe.erp.core.view.DeadStockItem;
+import com.niwe.erp.core.view.FastMoveItem;
 
 public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 
@@ -95,7 +97,7 @@ public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 
 	@Query("""
 			SELECT new com.niwe.erp.core.view.CoreItemListView(
-			       i.id, i.itemName, i.itemCode,i.barcode, i.unitPrice,i.unitCost, i.tax.id,i.tax.taxCode,i.tax.taxValue, i.nature.id, i.classification.id)
+			       i.id, i.itemName, i.itemCode,i.barcode, i.unitPrice,i.unitCost, i.tax.id,i.tax.taxCode,i.tax.taxValue, i.nature.id, i.classification.id,i.modifiedAt)
 			FROM CoreItem i
 			WHERE (:name IS NULL OR LOWER(i.itemName) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%')))
 			OR (:code IS NULL OR LOWER(i.itemCode) LIKE LOWER(CONCAT('%', CAST(:code AS string), '%')))
@@ -147,4 +149,8 @@ public interface CoreItemRepository extends JpaRepository<CoreItem, UUID> {
 			""")
 	Page<CoreItemListDTO> findByLastUpdatedAfter(@Param("lastUpdated") LocalDateTime lastUpdated, Pageable pageable);
 
+	@Query(value = "SELECT p.ITEM_NAME AS itemName, SUM(ii.QUANTITY) AS sold FROM SALE_SALE_ITEM ii JOIN CORE_ITEM p ON ii.ITEM_ID = p.id GROUP BY p.ITEM_NAME ORDER BY sold DESC LIMIT 10", nativeQuery = true)
+	List<FastMoveItem> findFastMoveItems();
+	@Query(value = "SELECT p.ITEM_NAME AS itemName, MAX(i.SALE_DATE) AS lastSold FROM SALE_SALE_ITEM ii JOIN SALE_SALE i ON ii.SALE_ID = i.id JOIN CORE_ITEM p ON ii.ITEM_ID = p.id GROUP BY p.ITEM_NAME HAVING MAX(i.SALE_DATE) < CURRENT_DATE - INTERVAL '6 days'", nativeQuery = true)
+	List<DeadStockItem> findDeadStockItems();
 }

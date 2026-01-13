@@ -33,6 +33,8 @@ import com.niwe.erp.core.repository.CoreItemClassificationRepository;
 import com.niwe.erp.core.repository.CoreItemRepository;
 import com.niwe.erp.core.repository.CoreQuantityUnitRepository;
 import com.niwe.erp.core.view.CoreItemListView;
+import com.niwe.erp.core.view.DeadStockItem;
+import com.niwe.erp.core.view.FastMoveItem;
 import com.niwe.erp.core.web.util.NiweErpCoreDefaultParameter;
 import com.niwe.erp.inventory.domain.MovementType;
 import com.niwe.erp.inventory.domain.Warehouse;
@@ -106,6 +108,7 @@ public class CoreItemService {
 		return coreItemRepository.findAll(pageable);
 	}
 
+	@Transactional
 	public CoreItem save(CoreItem item) {
 
 		boolean initialStock = false;
@@ -154,7 +157,7 @@ public class CoreItemService {
 	}
 
 	private void createWarehouseInventory(CoreItem saved, boolean initialStock) {
-		if (initialStock && saved.getQuantityInitial().compareTo(BigDecimal.ZERO)>0) {
+		if (initialStock && saved.getQuantityInitial().compareTo(BigDecimal.ZERO) > 0) {
 
 			Warehouse warehouse = warehouseRepository.findByIsMain(true).get();
 			stockMovementService.logReceive(warehouse, saved, saved.getQuantityInitial(), saved.getInternalCode(),
@@ -174,14 +177,13 @@ public class CoreItemService {
 				() -> new ResourceNotFoundException("Product not found with internalCode: " + internalCode));
 
 	}
+
 	public CoreItem findByInternalCodeApi(String internalCode) {
-		return coreItemRepository.findByInternalCode(internalCode).orElseThrow(
-				() -> {
-					String error = String.format("No Item  for item: %s", internalCode
-							);
-					errorLogService.save(error, error, ErrorLogType.ITEM);
-					throw new IllegalStateException(error);
-				});
+		return coreItemRepository.findByInternalCode(internalCode).orElseThrow(() -> {
+			String error = String.format("No Item  for item: %s", internalCode);
+			errorLogService.save(error, error, ErrorLogType.ITEM);
+			throw new IllegalStateException(error);
+		});
 
 	}
 
@@ -350,6 +352,12 @@ public class CoreItemService {
 
 	}
 
+	public List<FastMoveItem> findFastMoveItems(){
+		return coreItemRepository.findFastMoveItems();
+	}
+	public List<DeadStockItem> findDeadStockItems(){
+		return coreItemRepository.findDeadStockItems();
+	}
 	private String normalizeBarcode(String barcode) {
 		if (barcode == null || barcode.trim().isEmpty()) {
 			return null;

@@ -66,7 +66,7 @@
 						<div class="form-group">
 							<label for="newValue" th:text="#{label.general.new.value}"></label>
 							<input type="number" step="0.01" id="newValue" name="value"
-								class="form-control" >
+								class="form-control">
 						</div>
 					</div>
 
@@ -87,7 +87,7 @@
 	<!-- start inflow modal  -->
 	<!-- ============================================================== -->
 	<div class="modal fade" id="inflowModal" tabindex="-1" role="dialog">
-		<div class="modal-dialog modal-sm" role="document">
+		<div class="modal-dialog modal-md" role="document">
 			<div class="modal-content">
 				<form th:action="@{/inflows/save}" method="post">
 					<div class="modal-header">
@@ -99,46 +99,70 @@
 					<div class="modal-body">
 						<input type="hidden" id="itemId" name="itemId"> <input
 							type="hidden" id="warehouseId" name="warehouseId">
-						<div class="form-group">
-							<label th:text="#{label.general.name}"></label> <input
-								type="text" id="itemName" name="itemName" class="form-control"
-								readonly="readonly">
+
+						<div class="form-group row">
+							<label class="col-4 col-form-label"
+								th:text="#{label.general.name}"></label>
+							<div class="col-8">
+								<input type="text" id="itemName" name="itemName"
+									class="form-control" readonly="readonly">
+							</div>
 						</div>
-						<div class="form-group">
-							<label th:text="#{label.general.current}"></label> <input
-								type="text" step="0.01" id="oldValue" name="oldValue"
-								class="form-control" readonly="readonly">
+						<div class="form-group row">
+							<label class="col-4 col-form-label"
+								th:text="#{label.general.current}"></label>
+							<div class="col-8">
+								<input type="text" step="0.01" id="oldValue" name="oldValue"
+									class="form-control" readonly="readonly">
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="newValue" th:text="#{label.general.quantity}"></label>
-							<input type="number" step="0.01" id="newValue"
-								name="newValue" class="form-control">
+						<div class="form-group row">
+							<label class="col-4 col-form-label" for="newValue"
+								th:text="#{label.general.quantity}"></label>
+							<div class="col-8">
+								<input type="number" step="0.01" id="newValue" name="newValue"
+									class="form-control">
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="newUnitCost" th:text="#{label.general.unitCost}"></label>
-							<input type="number" step="0.01" id="newUnitCost"
-								name="newUnitCost" class="form-control">
+						<div class="form-group row">
+							<label class="col-4 col-form-label" for="newUnitCost"
+								th:text="#{label.general.unitCost}"></label>
+							<div class="col-8">
+								<input type="number" step="0.01" id="newUnitCost"
+									name="newUnitCost" class="form-control">
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="newUnitPrice" th:text="#{label.general.unitPrice}"></label>
-							<input type="number" step="0.01"  id="newUnitPrice"
-								name="newUnitPrice" class="form-control">
+						<div class="form-group row">
+							<label class="col-4 col-form-label" for="newUnitPrice"
+								th:text="#{label.general.unitPrice}"></label>
+							<div class="col-8">
+								<input type="number" step="0.01" id="newUnitPrice"
+									name="newUnitPrice" class="form-control">
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="newBarcode" th:text="#{label.general.barcode}"></label>
-							<input type="text" id="newBarcode"
-								name="newBarcode" class="form-control">
+						<div class="form-group row">
+							<label class="col-4 col-form-label" for="newBarcode"
+								th:text="#{label.general.barcode}"></label>
+							<div class="col-8">
+								<input type="text" id="newBarcode" name="newBarcode"
+									class="form-control">
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="supplier" th:text="#{label.general.supplier}"></label>
-							<input type="text" id="supplier" name="supplier"
-								class="form-control">
+						<div class="form-group row">
+							<label class="col-4 col-form-label" for="supplier"
+								th:text="#{label.general.supplier}"></label>
+							<div class="col-8">
+								<input type="text" id="supplier" name="supplier"
+									class="form-control">
+							</div>
 						</div>
-						<div class="form-group">
-							<label for="expirationDate"
-								th:text="#{label.general.expire.date}"></label> <input
-								type="date" id="expirationDate" name="expirationDate"
-								class="form-control">
+						<div class="form-group row">
+							<label class="col-4 col-form-label" for="expirationDate"
+								th:text="#{label.general.expire.date}"></label>
+							<div class="col-8">
+								<input type="date" id="expirationDate" name="expirationDate"
+									class="form-control">
+							</div>
 						</div>
 					</div>
 

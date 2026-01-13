@@ -11,8 +11,20 @@ public class AuditorConfig {
 
     @Bean
     public AuditorAware<String> auditorProvider() {
-        // return currently logged-in user; fallback to "system"
-        return () -> Optional.of("system");
+        return () -> {
+            var authentication =
+                    org.springframework.security.core.context.SecurityContextHolder
+                            .getContext()
+                            .getAuthentication();
+
+            if (authentication == null ||
+                !authentication.isAuthenticated() ||
+                authentication.getPrincipal().equals("anonymousUser")) {
+                return Optional.of("system");
+            }
+
+            return Optional.of(authentication.getName());
+        };
     }
 }
 
