@@ -56,13 +56,15 @@ public class StockMovementService {
 		return stockMovementRepository.save(m);
 	}
 
-	public Page<StockMovementListView> getMovementsByItemAndWarehouse(UUID itemId, UUID warehouseId, String search, Pageable pageable) {
+	public Page<StockMovementListView> getMovementsByItemAndWarehouse(UUID itemId, UUID warehouseId, String search,
+			Pageable pageable) {
 		if (search != null && search.trim().isEmpty()) {
 			search = null;
 		}
 
 		return stockMovementRepository.findMovementsByItemAndWarehouse(itemId, warehouseId, search, pageable);
 	}
+
 	public Page<StockMovementListView> getMovements(String search, Pageable pageable) {
 		if (search != null && search.trim().isEmpty()) {
 			search = null;
@@ -70,38 +72,57 @@ public class StockMovementService {
 
 		return stockMovementRepository.findMovements(search, pageable);
 	}
-	public Page<StockMovementListView> getMovementsWithDate(String search,String movementType,LocalDate fromDate,
-	        LocalDate toDate, Pageable pageable) {
+
+	public Page<StockMovementListView> getMovementsWithDate(String search, String movementType, LocalDate fromDate,
+			LocalDate toDate, Pageable pageable) {
 		if (search != null && search.trim().isEmpty()) {
 			search = null;
 		}
 		if (movementType != null && movementType.trim().isEmpty()) {
 			movementType = null;
 		}
-		if (fromDate == null && toDate == null && movementType==null) {
-	        
-	        return stockMovementRepository.findMovements(search, pageable);
-	    }
+		if (fromDate == null && toDate == null && movementType == null) {
 
-	    LocalDateTime from = fromDate != null
-	            ? fromDate.atStartOfDay()
-	            : LocalDate.now().withDayOfYear(1).atStartOfDay();
-	    
+			return stockMovementRepository.findMovements(search, pageable);
+		}
 
-	    LocalDateTime to = toDate != null
-	            ? toDate.atTime(LocalTime.MAX)
-	            : LocalDate.now().atTime(LocalTime.MAX);
-	    
-	    
+		LocalDateTime from = fromDate != null ? fromDate.atStartOfDay()
+				: LocalDate.now().withDayOfYear(1).atStartOfDay();
 
-	    return stockMovementRepository.findMovementsWithDate(search,movementType, from, to, pageable);
-		
+		LocalDateTime to = toDate != null ? toDate.atTime(LocalTime.MAX) : LocalDate.now().atTime(LocalTime.MAX);
+
+		return stockMovementRepository.findMovementsWithDate(search, movementType, from, to, pageable);
+
 	}
+
 	public List<StockMovementListView> getAllMovements() {
-	
 
 		return stockMovementRepository.findAllMovements();
 	}
+
+	public List<StockMovementListView> findWithFilters(String search, String movementType, LocalDate fromDate,
+			LocalDate toDate, Pageable pageable) {
+
+		if (search != null && search.trim().isEmpty()) {
+			search = null;
+		}
+		if (movementType != null && movementType.trim().isEmpty()) {
+			movementType = null;
+		}
+		if (fromDate == null && toDate == null && movementType == null) {
+
+			return stockMovementRepository.findMovements(search, pageable).getContent();
+		}
+
+		LocalDateTime from = fromDate != null ? fromDate.atStartOfDay()
+				: LocalDate.now().withDayOfYear(1).atStartOfDay();
+
+		LocalDateTime to = toDate != null ? toDate.atTime(LocalTime.MAX) : LocalDate.now().atTime(LocalTime.MAX);
+
+		return stockMovementRepository.findMovementsWithDate(search, movementType, from, to, pageable).getContent();
+
+	}
+
 	public Page<StockMovementListView> findMovementByItemAndLocations(UUID itemId, UUID locationId, String search,
 			Pageable pageable) {
 		if (search != null && search.trim().isEmpty()) {
@@ -114,6 +135,10 @@ public class StockMovementService {
 	@Transactional
 	public StockMovement logReceive(Warehouse warehouse, CoreItem item, BigDecimal qty, String reference,
 			MovementType movementType, LocalDate expirationDate) {
+
+		if (qty == null) {
+			qty = BigDecimal.ZERO;
+		}
 
 		BigDecimal prevWh = warehouseStockService.getQuantity(warehouse.getId(), item.getId());
 		BigDecimal newWh = prevWh.add(qty);

@@ -250,7 +250,7 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			         OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
 			        )
 			AND (:movementType IS NULL OR sm.movement_type = :movementType)
-			AND sm.movement_date >= :from 
+			AND sm.movement_date >= :from
 			AND sm.movement_date <= :to
 			""", countQuery = """
 			SELECT COUNT(*)
@@ -263,9 +263,36 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			        )
 			AND (:movementType IS NULL OR sm.movement_type = :movementType)
 			AND sm.movement_date >= :from
-            AND sm.movement_date <= :to
+			         AND sm.movement_date <= :to
 			""", nativeQuery = true)
-	Page<StockMovementListView> findMovementsWithDate(@Param("search") String search,@Param("movementType") String movementType, @Param("from") LocalDateTime from,
+	Page<StockMovementListView> findMovementsWithDate(@Param("search") String search,
+			@Param("movementType") String movementType, @Param("from") LocalDateTime from,
 			@Param("to") LocalDateTime to, Pageable pageable);
+
+	@Query(value = """
+			SELECT
+			    sm.item_id AS itemId,
+			    i.item_name AS itemName,
+			    i.internal_code AS itemCode,
+			    i.barcode AS barcode,
+			    i.unit_price AS unitPrice,
+			    i.unit_cost AS unitCost,
+			    sm.MOVED_QUANTITY AS movedQuantity,
+			    sm.PREVIOUS_WAREHOUSE_QUANTITY AS prevWarehouseQuantity,
+			    sm.CURRENT_WAREHOUSE_QUANTITY AS currentWarehouseQuantity,
+			    sm.PREVIOUS_LOCATION_QUANTITY AS prevLocationQuantity,
+			    sm.CURRENT_LOCATION_QUANTITY AS currentLocationQuantity,
+			    sm.movement_date AS movementDate,
+			    sm.movement_type AS movementType,
+			    sm.modified_at as modifiedAt,
+			    COALESCE(sm.to_warehouse_id, sm.from_warehouse_id) AS warehouseId,
+			    COALESCE(sm.to_location_id, sm.from_location_id) AS locationId,
+			    il.MANAGER_NAME  AS managerName
+			FROM INVENTORY_STOCK_MOVEMENT sm
+			JOIN core_item i ON sm.item_id = i.id
+			LEFT JOIN INVENTORY_LOCATION il
+			    ON il.id = sm.TO_LOCATION_ID
+			""", nativeQuery = true)
+	List<StockMovementListView> findWithFilters();
 
 }

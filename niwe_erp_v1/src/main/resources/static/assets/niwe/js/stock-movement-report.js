@@ -63,7 +63,7 @@ $(document).ready(function() {
                 className: 'btn btn-success',
                 action: function() {
                     window.location.href =
-                        `${BASE_URL}stock-movements/export/excel`;
+                        `${BASE_URL}stock-movements/export/excel?fromDate=${$('#startDate').val()}&toDate=${$('#endDate').val()}&movementType=${$('#movementType').val()}`;
                 }
             },
             {
@@ -71,7 +71,7 @@ $(document).ready(function() {
                 className: 'btn btn-danger',
                 action: function() {
                     window.location.href =
-                        `${BASE_URL}stock-movements/export/pdf`;
+                        `${BASE_URL}stock-movements/export/pdf?fromDate=${$('#startDate').val()}&toDate=${$('#endDate').val()}&movementType=${$('#movementType').val()}`;
                 }
             }
         ]

@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.niwe.erp.core.service.CoreItemService;
@@ -84,9 +87,14 @@ public class StockMovementController {
 	}
 
 	@GetMapping("/export/excel")
-	public ResponseEntity<InputStreamResource> exportToExcel(Model model) throws IOException {
-		List<StockMovementListView> movements = stockMovementService.getAllMovements();
-		ByteArrayInputStream in = stockMovementExcelExportService.exportMovementsToExcel(movements);
+	public ResponseEntity<InputStreamResource> exportToExcel(@RequestParam(required = false) String search,
+			@RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate fromDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate toDate,
+			@RequestParam(required = false) String movementType, Model model) throws IOException {
+		
+		log.info("exportToExcel search:{},fromDate:{},toDate:{},movementType:{}",search,fromDate,toDate,movementType);
+		List<StockMovementListView> movements = stockMovementService.findWithFilters(search, movementType, fromDate,
+				toDate, null);		ByteArrayInputStream in = stockMovementExcelExportService.exportMovementsToExcel(movements);
 		String fileName = "movements.xlsx";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "attachment; filename=" + fileName);
@@ -98,8 +106,13 @@ public class StockMovementController {
 	}
 
 	@GetMapping("/export/pdf")
-	public ResponseEntity<InputStreamResource> exportToPdf(Model model) throws IOException {
-		List<StockMovementListView> movements = stockMovementService.getAllMovements();
+	public ResponseEntity<InputStreamResource> exportToPdf(@RequestParam(required = false) String search,
+			@RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate fromDate,
+			@RequestParam(required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate toDate,
+			@RequestParam(required = false) String movementType, Model model) throws IOException {
+		log.info("exportToPdf search:{},fromDate:{},toDate:{},movementType:{}",search,fromDate,toDate,movementType);
+		List<StockMovementListView> movements = stockMovementService.findWithFilters(search, movementType, fromDate,
+				toDate, null);
 
 		ByteArrayInputStream in = stockMovementPdfExportService.exportMovementsToPdf(movements,
 				coreTaxpayerService.findAll().get(0));
