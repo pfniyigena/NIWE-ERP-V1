@@ -103,7 +103,7 @@ public class WarehouseStockController {
 	public ResponseEntity<InputStreamResource> exportToExcel(Model model) throws IOException {
 		List<ProductStockSummaryDto> list = warehouseStockService.getStockSummary();
 		ByteArrayInputStream in = warehouseStockExcelExportService.exportSalesToExcel(list);
-		String fileName = DataParserUtil.dateFromInstant(Instant.now())+ "-stock-summary.xlsx";
+		String fileName = DataParserUtil.dateTimeFromInstant(Instant.now())+ "-stock-summary.xlsx";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "attachment; filename=" + fileName);
 		return ResponseEntity.ok().headers(headers)
@@ -115,7 +115,7 @@ public class WarehouseStockController {
 	public ResponseEntity<InputStreamResource> exportToPdf(Model model) throws IOException {
 		List<ProductStockSummaryDto> list = warehouseStockService.getStockSummary();
 		ByteArrayInputStream in = warehouseStockPdfExportService.exportStockSummaryToPdf(list);
-		String fileName = DataParserUtil.dateFromInstant(Instant.now()) + "-stock-summary.pdf";
+		String fileName = DataParserUtil.dateTimeFromInstant(Instant.now()) + "-stock-summary.pdf";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "attachment; filename=" + fileName);
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
@@ -126,7 +126,7 @@ public class WarehouseStockController {
 	public ResponseEntity<InputStreamResource> exportAgingToExcel(Model model) throws IOException {
 		List<ProductStockAgingDto> list = warehouseStockService.getStockSummaryWithAging();
 		ByteArrayInputStream in = warehouseStockExcelExportService.exportStockAgingToExcel(list);
-		String fileName = DataParserUtil.dateFromInstant(Instant.now())+ "-stock-aging.xlsx";
+		String fileName = DataParserUtil.dateTimeFromInstant(Instant.now())+ "-stock-aging.xlsx";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "attachment; filename=" + fileName);
 		return ResponseEntity.ok().headers(headers)
@@ -139,7 +139,7 @@ public class WarehouseStockController {
 	public ResponseEntity<InputStreamResource> exportValuationToExcel(Model model) throws IOException {
 		List<ProductStockValuationDto> list = warehouseStockService.getStockValuationSummaryV2();
 		ByteArrayInputStream in = warehouseStockExcelExportService.exportEvaluationToExcel(list);
-		String fileName = DataParserUtil.dateFromInstant(Instant.now())+ "-stock-valuation.xlsx";
+		String fileName = DataParserUtil.dateTimeFromInstant(Instant.now())+ "-stock-valuation.xlsx";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "attachment; filename=" + fileName);
 		return ResponseEntity.ok().headers(headers)
@@ -151,7 +151,7 @@ public class WarehouseStockController {
 	public ResponseEntity<InputStreamResource> exportValuationToPdf(Model model) throws IOException {
 		List<ProductStockValuationDto> list = warehouseStockService.getStockValuationSummary();
 		ByteArrayInputStream in = warehouseStockPdfExportService.exportEvaluationToPdf(list);
-		String fileName = DataParserUtil.dateFromInstant(Instant.now()) + "-stock-valuation.pdf";
+		String fileName = DataParserUtil.dateTimeFromInstant(Instant.now()) + "-stock-valuation.pdf";
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Content-Disposition", "attachment; filename=" + fileName);
 		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)

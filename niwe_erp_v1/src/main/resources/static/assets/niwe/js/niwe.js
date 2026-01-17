@@ -6,15 +6,13 @@ jQuery(document).ready(function($) {
 	$('#keep-order').multiSelect({
 		keepOrder: true
 	});
-	$('.datatable').each(function() {
-		const pageLength = $(this).data('page-length') || 10;
-		const order = $(this).data('order') || [];
-
-		$(this).DataTable({
-			pageLength: pageLength,
-			order: order,
-			lengthMenu: [10, 25, 50, 100]
-		});
-	});
+	var table = $('.datatable').DataTable({
+		destroy: true,
+	        dom: 'Bfrtip',
+	        buttons: ['copy']
+	    });
+		
+		table.buttons().container()
+		    .appendTo($('.dataTables_wrapper .col-md-6:eq(0)'));
 });
 

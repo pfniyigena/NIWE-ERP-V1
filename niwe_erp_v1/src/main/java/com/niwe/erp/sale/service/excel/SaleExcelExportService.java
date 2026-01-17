@@ -41,7 +41,7 @@ public class SaleExcelExportService {
 			    if (sale.getTransactionType() == TransactionType.REFUND) {
 			        amount = amount.negate(); // Make it negative for refunds
 			    }
-			    row.createCell(0).setCellValue(DataParserUtil.dateFromInstant(sale.getSaleDate()));
+			    row.createCell(0).setCellValue(DataParserUtil.dateTimeFromInstant(sale.getSaleDate()));
 				row.createCell(1).setCellValue(sale.getInternalCode());
 				row.createCell(2).setCellValue(sale.getCustomerName());
 				row.createCell(3).setCellValue(sale.getItemNumber());
@@ -78,7 +78,7 @@ public class SaleExcelExportService {
 			    if (sale.getTransactionType() == TransactionType.REFUND) {
 			        amount = amount.negate(); // Make it negative for refunds
 			    }
-			    row.createCell(0).setCellValue(DataParserUtil.dateFromInstant(sale.getSaleDate()));
+			    row.createCell(0).setCellValue(DataParserUtil.dateTimeFromInstant(sale.getSaleDate()));
 				row.createCell(1).setCellValue(sale.getInternalCode());
 				row.createCell(2).setCellValue(sale.getCustomerName());
 				row.createCell(3).setCellValue(sale.getItemNumber());

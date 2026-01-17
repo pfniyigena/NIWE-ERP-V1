@@ -157,12 +157,14 @@ public class CoreItemService {
 	}
 
 	private void createWarehouseInventory(CoreItem saved, boolean initialStock) {
-		if (initialStock && saved.getQuantityInitial().compareTo(BigDecimal.ZERO) > 0) {
-
+		try {
+		if (initialStock) {
 			Warehouse warehouse = warehouseRepository.findByIsMain(true).get();
 			stockMovementService.logReceive(warehouse, saved, saved.getQuantityInitial(), saved.getInternalCode(),
 					MovementType.STOCK_INITIAL, null);
 
+		}}catch (Exception e) {
+			log.error("createWarehouseInventory:{}",e);
 		}
 	}
 

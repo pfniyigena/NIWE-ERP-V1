@@ -72,7 +72,7 @@ public class SalePdfExportService {
 				if (sale.getTransactionType() == TransactionType.REFUND) {
 					amount = amount.negate(); // negative for refunds
 				}
-				table.addCell(DataParserUtil.dateFromInstant(sale.getSaleDate()));
+				table.addCell(DataParserUtil.dateTimeFromInstant(sale.getSaleDate()));
 				table.addCell(sale.getInternalCode());
 				table.addCell(sale.getCustomerName() != null ? sale.getCustomerName() : "");
 				table.addCell(String.valueOf(sale.getItemNumber()));
@@ -200,7 +200,7 @@ public class SalePdfExportService {
 				if (sale.getTransactionType() == TransactionType.REFUND) {
 					amount = amount.negate(); // negative for refunds
 				}
-				table.addCell(DataParserUtil.dateFromInstant(sale.getSaleDate()));
+				table.addCell(DataParserUtil.dateTimeFromInstant(sale.getSaleDate()));
 				table.addCell(sale.getInternalCode());
 				table.addCell(sale.getCustomerName() != null ? sale.getCustomerName() : "");
 				table.addCell(String.valueOf(sale.getItemNumber()));

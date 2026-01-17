@@ -1,6 +1,7 @@
 package com.niwe.erp.inventory.repository;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +38,50 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			    sm.movement_type AS movementType,
 			    sm.modified_at as modifiedAt,
 			    COALESCE(sm.to_warehouse_id, sm.from_warehouse_id) AS warehouseId,
-			             COALESCE(sm.to_location_id, sm.from_location_id) AS locationId
+			    COALESCE(sm.to_location_id, sm.from_location_id) AS locationId,
+			    il.MANAGER_NAME  AS managerName
+			FROM INVENTORY_STOCK_MOVEMENT sm
+			JOIN core_item i ON sm.item_id = i.id
+			LEFT JOIN INVENTORY_LOCATION il
+			    ON il.id = sm.TO_LOCATION_ID
+			WHERE (
+			         :search IS NULL
+			         OR LOWER(i.item_name) LIKE LOWER(CONCAT('%', :search, '%'))
+			         OR LOWER(i.internal_code) LIKE LOWER(CONCAT('%', :search, '%'))
+			         OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
+			        )
+			""", countQuery = """
+			SELECT COUNT(*)
+			FROM INVENTORY_STOCK_MOVEMENT sm
+			JOIN core_item i ON sm.item_id = i.id
+			WHERE (:search IS NULL
+			       OR LOWER(i.item_name) LIKE LOWER(CONCAT('%', :search, '%'))
+			       OR LOWER(i.internal_code) LIKE LOWER(CONCAT('%', :search, '%'))
+			       OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
+			        )
+			""", nativeQuery = true)
+	Page<StockMovementListView> findMovements(@Param("search") String search, Pageable pageable);
+
+	@Query(value = """
+			SELECT
+			    sm.item_id AS itemId,
+			    i.item_name AS itemName,
+			    i.internal_code AS itemCode,
+			    i.barcode AS barcode,
+			    i.unit_price AS unitPrice,
+			    i.unit_cost AS unitCost,
+			    sm.MOVED_QUANTITY AS movedQuantity,
+			    sm.PREVIOUS_WAREHOUSE_QUANTITY AS prevWarehouseQuantity,
+			    sm.CURRENT_WAREHOUSE_QUANTITY AS currentWarehouseQuantity,
+			    sm.PREVIOUS_LOCATION_QUANTITY AS prevLocationQuantity,
+			    sm.CURRENT_LOCATION_QUANTITY AS currentLocationQuantity,
+			    sm.movement_date AS movementDate,
+			    sm.movement_type AS movementType,
+			    sm.reference AS reference,
+			    sm.modified_at as modifiedAt,
+			    COALESCE(sm.to_warehouse_id, sm.from_warehouse_id) AS warehouseId,
+			    COALESCE(sm.to_location_id, sm.from_location_id) AS locationId
+
 			FROM INVENTORY_STOCK_MOVEMENT sm
 			JOIN core_item i ON sm.item_id = i.id
 			WHERE (sm.from_warehouse_id = :warehouseId
@@ -65,8 +109,8 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			         OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
 			        )
 			""", nativeQuery = true)
-	Page<StockMovementListView> findMovements(@Param("itemId") UUID itemId, @Param("warehouseId") UUID warehouseId,
-			@Param("search") String search, Pageable pageable);
+	Page<StockMovementListView> findMovementsByItemAndWarehouse(@Param("itemId") UUID itemId,
+			@Param("warehouseId") UUID warehouseId, @Param("search") String search, Pageable pageable);
 
 	@Query(value = """
 			SELECT
@@ -149,5 +193,79 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			ORDER BY day DESC
 						""", nativeQuery = true)
 	List<InflowOutflowSaleView> findInflowOutflowSaleView();
+
+	@Query(value = """
+			SELECT
+			    sm.item_id AS itemId,
+			    i.item_name AS itemName,
+			    i.internal_code AS itemCode,
+			    i.barcode AS barcode,
+			    i.unit_price AS unitPrice,
+			    i.unit_cost AS unitCost,
+			    sm.MOVED_QUANTITY AS movedQuantity,
+			    sm.PREVIOUS_WAREHOUSE_QUANTITY AS prevWarehouseQuantity,
+			    sm.CURRENT_WAREHOUSE_QUANTITY AS currentWarehouseQuantity,
+			    sm.PREVIOUS_LOCATION_QUANTITY AS prevLocationQuantity,
+			    sm.CURRENT_LOCATION_QUANTITY AS currentLocationQuantity,
+			    sm.movement_date AS movementDate,
+			    sm.movement_type AS movementType,
+			    sm.modified_at as modifiedAt,
+			    COALESCE(sm.to_warehouse_id, sm.from_warehouse_id) AS warehouseId,
+			    COALESCE(sm.to_location_id, sm.from_location_id) AS locationId,
+			    il.MANAGER_NAME  AS managerName
+			FROM INVENTORY_STOCK_MOVEMENT sm
+			JOIN core_item i ON sm.item_id = i.id
+			LEFT JOIN INVENTORY_LOCATION il
+			    ON il.id = sm.TO_LOCATION_ID
+			""", nativeQuery = true)
+	List<StockMovementListView> findAllMovements();
+
+	@Query(value = """
+			SELECT
+			    sm.item_id AS itemId,
+			    i.item_name AS itemName,
+			    i.internal_code AS itemCode,
+			    i.barcode AS barcode,
+			    i.unit_price AS unitPrice,
+			    i.unit_cost AS unitCost,
+			    sm.MOVED_QUANTITY AS movedQuantity,
+			    sm.PREVIOUS_WAREHOUSE_QUANTITY AS prevWarehouseQuantity,
+			    sm.CURRENT_WAREHOUSE_QUANTITY AS currentWarehouseQuantity,
+			    sm.PREVIOUS_LOCATION_QUANTITY AS prevLocationQuantity,
+			    sm.CURRENT_LOCATION_QUANTITY AS currentLocationQuantity,
+			    sm.movement_date AS movementDate,
+			    sm.movement_type AS movementType,
+			    sm.modified_at as modifiedAt,
+			    COALESCE(sm.to_warehouse_id, sm.from_warehouse_id) AS warehouseId,
+			    COALESCE(sm.to_location_id, sm.from_location_id) AS locationId,
+			    il.MANAGER_NAME  AS managerName
+			FROM INVENTORY_STOCK_MOVEMENT sm
+			JOIN core_item i ON sm.item_id = i.id
+			LEFT JOIN INVENTORY_LOCATION il
+			    ON il.id = sm.TO_LOCATION_ID
+			WHERE (
+			         :search IS NULL
+			         OR LOWER(i.item_name) LIKE LOWER(CONCAT('%', :search, '%'))
+			         OR LOWER(i.internal_code) LIKE LOWER(CONCAT('%', :search, '%'))
+			         OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
+			        )
+			AND (:movementType IS NULL OR sm.movement_type = :movementType)
+			AND sm.movement_date >= :from 
+			AND sm.movement_date <= :to
+			""", countQuery = """
+			SELECT COUNT(*)
+			FROM INVENTORY_STOCK_MOVEMENT sm
+			JOIN core_item i ON sm.item_id = i.id
+			WHERE (:search IS NULL
+			       OR LOWER(i.item_name) LIKE LOWER(CONCAT('%', :search, '%'))
+			       OR LOWER(i.internal_code) LIKE LOWER(CONCAT('%', :search, '%'))
+			       OR LOWER(i.barcode) LIKE LOWER(CONCAT('%', :search, '%'))
+			        )
+			AND (:movementType IS NULL OR sm.movement_type = :movementType)
+			AND sm.movement_date >= :from
+            AND sm.movement_date <= :to
+			""", nativeQuery = true)
+	Page<StockMovementListView> findMovementsWithDate(@Param("search") String search,@Param("movementType") String movementType, @Param("from") LocalDateTime from,
+			@Param("to") LocalDateTime to, Pageable pageable);
 
 }

@@ -1,5 +1,6 @@
 package com.niwe.erp.core.web.ajax;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public record DataTablesRequest(
@@ -8,7 +9,10 @@ public record DataTablesRequest(
 	    int length,
 	    Search search,
 	    List<Order> order,
-	    List<Column> columns
+	    List<Column> columns,
+	    LocalDate fromDate,
+	    LocalDate toDate,
+	    String movementType
 	) {}
 
 	

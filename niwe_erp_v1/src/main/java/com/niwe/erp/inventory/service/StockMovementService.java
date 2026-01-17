@@ -3,6 +3,8 @@ package com.niwe.erp.inventory.service;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -54,14 +56,52 @@ public class StockMovementService {
 		return stockMovementRepository.save(m);
 	}
 
-	public Page<StockMovementListView> getMovements(UUID itemId, UUID warehouseId, String search, Pageable pageable) {
+	public Page<StockMovementListView> getMovementsByItemAndWarehouse(UUID itemId, UUID warehouseId, String search, Pageable pageable) {
 		if (search != null && search.trim().isEmpty()) {
 			search = null;
 		}
 
-		return stockMovementRepository.findMovements(itemId, warehouseId, search, pageable);
+		return stockMovementRepository.findMovementsByItemAndWarehouse(itemId, warehouseId, search, pageable);
 	}
+	public Page<StockMovementListView> getMovements(String search, Pageable pageable) {
+		if (search != null && search.trim().isEmpty()) {
+			search = null;
+		}
 
+		return stockMovementRepository.findMovements(search, pageable);
+	}
+	public Page<StockMovementListView> getMovementsWithDate(String search,String movementType,LocalDate fromDate,
+	        LocalDate toDate, Pageable pageable) {
+		if (search != null && search.trim().isEmpty()) {
+			search = null;
+		}
+		if (movementType != null && movementType.trim().isEmpty()) {
+			movementType = null;
+		}
+		if (fromDate == null && toDate == null && movementType==null) {
+	        
+	        return stockMovementRepository.findMovements(search, pageable);
+	    }
+
+	    LocalDateTime from = fromDate != null
+	            ? fromDate.atStartOfDay()
+	            : LocalDate.now().withDayOfYear(1).atStartOfDay();
+	    
+
+	    LocalDateTime to = toDate != null
+	            ? toDate.atTime(LocalTime.MAX)
+	            : LocalDate.now().atTime(LocalTime.MAX);
+	    
+	    
+
+	    return stockMovementRepository.findMovementsWithDate(search,movementType, from, to, pageable);
+		
+	}
+	public List<StockMovementListView> getAllMovements() {
+	
+
+		return stockMovementRepository.findAllMovements();
+	}
 	public Page<StockMovementListView> findMovementByItemAndLocations(UUID itemId, UUID locationId, String search,
 			Pageable pageable) {
 		if (search != null && search.trim().isEmpty()) {

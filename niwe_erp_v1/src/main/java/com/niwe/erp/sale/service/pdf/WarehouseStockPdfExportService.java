@@ -45,7 +45,7 @@ public class WarehouseStockPdfExportService {
 
 			// Add small spacing before title
 			document.add(new Paragraph("\n"));
-			document.add(new Paragraph("Stock Summary Report on " + DataParserUtil.dateFromInstant(Instant.now()))
+			document.add(new Paragraph("Stock Summary Report on " + DataParserUtil.dateTimeFromInstant(Instant.now()))
 					.setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER));
 
 			float[] columnWidths = { 2, 4, 8, 4, };
@@ -88,7 +88,7 @@ public class WarehouseStockPdfExportService {
 
 			// Add small spacing before title
 			document.add(new Paragraph("\n"));
-			document.add(new Paragraph("Stock Evaluation Report on " + DataParserUtil.dateFromInstant(Instant.now()))
+			document.add(new Paragraph("Stock Evaluation Report on " + DataParserUtil.dateTimeFromInstant(Instant.now()))
 					.setBold().setFontSize(14).setTextAlignment(TextAlignment.CENTER));
 
 			float[] columnWidths = { 2, 4, 8, 4, 4, 4 };

@@ -17,8 +17,12 @@ public abstract class DataParserUtil {
 		return inputDate != null ? Instant.from(formatter.parse(inputDate)) : Instant.now();
 	}
 
-	public static String dateFromInstant(Instant inputDate) {
+	public static String dateTimeFromInstant(Instant inputDate) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm").withZone(ZoneId.systemDefault());
+		return inputDate != null ? formatter.format(inputDate) : "";
+	}
+	public static String dateFromInstant(Instant inputDate) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy").withZone(ZoneId.systemDefault());
 		return inputDate != null ? formatter.format(inputDate) : "";
 	}
 

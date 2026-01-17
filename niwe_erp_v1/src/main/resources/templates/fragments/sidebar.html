@@ -156,8 +156,31 @@
 										</ul>
 										<ul class="nav flex-column">
 											<li class="nav-item"><a class="nav-link" href="#"
-												th:href="@{/logs/list}"><span
-													th:text="#{menu.logs}"></span></a></li>
+												th:href="@{/logs/list}"><span th:text="#{menu.logs}"></span></a></li>
+										</ul>
+									</div></li>
+							</ul>
+							<ul class="nav flex-column">
+								<li class="nav-item"><a class="nav-link" href="#"
+									data-toggle="collapse" aria-expanded="false"
+									data-target="#submenu-32" aria-controls="submenu-32"><span>Kwizera
+											Reports</span></a>
+									<div id="submenu-32" class="collapse submenu">
+										<ul class="nav flex-column">
+											<li class="nav-item"><a class="nav-link" href="#"
+												th:href="@{/stock-movements/report}"><span>Stock movement</span></a></li>
+										</ul>
+										<ul class="nav flex-column">
+											<li class="nav-item"><a class="nav-link" href="#"
+												th:href="@{/}"><span>Inventory status</span></a></li>
+										</ul>
+										<ul class="nav flex-column">
+											<li class="nav-item"><a class="nav-link" href="#"
+												th:href="@{/}"><span>Current inventory</span></a></li>
+										</ul>
+										<ul class="nav flex-column">
+											<li class="nav-item"><a class="nav-link" href="#"
+												th:href="@{/}"><span>Low stock</span></a></li>
 										</ul>
 									</div></li>
 							</ul>
