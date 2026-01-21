@@ -240,15 +240,30 @@ public class WarehouseStockService {
 				searchValue, searchValue, pageable);
 	}
 
-	public Page<InflowItemListView> findAllItems(UUID warehouseId, String searchValue, Pageable pageable) {
+	public Page<InflowItemListView> findAllItemstockByWarehouse(UUID warehouseId, String searchValue,
+			Pageable pageable) {
 
-		return warehouseStockRepository.findAllItems(warehouseId, searchValue, searchValue, searchValue, searchValue,
-				pageable);
+		return warehouseStockRepository.findAllItemstockByWarehouse(warehouseId, searchValue, searchValue, searchValue,
+				searchValue, pageable);
 	}
+
+	public Page<InflowItemListView> findAllItemstock(String category, String brand, String searchValue,
+			Pageable pageable) {
+
+		UUID categoryId = null;
+		if(category!=null && !category.isEmpty())
+			categoryId=UUID.fromString(category);
+		UUID brandId = null;
+		if(brand!=null && !brand.isEmpty())
+			brandId=UUID.fromString(brand);
+		return warehouseStockRepository.findAllItemstock(searchValue, searchValue, searchValue, searchValue, categoryId,
+				brandId, pageable);
+	}
+
 	public Page<InflowItemListView> findAllReorderItems(UUID warehouseId, String searchValue, Pageable pageable) {
 
-		return warehouseStockRepository.findAllReorderItems(warehouseId, searchValue, searchValue, searchValue, searchValue,
-				pageable);
+		return warehouseStockRepository.findAllReorderItems(warehouseId, searchValue, searchValue, searchValue,
+				searchValue, pageable);
 	}
 
 	@Transactional

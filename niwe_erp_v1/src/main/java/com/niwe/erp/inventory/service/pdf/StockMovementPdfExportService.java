@@ -21,10 +21,11 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.niwe.erp.common.util.DataParserUtil;
+import com.niwe.erp.common.util.PdfHeaderCommon;
 import com.niwe.erp.core.domain.CoreTaxpayer;
 import com.niwe.erp.inventory.web.view.StockMovementListView;
 import com.niwe.erp.sale.service.PageNumberEventHandler;
-import com.niwe.erp.sale.service.pdf.PdfHeaderCommon;
+
 
 @Service
 public class StockMovementPdfExportService {

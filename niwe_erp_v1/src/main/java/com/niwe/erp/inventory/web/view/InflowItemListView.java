@@ -24,4 +24,7 @@ public interface InflowItemListView {
 	Instant getModifiedAt();
 
 	Integer getStockLevel();
+	String getCategoryName();
+	String getBrandName();
+	
 }

@@ -24,6 +24,7 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.properties.UnitValue;
 import com.niwe.erp.common.util.DataParserUtil;
+import com.niwe.erp.common.util.PdfHeaderCommon;
 import com.niwe.erp.sale.domain.DailySalesSummary;
 import com.niwe.erp.sale.domain.PaymentMethod;
 import com.niwe.erp.sale.domain.Sale;

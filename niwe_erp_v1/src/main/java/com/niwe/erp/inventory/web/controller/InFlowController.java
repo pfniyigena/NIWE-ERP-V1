@@ -112,7 +112,7 @@ public class InFlowController {
 		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
 				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
 
-		Page<InflowItemListView> itemsPage = warehouseStockService.findAllItems(warehouse.getId(),
+		Page<InflowItemListView> itemsPage = warehouseStockService.findAllItemstockByWarehouse(warehouse.getId(),
 				searchValue, pageable);
 		log.info("INFLOWS DATA: [{}]", itemsPage.getTotalElements()); // ← NOW YOU WILL SEE IT!
 		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",

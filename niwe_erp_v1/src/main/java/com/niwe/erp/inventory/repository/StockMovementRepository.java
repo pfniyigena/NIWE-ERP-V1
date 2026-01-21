@@ -252,6 +252,8 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			AND (:movementType IS NULL OR sm.movement_type = :movementType)
 			AND sm.movement_date >= :from
 			AND sm.movement_date <= :to
+			ORDER BY sm.movement_date DESC
+            -- #pageable
 			""", countQuery = """
 			SELECT COUNT(*)
 			FROM INVENTORY_STOCK_MOVEMENT sm
@@ -263,7 +265,7 @@ public interface StockMovementRepository extends JpaRepository<StockMovement, UU
 			        )
 			AND (:movementType IS NULL OR sm.movement_type = :movementType)
 			AND sm.movement_date >= :from
-			         AND sm.movement_date <= :to
+			AND sm.movement_date <= :to
 			""", nativeQuery = true)
 	Page<StockMovementListView> findMovementsWithDate(@Param("search") String search,
 			@Param("movementType") String movementType, @Param("from") LocalDateTime from,

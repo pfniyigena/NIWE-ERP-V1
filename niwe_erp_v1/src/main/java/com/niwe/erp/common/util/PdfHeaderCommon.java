@@ -1,4 +1,4 @@
-package com.niwe.erp.sale.service.pdf;
+package com.niwe.erp.common.util;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

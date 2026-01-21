@@ -40,6 +40,10 @@ public class NikaErpInventoryUrlConstants {
 	 * The WAREHOUSE_STOCK_URL
 	 */
 	public static final String WAREHOUSE_STOCKS_URL = "warehouse-stocks";
+	/**
+	 * The WAREHOUSE_STOCKS_SUMMARY_PAGE
+	 */
+	public static final String WAREHOUSE_STOCKS_REPORT_PAGE = "warehouse-stocks/report";
 	
 	/**
 	 * The WAREHOUSE_STOCKS_LIST_PAGE
