@@ -74,6 +74,13 @@ public class WarehouseStockController {
 		model.addAttribute("brands", brandService.findAll());
 		return NikaErpInventoryUrlConstants.WAREHOUSE_STOCKS_REPORT_PAGE;
 	}
+	@GetMapping(path = "/report/low")
+	public String listLowStockReport(Model model) {
+		log.info("--------------Calling listLowStockReport-------------------");
+		model.addAttribute("categories", categoryService.findAll());
+		model.addAttribute("brands", brandService.findAll());
+		return NikaErpInventoryUrlConstants.WAREHOUSE_STOCKS_LOW_REPORT_PAGE;
+	}
 
 	@GetMapping(path = "/summary")
 	public String listWarehouseStockByProduct(Model model) {
@@ -198,12 +205,32 @@ public class WarehouseStockController {
 		String category = request.categoryId() == null ? "" : request.categoryId().trim();
 		String brand = request.brandId() == null ? "" : request.brandId().trim();
 		log.info("getStockReportAjax: Search{},CategoryId:{},BrandId:{}", searchValue, category, brand);
-		// Get sorting
-		String sortColumn = "modifiedAt"; // default
-		String sortDir = "desc";
+		// 🔹 DataTables sorting
+		int columnIndex = request.order().isEmpty() ? 1 : request.order().get(0).column();
+		String sortColumn = SORT_COLUMNS.getOrDefault(columnIndex, "itemName");
+		String sortDir = request.order().isEmpty() ? "asc" : request.order().get(0).dir();
 		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
 				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
 		Page<InflowItemListView> itemsPage = warehouseStockService.findAllItemstock(category, brand, searchValue,
+				pageable);
+		log.info("STOCK REPORT DATA: [{}]", itemsPage.getTotalElements());
+		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
+				itemsPage.getTotalElements(), "data", itemsPage.getContent());
+	}
+	@PostMapping(value = "/ajax/view/low", consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public Map<String, Object> getLowStockReportAjax(@RequestBody WarehouseStockDataTablesRequest request) {
+		String searchValue = request.search().value() == null ? "" : request.search().value().trim();
+		String category = request.categoryId() == null ? "" : request.categoryId().trim();
+		String brand = request.brandId() == null ? "" : request.brandId().trim();
+		log.info("getStockReportAjax: Search{},CategoryId:{},BrandId:{}", searchValue, category, brand);
+		// 🔹 DataTables sorting
+		int columnIndex = request.order().isEmpty() ? 1 : request.order().get(0).column();
+		String sortColumn = SORT_COLUMNS.getOrDefault(columnIndex, "itemName");
+		String sortDir = request.order().isEmpty() ? "asc" : request.order().get(0).dir();
+		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
+				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
+		Page<InflowItemListView> itemsPage = warehouseStockService.findAllItemLowStock(category, brand, searchValue,
 				pageable);
 		log.info("STOCK REPORT DATA: [{}]", itemsPage.getTotalElements());
 		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
@@ -246,4 +273,44 @@ public class WarehouseStockController {
 				.body(new InputStreamResource(in));
 
 	}
+	@GetMapping("/report/low/export/excel")
+	public ResponseEntity<InputStreamResource> exportLowStockToExcel(@RequestParam(required = false) String search,
+			@RequestParam(required = false) String categoryId, @RequestParam(required = false) String brandId,
+			Model model) throws IOException {
+
+		log.info("exportToExcel search:{},categoryId:{},brandId:{}", search, categoryId, brandId);
+		Page<InflowItemListView> itemsPage = warehouseStockService.findAllItemLowStock(categoryId, brandId, search, null);
+		ByteArrayInputStream in = warehouseStockExcelExportService.exportStocksToExcel(itemsPage.getContent());
+		String fileName = DataParserUtil.dateTimeFromInstant(Instant.now()) + "stock.xlsx";
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "attachment; filename=" + fileName);
+
+		return ResponseEntity.ok().headers(headers)
+				.contentType(
+						MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+				.body(new InputStreamResource(in));
+	}
+
+	@GetMapping("/report/low/export/pdf")
+	public ResponseEntity<InputStreamResource> exportLowStockToPdf(@RequestParam(required = false) String search,
+			@RequestParam(required = false) String categoryId, @RequestParam(required = false) String brandId,
+			Model model) throws IOException {
+		log.info("exportToPdf search:{},categoryId:{},brandId:{}", search, categoryId, brandId);
+		Page<InflowItemListView> itemsPage = warehouseStockService.findAllItemLowStock(categoryId, brandId, search, null);
+
+		ByteArrayInputStream in = warehouseStockPdfExportService.exportMovementsToPdf(itemsPage.getContent(),
+				coreTaxpayerService.findAll().get(0));
+
+		String fileName = DataParserUtil.dateTimeFromInstant(Instant.now()) + "stock.pdf";
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "attachment; filename=" + fileName);
+
+		return ResponseEntity.ok().headers(headers).contentType(MediaType.APPLICATION_PDF)
+				.body(new InputStreamResource(in));
+
+	}
+
+	private static final Map<Integer, String> SORT_COLUMNS = Map.of(1, "itemName", 2, "quantity", 3, "stockLevel", 4,
+			"categoryName", 5, "brandName");
+
 }

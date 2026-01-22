@@ -3,7 +3,7 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: {
-            url: `${BASE_URL}warehouse-stocks/ajax/view`,
+            url: `${BASE_URL}warehouse-stocks/ajax/view/low`,
             type: 'POST',
             contentType: 'application/json',
             data: function(d) {
@@ -23,17 +23,7 @@ $(document).ready(function() {
                 }
             },
             { data: 'itemName' },
-
-            {
-                data: 'quantity',
-                render: function(data, type, row) {
-                    if (data <= row.stockLevel) {
-                        return `<span class="badge bg-danger">${data}</span>`;
-                    } else {
-                        return `<span class="badge bg-success">${data}</span>`;
-                    }
-                }
-            },
+            { data: 'quantity' },
             { data: 'stockLevel' },
             { data: 'categoryName' },
             { data: 'brandName' },
@@ -49,7 +39,7 @@ $(document).ready(function() {
                 className: 'btn btn-success',
                 action: function() {
                     window.location.href =
-                        `${BASE_URL}warehouse-stocks/export/excel?categoryId=${$('#categoryId').val()}&brandId=${$('#brandId').val()}`;
+                        `${BASE_URL}warehouse-stocks/report/low/export/excel?categoryId=${$('#categoryId').val()}&brandId=${$('#brandId').val()}`;
                 }
             },
             {
@@ -57,7 +47,7 @@ $(document).ready(function() {
                 className: 'btn btn-danger',
                 action: function() {
                     window.location.href =
-                        `${BASE_URL}warehouse-stocks/export/pdf?categoryId=${$('#categoryId').val()}&brandId=${$('#brandId').val()}`;
+                        `${BASE_URL}warehouse-stocks/report/low/export/pdf?categoryId=${$('#categoryId').val()}&brandId=${$('#brandId').val()}`;
                 }
             }
         ]

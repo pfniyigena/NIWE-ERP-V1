@@ -259,6 +259,18 @@ public class WarehouseStockService {
 		return warehouseStockRepository.findAllItemstock(searchValue, searchValue, searchValue, searchValue, categoryId,
 				brandId, pageable);
 	}
+	public Page<InflowItemListView> findAllItemLowStock(String category, String brand, String searchValue,
+			Pageable pageable) {
+
+		UUID categoryId = null;
+		if(category!=null && !category.isEmpty())
+			categoryId=UUID.fromString(category);
+		UUID brandId = null;
+		if(brand!=null && !brand.isEmpty())
+			brandId=UUID.fromString(brand);
+		return warehouseStockRepository.findAllItemLowStock(searchValue, searchValue, searchValue, searchValue, categoryId,
+				brandId, pageable);
+	}
 
 	public Page<InflowItemListView> findAllReorderItems(UUID warehouseId, String searchValue, Pageable pageable) {
 

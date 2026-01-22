@@ -6,6 +6,27 @@
 <title th:text="#{menu.report.stock.status}"></title>
 </head>
 <div layout:fragment="content">
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="page-breadcrumb">
+				<nav aria-label="breadcrumb">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item"><span th:text="#{menu.inventory}"></span></li>
+						<li class="breadcrumb-item"><span th:text="#{menu.reports}"></span></li>
+						<li class="breadcrumb-item"><a href="#"
+							th:href="@{/stock-movements/report}" class="breadcrumb-link"><span
+								th:text="#{menu.report.stock.movements}"></span></a></li>
+						<li class="breadcrumb-item"><a href="#"
+							th:href="@{/warehouse-stocks/report/low}"> <span
+								th:text="#{menu.report.stock.low}"></span></a></li>
+						<li class="breadcrumb-item active" aria-current="page"><span
+							th:text="#{menu.report.stock.status}"></span></li>
+					</ol>
+				</nav>
+			</div>
+
+		</div>
+	</div>
 	<!-- ============================================================== -->
 	<!-- end pageheader -->
 	<!-- ============================================================== -->
@@ -16,6 +37,7 @@
 		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 			<div class="card">
 				<div class="card-header d-flex">
+					<h5 th:text="#{menu.report.stock.status}"></h5>
 					<div class="toolbar ml-auto">
 						<div class="form-inline align-items-center mr-2">
 							<div class="input-group input-group-sm">

@@ -204,6 +204,7 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			       AND (:categoryId IS NULL OR p.CATEGORY_ID = :categoryId)
 				   AND (:brandId IS NULL OR p.BRAND_ID = :brandId)
 			       AND p.deleted=false
+			       
 			""", countQuery = """
 			     SELECT COUNT(*)
 			     FROM core_item p
@@ -223,6 +224,58 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
 			     """, nativeQuery = true)
 
 	Page<InflowItemListView> findAllItemstock(String itemName, String itemCode, String internalCode, String barcode,
+			@Param("categoryId") UUID categoryId,
+			@Param("brandId") UUID brandId,	Pageable pageable);
+	@Query(value = """
+			SELECT
+			    p.id AS itemId,
+			    p.item_name AS itemName,
+			    p.internal_code AS itemCode,
+			    p.barcode AS barcode,
+			    p.unit_price AS unitPrice,
+			    p.unit_cost AS unitCost,
+			    COALESCE(ws.quantity, 0) AS quantity,
+			    ws.warehouse_id AS warehouseId,
+			    p.modified_at as modifiedAt,
+			    p.STOCK_LEVEL as stockLevel,
+			    ic.CATEGORY_NAME AS categoryName,
+			    ib.BRAND_NAME AS brandName
+			FROM core_item p
+			LEFT JOIN inventory_warehouse_stock ws
+			    ON ws.item_id = p.id
+			LEFT JOIN CORE_ITEM_CATEGORY ic
+			    ON p.CATEGORY_ID = ic.id
+			LEFT JOIN CORE_ITEM_BRAND ib
+			    ON p.BRAND_ID = ib.id
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
+			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			       AND (:categoryId IS NULL OR p.CATEGORY_ID = :categoryId)
+				   AND (:brandId IS NULL OR p.BRAND_ID = :brandId)
+			       AND p.deleted=false
+			       AND ws.quantity <= p.STOCK_LEVEL
+			       
+			""", countQuery = """
+			     SELECT COUNT(*)
+			     FROM core_item p
+			LEFT JOIN inventory_warehouse_stock ws
+			    ON ws.item_id = p.id
+			LEFT JOIN CORE_ITEM_CATEGORY ic
+			    ON p.CATEGORY_ID = ic.id
+			LEFT JOIN CORE_ITEM_BRAND ib
+			    ON p.BRAND_ID = ib.id
+			    WHERE ((:itemName IS NULL OR LOWER(p.item_name) LIKE LOWER(CONCAT('%', :itemName, '%')))
+			       OR (:itemCode IS NULL OR LOWER(p.item_code) LIKE LOWER(CONCAT('%', :itemCode, '%')))
+			       OR (:internalCode IS NULL OR LOWER(p.internal_code) LIKE LOWER(CONCAT('%', :internalCode, '%')))
+			       OR (:barcode IS NULL OR LOWER(p.barcode) LIKE LOWER(CONCAT('%', :barcode, '%'))))
+			      AND (:categoryId IS NULL OR p.CATEGORY_ID = :categoryId)
+				  AND (:brandId IS NULL OR p.BRAND_ID = :brandId)			      
+			      AND p.deleted=false 
+			      AND ws.quantity <= p.STOCK_LEVEL
+			     """, nativeQuery = true)
+
+	Page<InflowItemListView> findAllItemLowStock(String itemName, String itemCode, String internalCode, String barcode,
 			@Param("categoryId") UUID categoryId,
 			@Param("brandId") UUID brandId,	Pageable pageable);
 

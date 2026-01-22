@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.niwe.erp.common.license.LicenseLockedException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -24,6 +26,14 @@ public class GlobalExceptionHandler {
         model.addAttribute("errorTitle", "Resource Not Found");
         model.addAttribute("errorMessage", ex.getMessage());
         return "error/002";
+    }
+    
+    
+    @ExceptionHandler(LicenseLockedException.class)
+    public String handleLicenseLocked(LicenseLockedException ex, Model model) {
+        model.addAttribute("errorTitle", "LICENSE_LOCKED");
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error/003";
     }
 }
 

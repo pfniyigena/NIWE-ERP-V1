@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.niwe.erp.common.license.RequiresActiveLicense;
 import com.niwe.erp.common.util.NiweErpCommonConstants;
 import com.niwe.erp.core.domain.CoreItem;
 import com.niwe.erp.core.form.CoreItemForm;
@@ -65,6 +66,7 @@ public class CoreItemController {
 	}
 
 	// @CanManageItems
+	@RequiresActiveLicense
 	@GetMapping(path = "/new")
 	public String newItem(Model model) {
 		model.addAttribute("item", CoreItem.builder().build());
@@ -84,6 +86,7 @@ public class CoreItemController {
 	}
 
 	// @PreAuthorize("hasAnyAuthority('COREITEM_CREATE', 'COREITEM_UPDATE')")
+	@RequiresActiveLicense
 	@PostMapping(path = "/new")
 	public String saveItem(CoreItem item, RedirectAttributes redirectAttributes, BindingResult bindingResult,
 			Model model) {
@@ -92,7 +95,7 @@ public class CoreItemController {
 		redirectAttributes.addFlashAttribute("success", "Success.");
 		return NiweErpCoreUrlConstants.ITEMS_ADD_ITEM_TABLE_REDITECT_URL;
 	}
-
+	@RequiresActiveLicense
 	@GetMapping(path = "/update/{id}")
 	public String findById(@PathVariable String id, Model model) {
 		CoreItem item = coreItemService.findById(id);
@@ -108,7 +111,7 @@ public class CoreItemController {
 		setData(model);
 		return NiweErpCoreUrlConstants.ITEMS_VIEW_FORM_PAGE;
 	}
-
+	@RequiresActiveLicense
 	@PostMapping("/delete")
 	public String deleteItem(@RequestParam String itemId, RedirectAttributes redirectAttributes) {
 		log.info("----deleteItem id:{}", itemId);
@@ -116,7 +119,7 @@ public class CoreItemController {
 		redirectAttributes.addFlashAttribute("success", "Delete Success.");
 		return NiweErpCoreUrlConstants.ITEMS_ADD_ITEM_TABLE_REDITECT_URL;
 	}
-
+	@RequiresActiveLicense
 	@GetMapping(path = "/duplicate/{id}")
 	public String duplicate(@PathVariable String id, Model model) {
 		CoreItem item = coreItemService.duplicate(id);
@@ -146,7 +149,7 @@ public class CoreItemController {
 
 		return "items/list";
 	}
-
+	@RequiresActiveLicense
 	@PostMapping("/upload")
 	public String uploadFile(@RequestParam MultipartFile file, RedirectAttributes redirectAttributes, Model model) {
 		String contentType = file.getContentType();
@@ -159,7 +162,7 @@ public class CoreItemController {
 		redirectAttributes.addFlashAttribute("success", "Success.");
 		return NiweErpCoreUrlConstants.ITEMS_LIST_REDITECT_URL;
 	}
-
+	@RequiresActiveLicense
 	@PostMapping("/updatePrice")
 	public String updateItemValue(@RequestParam String itemId, @RequestParam String type,
 			@RequestParam BigDecimal value, RedirectAttributes redirectAttributes) {
