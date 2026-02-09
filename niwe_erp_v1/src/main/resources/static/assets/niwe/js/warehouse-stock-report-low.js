@@ -23,6 +23,8 @@ $(document).ready(function() {
                 }
             },
             { data: 'itemName' },
+			{ data: 'unitCost' },
+			{ data: 'unitPrice' },
             { data: 'quantity' },
             { data: 'stockLevel' },
             { data: 'categoryName' },

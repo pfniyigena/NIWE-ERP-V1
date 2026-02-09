@@ -127,7 +127,7 @@ public class WarehouseStockExcelExportService {
 
 			// Header
 			Row header = sheet.createRow(0);
-			String[] columns = { "Name", "Current Quantity", "Min Quantity", "Category", "Brand" };
+			String[] columns = { "Name", "Purchase Price","Selling Price","Current Quantity", "Min Quantity", "Category", "Brand" };
 
 			for (int i = 0; i < columns.length; i++) {
 				header.createCell(i).setCellValue(columns[i]);
@@ -138,10 +138,12 @@ public class WarehouseStockExcelExportService {
 			for (InflowItemListView dto : movements) {
 				Row row = sheet.createRow(rowIdx++);
 				row.createCell(0).setCellValue(dto.getItemName());
-				row.createCell(1).setCellValue(dto.getQuantity().doubleValue());
-				row.createCell(2).setCellValue(dto.getStockLevel() == null ? 0.00 : dto.getStockLevel().doubleValue());
-				row.createCell(3).setCellValue(dto.getCategoryName());
-				row.createCell(4).setCellValue(dto.getBrandName());
+				row.createCell(1).setCellValue(dto.getUnitCost().doubleValue());
+				row.createCell(2).setCellValue(dto.getUnitPrice().doubleValue());
+				row.createCell(3).setCellValue(dto.getQuantity().doubleValue());
+				row.createCell(4).setCellValue(dto.getStockLevel() == null ? 0.00 : dto.getStockLevel().doubleValue());
+				row.createCell(5).setCellValue(dto.getCategoryName());
+				row.createCell(6).setCellValue(dto.getBrandName());
 			}
 			// Autosize
 			for (int i = 0; i < columns.length; i++) {

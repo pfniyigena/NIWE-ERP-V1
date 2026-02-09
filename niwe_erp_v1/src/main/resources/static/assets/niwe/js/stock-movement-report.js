@@ -46,6 +46,8 @@ $(document).ready(function() {
                 }
             },
             { data: 'itemName' },
+			{ data: 'unitCost' },
+			{ data: 'unitPrice' },
             { data: 'movedQuantity' },
             { data: 'managerName' },
 

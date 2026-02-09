@@ -22,7 +22,7 @@ public class StockMovementExcelExportService {
 
 			// Header
 			Row header = sheet.createRow(0);
-			String[] columns = { "Date", "Movement Type", "Item", "Quantity", "Manager" };
+			String[] columns = { "Date", "Movement Type", "Item","Purchase Price","Selling Price", "Quantity", "Manager" };
 
 			for (int i = 0; i < columns.length; i++) {
 				header.createCell(i).setCellValue(columns[i]);
@@ -35,8 +35,10 @@ public class StockMovementExcelExportService {
 				row.createCell(0).setCellValue(DataParserUtil.dateTimeFromInstant(dto.getMovementDate()));
 				row.createCell(1).setCellValue(dto.getMovementType());
 				row.createCell(2).setCellValue(dto.getItemName());
-				row.createCell(3).setCellValue(dto.getMovedQuantity().doubleValue());
-				row.createCell(4).setCellValue(dto.getManagerName());
+				row.createCell(3).setCellValue(dto.getUnitCost().doubleValue());
+				row.createCell(4).setCellValue(dto.getUnitPrice().doubleValue());
+				row.createCell(5).setCellValue(dto.getMovedQuantity().doubleValue());
+				row.createCell(6).setCellValue(dto.getManagerName());
 			}
 			// Autosize
 			for (int i = 0; i < columns.length; i++) {

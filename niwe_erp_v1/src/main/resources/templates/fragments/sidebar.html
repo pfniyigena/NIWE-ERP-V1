@@ -103,6 +103,7 @@
 										th:text="#{menu.item.natures}"></span> </a></li>
 							</ul>
 						</div></li>
+					<!-- 
 					<li sec:authorize="hasRole('ADMIN')" class="nav-item "><a
 						class="nav-link active" href="#" data-toggle="collapse"
 						aria-expanded="false" data-target="#submenu-4"
@@ -116,6 +117,7 @@
 										th:text="#{menu.reconciliations}"></span> </a></li>
 							</ul>
 						</div></li>
+						 -->
 					<li sec:authorize="hasAnyRole('ADMIN','STOCK')" class="nav-item "><a
 						class="nav-link active" href="#" data-toggle="collapse"
 						aria-expanded="false" data-target="#submenu-5"
@@ -164,15 +166,17 @@
 												th:href="@{/warehouse-stocks/report/low}"
 												th:text="#{menu.report.stock.low}"></a></li>
 										</ul>
+										<!--  
 										<ul class="nav flex-column">
 											<li class="nav-item"><a class="nav-link" href="#"
 												th:href="@{/outflows/report}"><span
 													th:text="#{menu.outflows}"></span></a></li>
 										</ul>
-
+										-->
 									</div></li>
 							</ul>
 						</div></li>
+					<!--  
 					<li sec:authorize="hasAnyRole('ADMIN')" class="nav-item "><a
 						class="nav-link active" href="#" data-toggle="collapse"
 						aria-expanded="false" data-target="#submenu-6"
@@ -180,6 +184,7 @@
 							th:text="#{menu.operations}"></span> <span
 							class="badge badge-success">6</span></a>
 						<div id="submenu-6" class="collapse submenu"></div></li>
+					-->
 					<li sec:authorize="hasAnyRole('ADMIN','SALES')" class="nav-item "><a
 						class="nav-link active" href="#" data-toggle="collapse"
 						aria-expanded="false" data-target="#submenu-7"

@@ -150,12 +150,14 @@ public class WarehouseStockPdfExportService {
 			float[] columnWidths = { 4.0f, // Date
 					2.5f, // Type
 					8.0f, // Item
+					2.0f, // Unit Cost
+					2.0f, // Unit Price
 					2.0f, // Qty
 					5.5f // Manager
 			};
 			Table table = new Table(columnWidths);
 			table.setWidth(UnitValue.createPercentValue(100));
-			String[] headers = { "Name", "Current Quantity", "Min Stock", "Category", "Brand" };
+			String[] headers = { "Name","Purchase Price","Selling Price", "Current Quantity", "Min Stock", "Category", "Brand" };
 			for (String h : headers) {
 				table.addHeaderCell(
 						new Cell().add(new Paragraph(h).setFont(boldFont).setFontSize(headerFontSize)).setPadding(4)
@@ -165,6 +167,8 @@ public class WarehouseStockPdfExportService {
 			for (InflowItemListView dto : movements) {
 
 				table.addCell(compactCell(dto.getItemName(), regularFont, cellFontSize));
+				table.addCell(compactCell(dto.getUnitCost().toString(), regularFont, cellFontSize));
+				table.addCell(compactCell(dto.getUnitPrice().toString(), regularFont, cellFontSize));
 
 				table.addCell(compactCell(dto.getQuantity().toString(), regularFont, cellFontSize));
 

@@ -23,7 +23,8 @@ $(document).ready(function() {
                 }
             },
             { data: 'itemName' },
-
+			{ data: 'unitCost' },
+			{ data: 'unitPrice' },
             {
                 data: 'quantity',
                 render: function(data, type, row) {
