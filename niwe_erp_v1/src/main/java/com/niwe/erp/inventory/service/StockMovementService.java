@@ -152,7 +152,26 @@ public class StockMovementService {
 				.movementDate(Instant.now()).reference(reference).expirationDate(expirationDate).build();
 		return stockMovementRepository.save(sm);
 	}
+	@Transactional
+	public StockMovement logStockAdjustment(Warehouse warehouse, CoreItem item, BigDecimal qty, String reference,
+			MovementType movementType, LocalDate expirationDate) {
 
+		if (qty == null) {
+			qty = BigDecimal.ZERO;
+		}
+
+		BigDecimal prevWh = warehouseStockService.getQuantity(warehouse.getId(), item.getId());
+		BigDecimal newWh = qty;
+
+		// update warehouse stock
+		warehouseStockService.adjust(warehouse.getId(), item, qty);
+
+		StockMovement sm = StockMovement.builder().item(item).fromWarehouse(null)
+				.toWarehouse(Warehouse.builder().id(warehouse.getId()).build()).movedQuantity(qty)
+				.movementType(movementType).previousWarehouseQuantity(prevWh).currentWarehouseQuantity(newWh)
+				.movementDate(Instant.now()).reference(reference).expirationDate(expirationDate).build();
+		return stockMovementRepository.save(sm);
+	}
 	@Transactional
 	public StockMovement logTransferToLocation(UUID warehouseId, UUID locationId, CoreItem item, BigDecimal qty,
 			String reference, MovementType movementType) {
@@ -264,15 +283,15 @@ public class StockMovementService {
 				.currentLocationQuantity(newLoc).movementDate(Instant.now()).reference(reference).build();
 		lastMovement = stockMovementRepository.save(sm);
 		if (newLoc.compareTo(BigDecimal.ZERO) > 0) {
-			String error = String.format("Not enough stock on stand:%s- %s - %s - %s",
+			String error = String.format("No enough stock on stand:%s- %s - %s - %s",
 					loc.getLocation().getLocationName(), item.getItemName(), item.getInternalCode(), item.getBarcode());
 			errorLogService.save(error, error, ErrorLogType.INVENTORY);
 			// notificationService
-			// .sentEmail("Not enough stock in locations:" + item.getItemName() + "-" +
+			// .sentEmail("No enough stock in locations:" + item.getItemName() + "-" +
 			// item.getInternalCode());
 
 			// throw new IllegalStateException(
-			// "Not enough stock in locations: Available Stock in:" + remaining + " for
+			// "No enough stock in locations: Available Stock in:" + remaining + " for
 			// Item:" + item);
 		}
 
@@ -305,10 +324,10 @@ public class StockMovementService {
 		if (remaining.compareTo(BigDecimal.ZERO) > 0) {
 
 			notificationService
-					.sentEmail("Not enough stock in locations:" + item.getItemName() + "-" + item.getInternalCode());
+					.sentEmail("No enough stock in locations:" + item.getItemName() + "-" + item.getInternalCode());
 
 			// throw new IllegalStateException(
-			// "Not enough stock in locations: Available Stock in:" + remaining + " for
+			// "No enough stock in locations: Available Stock in:" + remaining + " for
 			// Item:" + item);
 		}
 

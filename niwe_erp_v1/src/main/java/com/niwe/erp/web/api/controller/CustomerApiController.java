@@ -47,8 +47,14 @@ public class CustomerApiController {
 	public ResponseEntity<NiweCommonResponse> getItems(@RequestBody NiweCommonRequest niweCommonRequest) {
 		log.info("Get Items from request: {}", niweCommonRequest);
 		Sort sort = Sort.by("modifiedAt").ascending();
+		Shelf shelf = shelfService.findByInternalCode(niweCommonRequest.shelfCode());
 		Pageable pageable = PageRequest.of(niweCommonRequest.pageSize(), niweCommonRequest.recordSize(), sort);
 		Page<CustomerDTO> page = customerService.findAllAsDto(pageable);
+		if (page.isLast()) {
+			// ✅ This is the last page
+			shelf.setLastSynCustomer(LocalDateTime.now()); // or max date from results
+			shelfService.save(shelf);
+		}
 		List<CustomerDTO> list = page.getContent();
 		NiweCommonResponse niweCommonResponse = new NiweCommonResponse(list, "000", "SUCCESS", page.getTotalPages());
 		log.info("Get Items from response: {}", niweCommonResponse);
@@ -66,10 +72,18 @@ public class CustomerApiController {
 		log.info("Get updates Customers from: {}", shelf);
 		Pageable pageable = PageRequest.of(niweCommonRequest.pageSize(), niweCommonRequest.recordSize(), sort);
 		Page<CustomerDTO> page = customerService.findByLastUpdatedAfter(shelf.getLastSynCustomer(), pageable);
+		
+		if (page.isLast()) {
+			// ✅ This is the last page
+			shelf.setLastSynCustomer(LocalDateTime.now()); // or max date from results
+			shelfService.save(shelf);
+		}
 		List<CustomerDTO> list = page.getContent();
 		log.info("Get updates Customers : {}", list.size());
-		shelf.setLastSynCustomer(LocalDateTime.now());
-		shelfService.save(shelf);
+		if (list.isEmpty()) {
+			log.info("No updates Customers found for shelf: {}", shelf);
+		}
+		
 		NiweCommonResponse niweCommonResponse = new NiweCommonResponse(list, "000", "SUCCESS", page.getTotalPages());
 		log.info("Get updates Items from response: {}", niweCommonResponse);
 		return ResponseEntity.ok(niweCommonResponse);

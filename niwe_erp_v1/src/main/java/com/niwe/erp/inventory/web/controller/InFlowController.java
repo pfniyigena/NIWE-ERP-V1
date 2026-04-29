@@ -118,6 +118,7 @@ public class InFlowController {
 		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
 				itemsPage.getTotalElements(), "data", itemsPage.getContent(), "warehouse", warehouse);
 	}
+
 	@PostMapping(value = "/reorder/list/data", consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public Map<String, Object> getReorderItems(@RequestBody DataTablesRequest request) {
@@ -130,8 +131,8 @@ public class InFlowController {
 		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
 				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
 
-		Page<InflowItemListView> itemsPage = warehouseStockService.findAllReorderItems(warehouse.getId(),
-				searchValue, pageable);
+		Page<InflowItemListView> itemsPage = warehouseStockService.findAllReorderItems(warehouse.getId(), searchValue,
+				pageable);
 		log.info("INFLOWS DATA: [{}]", itemsPage.getTotalElements()); // ← NOW YOU WILL SEE IT!
 		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
 				itemsPage.getTotalElements(), "data", itemsPage.getContent(), "warehouse", warehouse);
@@ -147,6 +148,20 @@ public class InFlowController {
 				newValue, itemId, warehouseId, supplier, expirationDate);
 		inventoryService.receiveToWarehouse(itemId, warehouseId, newValue, "", newUnitPrice, newUnitCost, newBarcode,
 				supplier, date);
+		redirectAttributes.addFlashAttribute("success", "Success.");
+		return NikaErpInventoryUrlConstants.IN_FLOWS_LIST_REDITECT_URL;
+	}
+
+	@PostMapping("/adjust")
+	public String adjustWarehouse(@RequestParam String itemId, @RequestParam String warehouseId,
+			@RequestParam BigDecimal newValue,RedirectAttributes redirectAttributes) {
+		log.info(" Quantity:{},itemId:{},warehouseId:{}",  
+				newValue, itemId, warehouseId);
+		inventoryService.adjustWarehouse(itemId, warehouseId, newValue, "", null, null, null,
+				 null, null);
+			
+		
+		
 		redirectAttributes.addFlashAttribute("success", "Success.");
 		return NikaErpInventoryUrlConstants.IN_FLOWS_LIST_REDITECT_URL;
 	}
@@ -184,8 +199,8 @@ public class InFlowController {
 		Pageable pageable = PageRequest.of(request.start() / request.length(), request.length(),
 				Sort.Direction.fromString(sortDir.toUpperCase()), sortColumn);
 
-		Page<StockMovementListView> page = stockMovementService.getMovementsByItemAndWarehouse(itemId, warehouseId, searchValue,
-				pageable);
+		Page<StockMovementListView> page = stockMovementService.getMovementsByItemAndWarehouse(itemId, warehouseId,
+				searchValue, pageable);
 		log.info("INFLOWS DATA: [{}]", page.getTotalElements()); // ← NOW YOU WILL SEE IT!
 		return Map.of("draw", request.draw(), "recordsTotal", coreItemService.countAll(), "recordsFiltered",
 				page.getTotalElements(), "data", page.getContent());

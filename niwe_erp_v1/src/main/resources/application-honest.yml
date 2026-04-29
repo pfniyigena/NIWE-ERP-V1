@@ -84,6 +84,12 @@ logging:
     name: logs/app.log
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  logback:
+    rollingpolicy:
+      max-file-size: 100MB
+      max-history: 10
+      total-size-cap: 1GB
+      file-name-pattern: logs/app.%d{yyyy-MM-dd}.%i.log.gz
 printer:
   ip: 192.168.1.100       # your printer IP
   port: 9100

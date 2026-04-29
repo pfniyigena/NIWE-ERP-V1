@@ -81,7 +81,7 @@ public class Sale extends AbstractEntity {
 	/**
 	 * The externalCode
 	 */
-	@Column(name = "EXTERNAL_CODE", nullable = true, length = 50)
+	@Column(name = "EXTERNAL_CODE", nullable = true, length = 250)
 	private String externalCode;
 	/**
 	 * The transactionType

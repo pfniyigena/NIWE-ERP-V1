@@ -5,12 +5,12 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.7</version>
+		<version>3.5.12</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.niwe.erp</groupId>
 	<artifactId>erp</artifactId>
-	<version>com.niwe.erp-0.0.1</version>
+	<version>0.0.2</version>
 	<name>niwe-erp</name>
 	<description>Niwe Erp Platform</description>
 	<url/>
@@ -127,12 +127,10 @@
 		<dependency>
 		  <groupId>org.flywaydb</groupId>
 		  <artifactId>flyway-core</artifactId>
-		  <version>${flyway.version}</version>
 		</dependency>
 		<dependency>
 		  <groupId>org.flywaydb</groupId>
 		  <artifactId>flyway-database-postgresql</artifactId>
-		  <version>${flyway.version}</version>
 		</dependency>
 		<dependency>
 	        <groupId>jakarta.xml.bind</groupId>
@@ -218,7 +216,6 @@
       <plugin>
         <groupId>org.graalvm.buildtools</groupId>
         <artifactId>native-maven-plugin</artifactId>
-        <version>0.10.2</version>
         <extensions>true</extensions>
         <configuration>
           <buildArgs>

@@ -35,17 +35,21 @@ public class ErrorLogService {
 
 	}
 
-	public void deleteItemById(String logId) {
+	public void deleteErrorLogById(String logId) {
 		errorLogRepository.deleteById(UUID.fromString(logId));
 	}
+
 	public List<ErrorLog> findAll() {
 		return errorLogRepository.findAll();
 	}
+
 	public ErrorLog findById(String id) {
 		return errorLogRepository.findById(UUID.fromString(id))
 				.orElseThrow(() -> new ResourceNotFoundException("Log not found with id " + id));
 
 	}
 
-
+	public void deleteAll() {
+		errorLogRepository.deleteAll();
+	}
 }

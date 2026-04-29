@@ -34,9 +34,8 @@ $(document).ready(function() {
 				render: function(data, type, row) {
 					return `<div class="input-group-append">
 							<a href="#" data-toggle="modal" data-target="#outflowModal" data-id="${row.itemId}" data-name="${row.itemName}"
-														data-quantity="${row.quantity}" data-warehouse="${row.warehouseId}" class="btn btn-warning open-update-modal" title="${labelOutflow}">
+														data-quantity="${row.quantity}" data-warehouse="${row.warehouseId}" class="btn btn-danger open-update-modal" title="${labelOutflow}">
 														<i class="fas fa-calendar-minus"></i></a>
-							
 							<a href="${BASE_URL}inflows/view/${row.itemId}/${row.warehouseId}" class="btn btn-success" title="${labelView}"><i class="fa fa-eye"></i></a>
 							</div>`;
 				}

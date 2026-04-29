@@ -180,9 +180,9 @@ public class CoreItemService {
 
 	}
 
-	public CoreItem findByInternalCodeApi(String internalCode) {
+	public CoreItem findByInternalCodeApi(String internalCode,String shelfCode) {
 		return coreItemRepository.findByInternalCode(internalCode).orElseThrow(() -> {
-			String error = String.format("No Item  for item: %s", internalCode);
+			String error = String.format("No Item  for item: %s from %s", internalCode,shelfCode);
 			errorLogService.save(error, error, ErrorLogType.ITEM);
 			throw new IllegalStateException(error);
 		});

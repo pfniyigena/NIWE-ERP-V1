@@ -66,6 +66,25 @@ public class InventoryService {
 		}
 	}
 
+	@Transactional
+	public void adjustWarehouse(String itemId, String warehouseId, BigDecimal qty, String reference,
+			BigDecimal newUnitPrice, BigDecimal newUnitCost, String newBarcode, String supplier,
+			LocalDate expirationDate) {
+		CoreItem item = coreItemRepository.findById(UUID.fromString(itemId))
+				.orElseThrow(() -> new ResourceNotFoundException("Item not found" + itemId));
+		Warehouse warehouse = null;
+		if (warehouseId == null || warehouseId.isEmpty() || warehouseId.isBlank()) {
+			warehouse = warehouseRepository.findByIsMain(true).get();
+		} else {
+			warehouse = warehouseRepository.findById(UUID.fromString(warehouseId))
+					.orElseThrow(() -> new ResourceNotFoundException("Warehouse not found " + warehouseId));
+
+		}
+		movementService.logStockAdjustment(warehouse, item, qty, reference, MovementType.ADJUSTMENT, expirationDate);
+		
+		
+	}
+
 	/**
 	 * Transfer from warehouse -> location (common case for preparing sale)
 	 */

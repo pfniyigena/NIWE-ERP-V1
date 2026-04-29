@@ -42,7 +42,7 @@ public class ErrorLogController {
 	@PostMapping("/delete")
 	public String deleteItem(@RequestParam String logId, RedirectAttributes redirectAttributes) {
 		log.info("----deleteItem id:{}", logId);
-		errorLogService.deleteItemById(logId);
+		errorLogService.deleteErrorLogById(logId);
 		redirectAttributes.addFlashAttribute("success", "Delete Success.");
 		return NiweErpCoreUrlConstants.LOGS_LIST_REDITECT_URL;
 	}

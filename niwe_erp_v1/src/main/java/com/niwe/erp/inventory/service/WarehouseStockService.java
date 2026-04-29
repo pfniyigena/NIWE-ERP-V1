@@ -111,7 +111,7 @@ public class WarehouseStockService {
 			}
 			/*
 			 * if (newQuantity.compareTo(new BigDecimal("0.00")) < 0) { throw new
-			 * IllegalStateException( "Not enough stock for product " +
+			 * IllegalStateException( "No enough stock for product " +
 			 * product.getItemName() + " in warehouse " + warehouse.getWarehouseName()); }
 			 */
 			stock.setQuantity(newQuantity);
@@ -278,6 +278,14 @@ public class WarehouseStockService {
 				searchValue, pageable);
 	}
 
+	@Transactional
+	public void adjust(UUID warehouseId, CoreItem item, BigDecimal qty) {
+		WarehouseStock ws = warehouseStockRepository.findByWarehouseAndItemForUpdate(warehouseId, item.getId())
+				.orElseGet(() -> WarehouseStock.builder().warehouse(Warehouse.builder().id(warehouseId).build())
+						.item(item).quantity(BigDecimal.ZERO).build());
+		ws.setQuantity(qty);
+		warehouseStockRepository.save(ws);
+	}
 	@Transactional
 	public void increase(UUID warehouseId, CoreItem item, BigDecimal qty) {
 		WarehouseStock ws = warehouseStockRepository.findByWarehouseAndItemForUpdate(warehouseId, item.getId())

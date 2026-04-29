@@ -196,7 +196,7 @@ public class ShelfService {
 			sale.setTotalAmountHorsTax(request.totalAmount().subtract(request.totalTaxAmount()));
 			sale.setTotalAmountToPay(request.totalAmount());
 			List<SaleItem> lines = request.items().stream().map(itemRequest -> {
-				SaleItem line = mapToSaleLine(itemRequest);
+				SaleItem line = mapToSaleLine(itemRequest,shelf.getInternalCode());
 				line.setPurchasePrice(line.getItem().getUnitCost());
 				sale.setTotalCost(sale.getTotalCost().add((line.getItem().getUnitCost().multiply(line.getQuantity()))));
 				return line;
@@ -214,8 +214,8 @@ public class ShelfService {
 			return true;
 	}
 
-	private SaleItem mapToSaleLine(SaleItemRequest saleItemRequest) {
-		CoreItem coreItem = coreItemService.findByInternalCodeApi(saleItemRequest.itemCode());
+	private SaleItem mapToSaleLine(SaleItemRequest saleItemRequest, String shelfCode) {
+		CoreItem coreItem = coreItemService.findByInternalCodeApi(saleItemRequest.itemCode(),shelfCode);
 		return SaleItem.builder().item(coreItem).itemName(coreItem.getItemName()).quantity(saleItemRequest.quantity())
 				.salePrice(saleItemRequest.unitPrice()).itemSeq(saleItemRequest.itemSequence())
 				.taxAmount(saleItemRequest.totalTax())

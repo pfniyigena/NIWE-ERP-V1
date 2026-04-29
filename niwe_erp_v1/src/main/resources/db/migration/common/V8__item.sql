@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX idx_unique_item_name_clean ON core_item (LOWER(TRIM(item_name)));
