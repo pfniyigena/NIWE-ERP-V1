@@ -120,7 +120,9 @@ public class CoreItemService {
 		if (item.getId() != null) {
 			saved = coreItemRepository.getReferenceById(item.getId());
 			saved.setItemName(item.getItemName());
-			saved.setBarcode(item.getBarcode());
+			if (saved.getBarcode() == null) {
+				saved.setBarcode(item.getBarcode());
+			}
 			saved.setExternalItemCode(item.getExternalItemCode());
 			saved.setItemCode(item.getItemCode());
 			saved.setUnitPrice(item.getUnitPrice());
@@ -158,13 +160,14 @@ public class CoreItemService {
 
 	private void createWarehouseInventory(CoreItem saved, boolean initialStock) {
 		try {
-		if (initialStock) {
-			Warehouse warehouse = warehouseRepository.findByIsMain(true).get();
-			stockMovementService.logReceive(warehouse, saved, saved.getQuantityInitial(), saved.getInternalCode(),
-					MovementType.STOCK_INITIAL, null);
+			if (initialStock) {
+				Warehouse warehouse = warehouseRepository.findByIsMain(true).get();
+				stockMovementService.logReceive(warehouse, saved, saved.getQuantityInitial(), saved.getInternalCode(),
+						MovementType.STOCK_INITIAL, null);
 
-		}}catch (Exception e) {
-			log.error("createWarehouseInventory:{}",e);
+			}
+		} catch (Exception e) {
+			log.error("createWarehouseInventory:{}", e);
 		}
 	}
 
@@ -180,9 +183,9 @@ public class CoreItemService {
 
 	}
 
-	public CoreItem findByInternalCodeApi(String internalCode,String shelfCode) {
+	public CoreItem findByInternalCodeApi(String internalCode, String shelfCode) {
 		return coreItemRepository.findByInternalCode(internalCode).orElseThrow(() -> {
-			String error = String.format("No Item  for item: %s from %s", internalCode,shelfCode);
+			String error = String.format("No Item  for item: %s from %s", internalCode, shelfCode);
 			errorLogService.save(error, error, ErrorLogType.ITEM);
 			throw new IllegalStateException(error);
 		});
@@ -354,12 +357,14 @@ public class CoreItemService {
 
 	}
 
-	public List<FastMoveItem> findFastMoveItems(){
+	public List<FastMoveItem> findFastMoveItems() {
 		return coreItemRepository.findFastMoveItems();
 	}
-	public List<DeadStockItem> findDeadStockItems(){
+
+	public List<DeadStockItem> findDeadStockItems() {
 		return coreItemRepository.findDeadStockItems();
 	}
+
 	private String normalizeBarcode(String barcode) {
 		if (barcode == null || barcode.trim().isEmpty()) {
 			return null;
